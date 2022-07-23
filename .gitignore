@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Those will need to be downloaded from external sources
+modules/
+data/
+altv-server
+altv-server.exe
