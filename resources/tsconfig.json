@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+      "lib": [ "es5", "es6", "esnext" ],
+      "module": "esnext",
+      "moduleResolution": "node",
+      "target": "esnext",
+  
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "removeComments": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "preserveConstEnums": true,
+  
+      "noImplicitAny": true,
+      "sourceMap": false,
+  
+      "typeRoots": ["./../node_modules/@altv"]
+    },
+
+    "include": [
+      "./**/*.ts"
+    ],
+    
+    "exclude": [
+      "node_modules"
+    ]
+  }

@@ -103,7 +103,10 @@ dist
 # TernJS port file
 .tern-port
 
-# Those will need to be downloaded from external sources
+# WebStorm configuration folder
+.idea/
+
+# These will be downloaded by the gulpfile
 modules/
 data/
 altv-server
