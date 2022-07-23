@@ -1,8 +1,7 @@
-const gulp = require('gulp')
-const log = require('fancy-log')
-
-const https = require('https')
-const fs = require('fs')
+import gulp from 'gulp'
+import * as log from 'fancy-log'
+import https from 'https'
+import fs from 'fs'
 
 const DIST_FOLDER = 'dist'
 
@@ -34,7 +33,7 @@ const downloadFile = (url, destination) => {
 }
 
 const downloadToDist = (url, destination) => {
-    if (!fs.existsSync(destination)) {
+    if (!fs.existsSync(DIST_FOLDER + '/' + destination)) {
         let directoryTree = DIST_FOLDER
 
         if (destination.includes('/')) {
@@ -51,9 +50,9 @@ const downloadToDist = (url, destination) => {
 
 const downloadBinaryLinux = (cb) => {
     const url = 'https://cdn.altv.mp/server/release/x64_linux/altv-server'
-    const path = '/altv-server'
+    const path = 'altv-server'
 
-    if (fs.existsSync(path)) {
+    if (fs.existsSync(DIST_FOLDER + '/' + path)) {
         cb()
         return
     }
@@ -72,9 +71,9 @@ const downloadBinaryLinux = (cb) => {
 
 const downloadBinaryWindows = (cb) => {
     const url = 'https://cdn.altv.mp/server/release/x64_win32/altv-server.exe'
-    const path = '/altv-server.exe'
+    const path = 'altv-server.exe'
 
-    if (fs.existsSync(path)) {
+    if (fs.existsSync(DIST_FOLDER + '/' + path)) {
         cb()
         return
     }
@@ -112,13 +111,21 @@ const downloadModels = (cb) => {
         'https://cdn.altv.mp/data/release/data/clothes.bin'
     ]
 
+    let existing = 0
     let downloaded = 0
 
     for (const url of urls) {
         const splitUrl = url.split('/')
         const fileName = splitUrl[splitUrl.length - 1]
 
-        if (fs.existsSync(DIST_FOLDER + '/data/' + fileName)) continue
+        if (fs.existsSync(DIST_FOLDER + '/data/' + fileName)) {
+            existing++
+            if (existing === urls.length) {
+                cb()
+                return
+            }
+            continue
+        }
 
         log.info(`Downloading ${fileName}...`)
         downloadToDist(url, '/data/' + fileName)
@@ -160,7 +167,7 @@ const downloadJSModule = (cb, platform) => {
 
         if (fs.existsSync(DIST_FOLDER + '/modules/js-module/' + fileName)) {
             existing++
-            if (urls.length == existing) {
+            if (urls.length === existing) {
                 cb()
                 return
             }
@@ -171,7 +178,7 @@ const downloadJSModule = (cb, platform) => {
         downloadToDist(url, '/modules/js-module/' + fileName).then(() => {
             log.info(`Finished downloading ${fileName}`)
             downloaded++
-            if (downloaded == urls.length) cb()
+            if (downloaded === urls.length) cb()
         }).catch((err) => {
             log.error('Error downloading platform file')
             throw err
@@ -207,23 +214,23 @@ const downloadBytecodeModule = (cb, platform) => {
     })
 }
 
-const downloadAllWindows = (cb) => {
-    gulp.parallel('download:binary:windows', 'download:models', 'download:modules:windows')()
+const downloadAllWindows = async (cb) => {
+    await gulp.parallel('download:binary:windows', 'download:models', 'download:modules:windows')()
     cb()
 }
 
-const downloadAllLinux = (cb) => {
-    gulp.parallel('download:binary:linux', 'download:models', 'download:modules:linux')()
+const downloadAllLinux = async (cb) => {
+    await gulp.parallel('download:binary:linux', 'download:models', 'download:modules:linux')()
     cb()
 }
 
-const downloadAll = (cb) => {
+const downloadAll = async (cb) => {
     switch (process.platform) {
         case 'win32':
-            downloadAllWindows(cb)
+            await downloadAllWindows(cb)
             break
         case 'linux':
-            downloadAllLinux(cb)
+            await downloadAllLinux(cb)
             break
         default:
             log.error('There are no alt:V files for your OS.')
@@ -245,5 +252,8 @@ gulp.task('download:modules:linux', gulp.series((cb) => {
 }, (cb) => {
     downloadBytecodeModule(cb, 'linux')
 }))
+gulp.task('download:windows', downloadAllWindows)
+gulp.task('download:linux', downloadAllLinux)
 gulp.task('download', downloadAll)
-exports.default = downloadAll
+
+export default downloadAll

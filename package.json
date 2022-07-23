@@ -11,6 +11,7 @@
     "url": "https://github.com/stanislawkrowicki/gta-rpg/issues"
   },
   "homepage": "https://github.com/stanislawkrowicki/gta-rpg#readme",
+  "type":  "module",
   "devDependencies": {
     "@altv/types-client": "^2.2.7",
     "@altv/types-natives": "^1.4.4",
