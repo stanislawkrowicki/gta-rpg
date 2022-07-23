@@ -108,3 +108,6 @@ modules/
 data/
 altv-server
 altv-server.exe
+
+# Those are generated automatically via gulp
+server.cfg
