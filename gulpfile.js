@@ -2,10 +2,16 @@ import gulp from 'gulp'
 import * as log from 'fancy-log'
 import https from 'https'
 import fs from 'fs'
+import { createGulpEsbuild } from 'gulp-esbuild'
+
+import ServerConfig from './server.config.js'
+import ServerConfigUtils from './utils/ServerConfigUtils.js'
+
+const gulpEsbuild = createGulpEsbuild({});
 
 const DIST_FOLDER = 'dist'
 
-const downloadFile = (url, destination) => {
+const downloadFile = async (url, destination) => {
     if (!fs.existsSync(destination))
         fs.open(destination, 'w', (err) => {
             if (err) throw err
@@ -32,7 +38,7 @@ const downloadFile = (url, destination) => {
     })
 }
 
-const downloadToDist = (url, destination) => {
+const downloadToDist = async (url, destination) => {
     if (!fs.existsSync(DIST_FOLDER + '/' + destination)) {
         let directoryTree = DIST_FOLDER
 
@@ -48,7 +54,7 @@ const downloadToDist = (url, destination) => {
     return downloadFile(url, DIST_FOLDER + '/' + destination)
 }
 
-const downloadBinaryLinux = (cb) => {
+const downloadBinaryLinux = async (cb) => {
     const url = 'https://cdn.altv.mp/server/release/x64_linux/altv-server'
     const path = 'altv-server'
 
@@ -69,7 +75,7 @@ const downloadBinaryLinux = (cb) => {
         })
 }
 
-const downloadBinaryWindows = (cb) => {
+const downloadBinaryWindows = async (cb) => {
     const url = 'https://cdn.altv.mp/server/release/x64_win32/altv-server.exe'
     const path = 'altv-server.exe'
 
@@ -90,13 +96,13 @@ const downloadBinaryWindows = (cb) => {
         })
 }
 
-const downloadBinary = (cb) => {
+const downloadBinary = async (cb) => {
     switch (process.platform) {
         case 'win32':
-            downloadBinaryWindows(cb)
+            await downloadBinaryWindows(cb)
             break
         case 'linux':
-            downloadBinaryLinux(cb)
+            await downloadBinaryLinux(cb)
             break
         default:
             log.error('There are no alt:V binaries for your OS.')
@@ -104,7 +110,7 @@ const downloadBinary = (cb) => {
     }
 }
 
-const downloadModels = (cb) => {
+const downloadModels = async (cb) => {
     const urls = [
         'https://cdn.altv.mp/data/release/data/vehmodels.bin',
         'https://cdn.altv.mp/data/release/data/vehmods.bin',
@@ -128,6 +134,7 @@ const downloadModels = (cb) => {
         }
 
         log.info(`Downloading ${fileName}...`)
+
         downloadToDist(url, '/data/' + fileName)
             .then(() => {
                 log.info('Finished downloading ' + fileName)
@@ -141,7 +148,7 @@ const downloadModels = (cb) => {
     }
 }
 
-const downloadJSModule = (cb, platform) => {
+const downloadJSModule = async (cb, platform) => {
     const moduleMap = {
         win32: [
             'https://cdn.altv.mp/js-module/release/x64_win32/modules/js-module/libnode.dll',
@@ -186,7 +193,7 @@ const downloadJSModule = (cb, platform) => {
     }
 }
 
-const downloadBytecodeModule = (cb, platform) => {
+const downloadBytecodeModule = async (cb, platform) => {
     const moduleMap = {
         win32: 'https://cdn.altv.mp/js-bytecode-module/release/x64_win32/modules/js-bytecode-module.dll',
         linux: 'https://cdn.altv.mp/js-bytecode-module/release/x64_linux/modules/libjs-bytecode-module.so'
@@ -233,27 +240,75 @@ const downloadAll = async (cb) => {
             await downloadAllLinux(cb)
             break
         default:
-            log.error('There are no alt:V files for your OS.')
-            throw 'There are no alt:V files for your OS.'
+            throw 'There are no required alt:V files for your OS.'
     }
 }
+
+gulp.task('build:resources', async (done) => {
+    gulp.series(
+        async function buildScripts(done) {
+            gulp.src('./resources/**/*.ts')
+                .pipe(gulpEsbuild({
+                    outdir: './test',
+                    format: 'esm',
+                    platform: 'node',
+                }))
+                .on('error', (error) => {
+                    console.log(error);
+                })
+                .pipe(gulp.dest('./dist/resources/'))
+                .on('end', done)
+        },
+        done()
+    )()
+})
+
+async function build(done) {
+    await gulp.series(
+        'build:resources',
+        async function buildServerCfg(done) {
+            let cfg = ServerConfigUtils.getAsCfg(ServerConfig)
+
+            fs.writeFileSync('dist/server.cfg', cfg.toString());
+
+            done()
+        }
+    )()
+
+    done()
+}
+
+gulp.task('build', build)
 
 gulp.task('download:binary:windows', downloadBinaryWindows)
 gulp.task('download:binary:linux', downloadBinaryLinux)
 gulp.task('download:binary', downloadBinary)
 gulp.task('download:models', downloadModels)
-gulp.task('download:modules:windows', gulp.series((cb) => {
-    downloadJSModule(cb, 'win32')
-}, (cb) => {
-    downloadBytecodeModule(cb, 'win32')
-}))
-gulp.task('download:modules:linux', gulp.series((cb) => {
-    downloadJSModule(cb, 'linux')
-}, (cb) => {
-    downloadBytecodeModule(cb, 'linux')
-}))
+gulp.task('download:modules:windows', async (done) => {
+    gulp.series(
+        async (done) => {
+            await downloadJSModule(done, 'win32')
+        },
+        async (done) => {
+            await downloadBytecodeModule(done, 'win32')
+        },
+        done()
+    )()
+})
+
+gulp.task('download:modules:linux',
+    gulp.series(
+        async (cb) => {
+            await downloadJSModule(cb, 'linux')
+        },
+        async (cb) => {
+            await downloadBytecodeModule(cb, 'linux')
+        }
+    )
+)
+
 gulp.task('download:windows', downloadAllWindows)
 gulp.task('download:linux', downloadAllLinux)
 gulp.task('download', downloadAll)
 
-export default downloadAll
+export default build
