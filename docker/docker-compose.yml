@@ -1,12 +1,11 @@
 services:
   rpg-mongo:
-    build: ./docker/mongo/
+    build: mongo
     restart: always
     volumes:
       - data_mongo:/data/mongo
     ports:
-      - 27017:27017
-      - 27018:27018
+      - ${MONGODB_PORT}:27017
 
 volumes:
   data_mongo:
