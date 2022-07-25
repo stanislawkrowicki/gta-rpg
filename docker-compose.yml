@@ -1,0 +1,10 @@
+services:
+  rpg-postgres:
+    build: ./docker/postgres/
+    volumes:
+      - data_postgres:/var/lib/postgres
+    ports:
+      - 5432:5432
+
+volumes:
+  data_postgres:
