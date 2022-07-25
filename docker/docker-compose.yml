@@ -7,5 +7,15 @@ services:
     ports:
       - ${MONGODB_PORT}:27017
 
+  rpg-mongo-express:
+      build: mongo-express
+      restart: always
+      ports:
+        - ${MONGO_EXPRESS_PORT}:8081
+      environment:
+        ME_CONFIG_MONGODB_SERVER: rpg-mongo
+      depends_on:
+        - rpg-mongo
+
 volumes:
   data_mongo:
