@@ -1,4 +1,9 @@
 import fs from 'fs'
+import dotenv from 'dotenv'
+
+dotenv.config({path: './docker/.env'})
+
+const PRODUCTION_ENVIRONMENT = 'prod'
 
 async function getResourcesInFolder(path) {
     return fs.readdirSync(path, { withFileTypes: true })
@@ -16,7 +21,7 @@ export default {
     website: '<website>',
     language: 'en',
     description: "RPG Server",
-    debug: true,
+    debug: process.env.ENVIRONMENT===PRODUCTION_ENVIRONMENT,
     modules: [
         'js-module',
         'js-bytecode-module'

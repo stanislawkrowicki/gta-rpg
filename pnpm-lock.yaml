@@ -8,12 +8,14 @@ specifiers:
   '@altv/types-webview': ^1.0.3
   '@altv/types-worker': ^1.0.7
   cli-spinners: ^2.6.1
+  dotenv: ^16.0.1
   fancy-log: ^2.0.0
   gulp: ^4.0.2
   gulp-esbuild: ^0.10.4
 
 dependencies:
   cli-spinners: 2.6.1
+  dotenv: 16.0.1
   fancy-log: 2.0.0
   gulp-esbuild: 0.10.4
 
@@ -516,6 +518,11 @@ packages:
     resolution: {integrity: sha512-DtCOLG98P007x7wiiOmfI0fi3eIKyWiLTGJ2MDnVi/E04lWGbf+JzrRHMm0rgIIZJGtHpKpbVgLWHrv8xXpc3Q==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /dotenv/16.0.1:
+    resolution: {integrity: sha512-1K6hR6wtk2FviQ4kEiSjFiH5rpzEVi8WW0x96aztHVMhEspNpc4DVOUTEHtEva5VThQ8IaBX1Pe4gSzpVVUsKQ==}
+    engines: {node: '>=12'}
+    dev: false
 
   /duplexify/3.7.1:
     resolution: {integrity: sha512-07z8uv2wMyS51kKhD1KsdXJg5WQ6t93RneqRxUHnskXVtlYYkLqM0gqStQZ3pj073g687jPCHrqNfCzawLYh5g==}
