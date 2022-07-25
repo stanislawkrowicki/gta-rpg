@@ -11,7 +11,7 @@
     "url": "https://github.com/stanislawkrowicki/gta-rpg/issues"
   },
   "homepage": "https://github.com/stanislawkrowicki/gta-rpg#readme",
-  "type":  "module",
+  "type": "module",
   "devDependencies": {
     "@altv/types-client": "^2.2.7",
     "@altv/types-natives": "^1.4.4",
@@ -24,7 +24,6 @@
   "dependencies": {
     "cli-spinners": "^2.6.1",
     "fancy-log": "^2.0.0",
-    "gulp-esbuild": "^0.10.4",
-    "ora": "^6.1.2"
+    "gulp-esbuild": "^0.10.4"
   }
 }
