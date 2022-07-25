@@ -11,7 +11,7 @@ const gulpEsbuild = createGulpEsbuild({});
 
 const DIST_FOLDER = 'dist'
 
-const downloadFile = async (url, destination) => {
+const downloadFile = (url, destination) => {
     if (!fs.existsSync(destination))
         fs.open(destination, 'w', (err) => {
             if (err) throw err
@@ -75,7 +75,7 @@ const downloadBinaryLinux = async (cb) => {
         })
 }
 
-const downloadBinaryWindows = async (cb) => {
+const downloadBinaryWindows = (cb) => {
     const url = 'https://cdn.altv.mp/server/release/x64_win32/altv-server.exe'
     const path = 'altv-server.exe'
 
@@ -110,7 +110,7 @@ const downloadBinary = async (cb) => {
     }
 }
 
-const downloadModels = async (cb) => {
+const downloadModels = async (done) => {
     const urls = [
         'https://cdn.altv.mp/data/release/data/vehmodels.bin',
         'https://cdn.altv.mp/data/release/data/vehmods.bin',
@@ -127,7 +127,7 @@ const downloadModels = async (cb) => {
         if (fs.existsSync(DIST_FOLDER + '/data/' + fileName)) {
             existing++
             if (existing === urls.length) {
-                cb()
+                done()
                 return
             }
             continue
@@ -135,11 +135,11 @@ const downloadModels = async (cb) => {
 
         log.info(`Downloading ${fileName}...`)
 
-        downloadToDist(url, '/data/' + fileName)
+        await downloadToDist(url, '/data/' + fileName)
             .then(() => {
                 log.info('Finished downloading ' + fileName)
                 downloaded++
-                if (downloaded === urls.length) cb()
+                if (downloaded === urls.length) done()
             })
             .catch((err) => {
                 log.error('Failed to download ' + fileName)
@@ -148,7 +148,7 @@ const downloadModels = async (cb) => {
     }
 }
 
-const downloadJSModule = async (cb, platform) => {
+const downloadJSModule = async (platform) => {
     const moduleMap = {
         win32: [
             'https://cdn.altv.mp/js-module/release/x64_win32/modules/js-module/libnode.dll',
@@ -168,32 +168,36 @@ const downloadJSModule = async (cb, platform) => {
     let existing = 0
 
     const urls = moduleMap[platform]
-    for (const url of urls) {
-        const splitUrl = url.split('/')
-        const fileName = splitUrl[splitUrl.length - 1]
 
-        if (fs.existsSync(DIST_FOLDER + '/modules/js-module/' + fileName)) {
-            existing++
-            if (urls.length === existing) {
-                cb()
-                return
+    await new Promise((finish, fail) => {
+        for (const url of urls) {
+            const splitUrl = url.split('/')
+            const fileName = splitUrl[splitUrl.length - 1]
+
+            if (fs.existsSync(DIST_FOLDER + '/modules/js-module/' + fileName)) {
+                existing++
+                if (urls.length === existing) {
+                    finish()
+                    return
+                }
+                continue
             }
-            continue
-        }
 
-        log.info(`Downloading ${fileName} for ${platform}`)
-        downloadToDist(url, '/modules/js-module/' + fileName).then(() => {
-            log.info(`Finished downloading ${fileName}`)
-            downloaded++
-            if (downloaded === urls.length) cb()
-        }).catch((err) => {
-            log.error('Error downloading platform file')
-            throw err
-        })
-    }
+            log.info(`Downloading ${fileName} for ${platform}`)
+            downloadToDist(url, '/modules/js-module/' + fileName).then(() => {
+                log.info(`Finished downloading ${fileName}`)
+                downloaded++
+                if (downloaded === urls.length) finish()
+            }).catch((err) => {
+                log.error('Error downloading platform file')
+                throw err
+                fail()
+            })
+        }
+    })
 }
 
-const downloadBytecodeModule = async (cb, platform) => {
+const downloadBytecodeModule = (platform) => {
     const moduleMap = {
         win32: 'https://cdn.altv.mp/js-bytecode-module/release/x64_win32/modules/js-bytecode-module.dll',
         linux: 'https://cdn.altv.mp/js-bytecode-module/release/x64_linux/modules/libjs-bytecode-module.so'
@@ -207,14 +211,14 @@ const downloadBytecodeModule = async (cb, platform) => {
     const fileName = urlSplit[urlSplit.length - 1]
 
     if (fs.existsSync(DIST_FOLDER + '/modules/' + fileName)) {
-        cb()
+        // cb()
         return
     }
 
     log.info(`Downloading ${fileName}`)
-    downloadToDist(url, '/modules/' + fileName).then(() => {
+
+    return downloadToDist(url, '/modules/' + fileName).then(() => {
         log.info(`Finished downloading ${fileName}`)
-        cb()
     }).catch((err) => {
         log.error(`Error downloading ${fileName} for ${platform}`)
         throw err
@@ -222,13 +226,21 @@ const downloadBytecodeModule = async (cb, platform) => {
 }
 
 const downloadAllWindows = async (cb) => {
-    await gulp.parallel('download:binary:windows', 'download:models', 'download:modules:windows')()
-    cb()
+    await new Promise((finish) => {
+        gulp.parallel('download:binary:windows', 'download:models', 'download:modules:windows')(() => {
+            cb()
+            finish()
+        })
+    })
 }
 
 const downloadAllLinux = async (cb) => {
-    await gulp.parallel('download:binary:linux', 'download:models', 'download:modules:linux')()
-    cb()
+    await new Promise((finish) => {
+        gulp.parallel('download:binary:linux', 'download:models', 'download:modules:linux')(() => {
+            cb()
+            finish()
+        })
+    })
 }
 
 const downloadAll = async (cb) => {
@@ -244,65 +256,78 @@ const downloadAll = async (cb) => {
     }
 }
 
-gulp.task('build:resources', async (done) => {
+gulp.task('build:resources', (done) => {
     gulp.series(
         async function buildScripts(done) {
-            gulp.src('./resources/**/*.ts')
-                .pipe(gulpEsbuild({
-                    outdir: './test',
-                    format: 'esm',
-                    platform: 'node',
-                }))
-                .on('error', (error) => {
-                    console.log(error);
-                })
+            // gulp.src(.../client/index.ts)
+            //     .pipe(gulpEsbuild({
+            //         outfile: 'index.js',
+            //         format: 'esm',
+            //         platform: 'node',
+            //     }))
+            //     .on('error', (error) => {
+            //         console.log(error);
+            //     })
+            //     .pipe(gulp.dest(...))
+            //     .on('end', done)
+            //
+            // gulp.src(.../server/index.ts)
+            //     .pipe(gulpEsbuild({
+            //         outfile: 'index.js',
+            //         format: 'esm',
+            //         platform: 'node',
+            //     }))
+            //     .on('error', (error) => {
+            //         console.log(error);
+            //     })
+            //     .pipe(gulp.dest(...))
+            //     .on('end', done)
+        },
+        async function buildConfigs(done) {
+            gulp.src('./resources/**/*.cfg')
                 .pipe(gulp.dest('./dist/resources/'))
                 .on('end', done)
-        },
-        done()
-    )()
+        }
+    )(done)
 })
 
-async function build(done) {
-    await gulp.series(
+function build(done) {
+    return gulp.series(
         'build:resources',
-        async function buildServerCfg(done) {
+        function buildServerCfg(done) {
             let cfg = ServerConfigUtils.getAsCfg(ServerConfig)
 
             fs.writeFileSync('dist/server.cfg', cfg.toString());
 
             done()
         }
-    )()
-
-    done()
+    )(done)
 }
-
-gulp.task('build', build)
 
 gulp.task('download:binary:windows', downloadBinaryWindows)
 gulp.task('download:binary:linux', downloadBinaryLinux)
 gulp.task('download:binary', downloadBinary)
 gulp.task('download:models', downloadModels)
-gulp.task('download:modules:windows', async (done) => {
+gulp.task('download:modules:windows',
     gulp.series(
-        async (done) => {
-            await downloadJSModule(done, 'win32')
+        async function downloadingJSModule() {
+            return downloadJSModule('win32')
         },
-        async (done) => {
-            await downloadBytecodeModule(done, 'win32')
-        },
-        done()
-    )()
-})
+        async function downloadingBytecodeModule() {
+            return downloadBytecodeModule('win32')
+        }
+    )
+)
 
 gulp.task('download:modules:linux',
     gulp.series(
         async (cb) => {
-            await downloadJSModule(cb, 'linux')
+            await downloadJSModule('linux')
+            cb()
         },
         async (cb) => {
-            await downloadBytecodeModule(cb, 'linux')
+            await downloadBytecodeModule('linux')
+            cb()
         }
     )
 )
@@ -311,4 +336,5 @@ gulp.task('download:windows', downloadAllWindows)
 gulp.task('download:linux', downloadAllLinux)
 gulp.task('download', downloadAll)
 
+gulp.task('build', build)
 export default build
