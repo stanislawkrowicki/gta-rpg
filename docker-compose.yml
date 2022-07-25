@@ -1,10 +1,12 @@
 services:
-  rpg-postgres:
-    build: ./docker/postgres/
+  rpg-mongo:
+    build: ./docker/mongo/
+    restart: always
     volumes:
-      - data_postgres:/var/lib/postgres
+      - data_mongo:/data/mongo
     ports:
-      - 5432:5432
+      - 27017:27017
+      - 27018:27018
 
 volumes:
-  data_postgres:
+  data_mongo:
