@@ -268,7 +268,12 @@ gulp.task('build:resources', (done) => {
                     .pipe(gulpEsbuild({
                         outfile: 'index.js',
                         format: 'esm',
-                        platform: 'node'
+                        platform: 'node',
+                        bundle: true,
+                        external: [
+                            'alt-client',
+                            'natives'
+                        ]
                     }))
                     .on('error', (err) => {
                         if (err) {
@@ -290,7 +295,13 @@ gulp.task('build:resources', (done) => {
                     .pipe(gulpEsbuild({
                         outfile: 'index.js',
                         format: 'esm',
-                        platform: 'node'
+                        platform: 'node',
+                        bundle: true,
+                        external: [
+                            'alt-server',
+                            'dotenv',
+                            'mongoose'
+                        ]
                     }))
                     .on('error', (err) => {
                         if (err) {
