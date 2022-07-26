@@ -26,6 +26,6 @@ export default {
         'js-module',
         'js-bytecode-module'
     ],
-    resources: await getResourcesInFolder('resources/')
+    resources: await getResourcesInFolder('./src/resources/')
 }
 

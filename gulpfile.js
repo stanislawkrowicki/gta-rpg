@@ -2,7 +2,7 @@ import gulp from 'gulp'
 import * as log from 'fancy-log'
 import https from 'https'
 import fs from 'fs'
-import { createGulpEsbuild } from 'gulp-esbuild'
+import {createGulpEsbuild} from 'gulp-esbuild'
 
 import ServerConfig from './server.config.js'
 import ServerConfigUtils from './utils/ServerConfigUtils.js'
@@ -258,33 +258,57 @@ const downloadAll = async (cb) => {
 
 gulp.task('build:resources', (done) => {
     gulp.series(
-        async function buildScripts(done) {
-            // gulp.src(.../client/index.ts)
-            //     .pipe(gulpEsbuild({
-            //         outfile: 'index.js',
-            //         format: 'esm',
-            //         platform: 'node',
-            //     }))
-            //     .on('error', (error) => {
-            //         console.log(error);
-            //     })
-            //     .pipe(gulp.dest(...))
-            //     .on('end', done)
-            //
-            // gulp.src(.../server/index.ts)
-            //     .pipe(gulpEsbuild({
-            //         outfile: 'index.js',
-            //         format: 'esm',
-            //         platform: 'node',
-            //     }))
-            //     .on('error', (error) => {
-            //         console.log(error);
-            //     })
-            //     .pipe(gulp.dest(...))
-            //     .on('end', done)
+        async function buildClientScripts(done) {
+            const directories = fs.readdirSync('./src/resources/', { withFileTypes: true })
+                .filter(dirent => dirent.isDirectory())
+                .map(dirent => dirent.name)
+
+            directories.forEach((resource) => {
+                gulp.src(`./src/resources/${resource}/client/index.ts`)
+                    .pipe(gulpEsbuild({
+                        outfile: 'index.js',
+                        format: 'esm',
+                        platform: 'node'
+                    }))
+                    .on('error', (err) => {
+                        if (err) {
+                            log.error(`Error while compiling resource ${resource} client`)
+                            throw err
+                        }
+                    })
+                    .pipe(gulp.dest(`${DIST_FOLDER}/resources/${resource}/client`))
+                    .on('end', done)
+            })
+        },
+        async function buildServerScripts(done) {
+            const directories = fs.readdirSync('./src/resources/', { withFileTypes: true })
+                .filter(dirent => dirent.isDirectory())
+                .map(dirent => dirent.name)
+
+            directories.forEach((resource) => {
+                gulp.src(`./src/resources/${resource}/server/index.ts`)
+                    .pipe(gulpEsbuild({
+                        outfile: 'index.js',
+                        format: 'esm',
+                        platform: 'node'
+                    }))
+                    .on('error', (err) => {
+                        if (err) {
+                            log.error(`Error while compiling resource ${resource} server`)
+                            throw err
+                        }
+                    })
+                    .pipe(gulp.dest(`${DIST_FOLDER}/resources/${resource}/server`))
+                    .on('end', done)
+            })
+        },
+        async function moveClientAssets(done) {
+          gulp.src('./src/resources/**/client/assets')
+              .pipe(gulp.dest('./dist/resources/'))
+              .on('end', done)
         },
         async function buildConfigs(done) {
-            gulp.src('./resources/**/*.cfg')
+            gulp.src('./src/resources/**/*.cfg')
                 .pipe(gulp.dest('./dist/resources/'))
                 .on('end', done)
         }
