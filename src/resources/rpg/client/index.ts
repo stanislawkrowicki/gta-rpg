@@ -28,9 +28,21 @@ class Interactivities {
     }
 }
 
-
 alt.on('GAME:USER_SHOULD_LOGIN', () => {})
 alt.on('beforePlayerConnect', (connectionInfo) => {})
+
+alt.onServer('GAME:LOGIN_PANEL:SHOW', () => {
+    const loginView = new alt.WebView('resource/client/webviews/login/index.html')
+
+    loginView.focus()
+    alt.setCamFrozen(true)
+    alt.showCursor(true)
+
+    loginView.on('LOGIN:ATTEMPT', (login: string, password: string) => {
+        alt.emitServer('GAME:LOGIN_PANEL:LOGIN_ACTION', login, password)
+    })
+
+})
 
 function clearAmbientAudio() {
     game.startAudioScene("FBI_HEIST_H5_MUTE_AMBIENCE_SCENE")

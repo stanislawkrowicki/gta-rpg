@@ -3,6 +3,8 @@ import * as log from 'fancy-log'
 import https from 'https'
 import fs from 'fs'
 import {createGulpEsbuild} from 'gulp-esbuild'
+import esbuildSvelte from 'esbuild-svelte'
+import sveltePreprocess from "svelte-preprocess";
 
 import ServerConfig from './server.config.js'
 import ServerConfigUtils from './utils/ServerConfigUtils.js'
@@ -358,6 +360,9 @@ gulp.task('build:resources', (done) => {
                 buildResource(`./src/resources/${resource}/server/index.ts`, done)
             })
         },
+        async function buildWebviews(done) {
+            // TODO
+        },
         async function moveClientAssets(done) {
             gulp.src('./src/resources/**/client/assets')
                 .pipe(gulp.dest('./dist/resources/'))
@@ -416,6 +421,8 @@ const watchClientAssets = () => {
     })
 
     watcher.on('all', (_, path) => {
+        path = path.replace(/\\/g, '/')
+
         const resourceName = path.split('/resources/')[1].split('/')[0]
 
         log.info(`Resource ${resourceName} assets changed, distributing...`)
@@ -430,6 +437,62 @@ const watchClientAssets = () => {
     })
 }
 
+const watchWebviews = () => {
+    const watcher = gulp.watch('./src/resources/**/client/webviews/**/*.ts', { ignoreInitial: false })
+
+    watcher.on('error', (err) => {
+        log.error('Client web watcher threw an error.')
+        throw err
+    })
+
+    watcher.on('all', (_, path) => {
+        path = path.replace(/\\/g, '/')
+
+        const resourceName = path.split('/resources/')[1].split('/')[0]
+        const webviewName = path.split('/webviews/')[1].split('/')[0]
+
+        log.info(`Resource ${resourceName} web changed, running Svelte compiler...`)
+
+        const distWebviewPath = `${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/`
+        if (!fs.existsSync(distWebviewPath))
+            fs.mkdirSync(distWebviewPath, {recursive: true})
+
+        fs.writeFileSync(`${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/index.html`,
+            '<!DOCTYPE html>\n' +
+            '<html lang="en">\n' +
+            '<head>\n' +
+            '    <meta charset="UTF-8">\n' +
+            '    <script src="index.js" defer></script>\n' +
+            '    <link rel="stylesheet" href="index.css">\n' +
+            '</head>\n' +
+            '<body>\n' +
+            '</body>\n' +
+            '</html>')
+
+        gulp.src(path)
+            .pipe(gulpEsbuild({
+                entryPoints: [`./index.ts`],
+                bundle: true,
+                outdir: `./`,
+                mainFields: ["svelte", "browser", "module", "main"],
+                minify: false,
+                sourcemap: "inline",
+                splitting: true,
+                write: true,
+                format: `esm`,
+                plugins: [
+                    esbuildSvelte({
+                        preprocess: sveltePreprocess(),
+                    }),
+                ],
+            }))
+            .pipe(gulp.dest(`./${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/`))
+            .on('end', () => {
+                log.info(`Successfully compiled ${resourceName} webviews`)
+            })
+    })
+}
+
 const watchResourceConfig = () => {
     const watcher = gulp.watch('./src/resources/**/resource.cfg')
 
@@ -439,6 +502,7 @@ const watchResourceConfig = () => {
     })
 
     watcher.on('all', (_, path) => {
+        path = path.replace(/\\/g, '/')
         const resourceName = path.split('/resources/')[1].split('/')[0]
 
         log.info(`Resource ${resourceName} config changed, distributing...`)
@@ -491,11 +555,13 @@ gulp.task('watch:client', watchClientScripts)
 gulp.task('watch:server', watchServerScripts)
 gulp.task('watch:assets', watchClientAssets)
 gulp.task('watch:config', watchResourceConfig)
+gulp.task('watch:web', watchWebviews)
 gulp.task(
     'watch',
     gulp.parallel(
         'watch:client',
         'watch:server',
+        'watch:web',
         'watch:assets',
         'watch:config'
     )

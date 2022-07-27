@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "lib": [ "es5", "es6", "esnext" ],
+      "lib": [ "es5", "es6", "esnext", "dom" ],
       "module": "esnext",
       "moduleResolution": "node",
       "target": "esnext",
@@ -14,17 +14,18 @@
   
       "noImplicitAny": true,
       "sourceMap": false,
-  
+
       "typeRoots": [
         "../../node_modules/@altv"
       ]
-    },
 
+    },
+  "extends": "@tsconfig/svelte/tsconfig.json",
     "include": [
-      "./**/*.ts"
+      "./**/*.ts",
+      "../../node_modules/.pnpm/@altv+types-webview@1.0.3/node_modules/@altv/types-webview/index.d.ts"
     ],
-    
-    "exclude": [
+  "exclude": [
       "node_modules"
     ]
-  }
+}
