@@ -415,7 +415,7 @@ const watchClientAssets = () => {
         throw err
     })
 
-    watcher.on('all', (path) => {
+    watcher.on('all', (_, path) => {
         const resourceName = path.split('/resources/')[1].split('/')[0]
 
         log.info(`Resource ${resourceName} assets changed, distributing...`)
@@ -438,7 +438,7 @@ const watchResourceConfig = () => {
         throw err
     })
 
-    watcher.on('all', (path) => {
+    watcher.on('all', (_, path) => {
         const resourceName = path.split('/resources/')[1].split('/')[0]
 
         log.info(`Resource ${resourceName} config changed, distributing...`)
