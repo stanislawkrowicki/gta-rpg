@@ -19,7 +19,7 @@ export default {
     website: '<website>',
     language: 'en',
     description: "RPG Server",
-    debug: process.env['ENVIRONMENT'] === PRODUCTION_ENVIRONMENT,
+    debug: process.env['ENVIRONMENT'] !== PRODUCTION_ENVIRONMENT,
     modules: [
         'js-module',
         'js-bytecode-module'

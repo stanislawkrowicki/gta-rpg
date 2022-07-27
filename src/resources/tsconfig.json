@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "lib": [ "es5", "es6", "esnext" ],
+      "lib": [ "es5", "es6", "esnext", "dom" ],
       "module": "esnext",
       "moduleResolution": "node",
       "target": "esnext",
@@ -14,10 +14,11 @@
   
       "noImplicitAny": true,
       "sourceMap": false,
-  
+
       "typeRoots": [
         "../../node_modules/@altv"
-      ]
+      ],
+
     },
 
     "include": [
@@ -26,5 +27,5 @@
     
     "exclude": [
       "node_modules"
-    ]
-  }
+    ],
+}
