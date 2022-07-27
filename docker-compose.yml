@@ -17,5 +17,14 @@ services:
       depends_on:
         - rpg-mongo
 
+  rpg-redis:
+    build: docker/redis
+    restart: always
+    volumes:
+      - data_redis:/data/redis
+    ports:
+      - ${REDIS_PORT}:6379
+
 volumes:
   data_mongo:
+  data_redis:
