@@ -256,6 +256,32 @@ const downloadAll = async (cb) => {
     }
 }
 
+const buildResource = (path, done) => {
+    path = path.replace(/\\/g, '/')
+    const resourceName = path.split('/resources/')[1].split('/')[0]
+    const resourceType = path.split(`/${resourceName}/`)[1].split('/')[0]
+
+    log.info(`Resource ${resourceName} ${resourceType} changed, rebuilding...`)
+
+    gulp.src(path)
+        .pipe(gulpEsbuild({
+            outfile: 'index.js',
+            format: 'esm',
+            platform: 'node'
+        }))
+        .on('error', (err) => {
+            if (err) {
+                log.error(`Error while building resource ${resourceName} ${resourceType}`)
+                throw err
+            }
+        })
+        .pipe(gulp.dest(`${DIST_FOLDER}/resources/${resourceName}/${resourceType}/`))
+        .on('end', () => {
+            if (done) done()
+            else log.info(`Successfully built resource ${resourceName} ${resourceType}`)
+        })
+}
+
 gulp.task('build:resources', (done) => {
     gulp.series(
         async function buildClientScripts(done) {
@@ -264,20 +290,7 @@ gulp.task('build:resources', (done) => {
                 .map(dirent => dirent.name)
 
             directories.forEach((resource) => {
-                gulp.src(`./src/resources/${resource}/client/index.ts`)
-                    .pipe(gulpEsbuild({
-                        outfile: 'index.js',
-                        format: 'esm',
-                        platform: 'node'
-                    }))
-                    .on('error', (err) => {
-                        if (err) {
-                            log.error(`Error while compiling resource ${resource} client`)
-                            throw err
-                        }
-                    })
-                    .pipe(gulp.dest(`${DIST_FOLDER}/resources/${resource}/client`))
-                    .on('end', done)
+                buildResource(`./src/resources/${resource}/client/index.ts`, done)
             })
         },
         async function buildServerScripts(done) {
@@ -286,20 +299,7 @@ gulp.task('build:resources', (done) => {
                 .map(dirent => dirent.name)
 
             directories.forEach((resource) => {
-                gulp.src(`./src/resources/${resource}/server/index.ts`)
-                    .pipe(gulpEsbuild({
-                        outfile: 'index.js',
-                        format: 'esm',
-                        platform: 'node'
-                    }))
-                    .on('error', (err) => {
-                        if (err) {
-                            log.error(`Error while compiling resource ${resource} server`)
-                            throw err
-                        }
-                    })
-                    .pipe(gulp.dest(`${DIST_FOLDER}/resources/${resource}/server`))
-                    .on('end', done)
+                buildResource(`./src/resources/${resource}/server/index.ts`, done)
             })
         },
         async function moveClientAssets(done) {
@@ -315,7 +315,7 @@ gulp.task('build:resources', (done) => {
     )(done)
 })
 
-function build(done) {
+const build = (done) => {
     return gulp.series(
         'build:resources',
         function buildServerCfg(done) {
@@ -326,6 +326,70 @@ function build(done) {
             done()
         }
     )(done)
+}
+
+const watchClientScripts = () => {
+    const watcher = gulp.watch('./src/resources/**/client/*.ts')
+
+    watcher.on('error', (err) => {
+        log.error('Client file watcher threw an error.')
+        throw err
+    })
+
+    watcher.on('all', (_, path) => {
+        buildResource(path)
+    })
+}
+
+const watchServerScripts = () => {
+    const watcher = gulp.watch('./src/resources/**/server/*.ts')
+
+    watcher.on('error', (err) => {
+        log.error('Server file watcher threw an error.')
+        throw err
+    })
+
+    watcher.on('all', (_, path) => {
+      buildResource(path)
+    })
+}
+
+const watchClientAssets = () => {
+    const watcher = gulp.watch('./src/resources/**/client/assets/')
+
+    watcher.on('error', (err) => {
+        log.error('Client assets watcher threw an error.')
+        throw err
+    })
+
+    watcher.on('all', (path) => {
+        const resourceName = path.split('/resources/')[1].split('/')[0]
+
+        log.info(`Resource ${resourceName} assets changed, distributing...`)
+
+        gulp.src(`./src/resources/${resourceName}/client/assets/`)
+            .pipe(gulp.dest(`./dist/resources/${resourceName}/client/assets`))
+            .on('end', () => { log.info(`Successfully distributed changed ${resourceName} assets`) })
+    })
+}
+
+const watchResourceConfig = () => {
+    const watcher = gulp.watch('./src/resources/**/resource.cfg')
+
+    watcher.on('error', (err) => {
+        log.error('Resource config watcher threw an error.')
+        throw err
+    })
+
+    watcher.on('all', (path) => {
+        const resourceName = path.split('/resources/')[1].split('/')[0]
+
+        log.info(`Resource ${resourceName} config changed, distributing...`)
+
+        gulp.src(`./src/resources/${resourceName}/resource.cfg`)
+            .pipe(gulp.dest(`./dist/resources/${resourceName}/`))
+            .on('end', () => { log.info(`Successfully distributed ${resourceName} config`) })
+    })
 }
 
 gulp.task('download:binary:windows', downloadBinaryWindows)
@@ -361,4 +425,11 @@ gulp.task('download:linux', downloadAllLinux)
 gulp.task('download', downloadAll)
 
 gulp.task('build', build)
+
+gulp.task('watch:client', watchClientScripts)
+gulp.task('watch:server', watchServerScripts)
+gulp.task('watch:assets', watchClientAssets)
+gulp.task('watch:config', watchResourceConfig)
+gulp.task('watch', gulp.parallel('watch:client', 'watch:server', 'watch:assets', 'watch:config'))
+
 export default build
