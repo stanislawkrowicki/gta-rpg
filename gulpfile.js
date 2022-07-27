@@ -7,7 +7,7 @@ import {createGulpEsbuild} from 'gulp-esbuild'
 import ServerConfig from './server.config.js'
 import ServerConfigUtils from './utils/ServerConfigUtils.js'
 
-const gulpEsbuild = createGulpEsbuild({});
+const gulpEsbuild = createGulpEsbuild({})
 
 const DIST_FOLDER = 'dist'
 
@@ -114,7 +114,7 @@ const downloadModels = async (done) => {
     const urls = [
         'https://cdn.altv.mp/data/release/data/vehmodels.bin',
         'https://cdn.altv.mp/data/release/data/vehmods.bin',
-        'https://cdn.altv.mp/data/release/data/clothes.bin'
+        'https://cdn.altv.mp/data/release/data/clothes.bin',
     ]
 
     let existing = 0
@@ -152,12 +152,12 @@ const downloadJSModule = async (platform) => {
     const moduleMap = {
         win32: [
             'https://cdn.altv.mp/js-module/release/x64_win32/modules/js-module/libnode.dll',
-            'https://cdn.altv.mp/js-module/release/x64_win32/modules/js-module/js-module.dll'
+            'https://cdn.altv.mp/js-module/release/x64_win32/modules/js-module/js-module.dll',
         ],
         linux: [
             'https://cdn.altv.mp/js-module/release/x64_linux/modules/js-module/libnode.so.102',
-            'https://cdn.altv.mp/js-module/release/x64_linux/modules/js-module/libjs-module.so'
-        ]
+            'https://cdn.altv.mp/js-module/release/x64_linux/modules/js-module/libjs-module.so',
+        ],
     }
 
     if (!(platform in moduleMap)) {
@@ -184,15 +184,17 @@ const downloadJSModule = async (platform) => {
             }
 
             log.info(`Downloading ${fileName} for ${platform}`)
-            downloadToDist(url, '/modules/js-module/' + fileName).then(() => {
-                log.info(`Finished downloading ${fileName}`)
-                downloaded++
-                if (downloaded === urls.length) finish()
-            }).catch((err) => {
-                log.error('Error downloading platform file')
-                throw err
-                fail()
-            })
+            downloadToDist(url, '/modules/js-module/' + fileName)
+                .then(() => {
+                    log.info(`Finished downloading ${fileName}`)
+                    downloaded++
+                    if (downloaded === urls.length) finish()
+                })
+                .catch((err) => {
+                    log.error('Error downloading platform file')
+                    throw err
+                    fail()
+                })
         }
     })
 }
@@ -200,7 +202,7 @@ const downloadJSModule = async (platform) => {
 const downloadBytecodeModule = (platform) => {
     const moduleMap = {
         win32: 'https://cdn.altv.mp/js-bytecode-module/release/x64_win32/modules/js-bytecode-module.dll',
-        linux: 'https://cdn.altv.mp/js-bytecode-module/release/x64_linux/modules/libjs-bytecode-module.so'
+        linux: 'https://cdn.altv.mp/js-bytecode-module/release/x64_linux/modules/libjs-bytecode-module.so',
     }
 
     if (!(platform in moduleMap))
@@ -217,17 +219,23 @@ const downloadBytecodeModule = (platform) => {
 
     log.info(`Downloading ${fileName}`)
 
-    return downloadToDist(url, '/modules/' + fileName).then(() => {
-        log.info(`Finished downloading ${fileName}`)
-    }).catch((err) => {
-        log.error(`Error downloading ${fileName} for ${platform}`)
-        throw err
-    })
+    return downloadToDist(url, '/modules/' + fileName)
+        .then(() => {
+            log.info(`Finished downloading ${fileName}`)
+        })
+        .catch((err) => {
+            log.error(`Error downloading ${fileName} for ${platform}`)
+            throw err
+        })
 }
 
 const downloadAllWindows = async (cb) => {
     await new Promise((finish) => {
-        gulp.parallel('download:binary:windows', 'download:models', 'download:modules:windows')(() => {
+        gulp.parallel(
+            'download:binary:windows',
+            'download:models',
+            'download:modules:windows'
+        )(() => {
             cb()
             finish()
         })
@@ -236,7 +244,11 @@ const downloadAllWindows = async (cb) => {
 
 const downloadAllLinux = async (cb) => {
     await new Promise((finish) => {
-        gulp.parallel('download:binary:linux', 'download:models', 'download:modules:linux')(() => {
+        gulp.parallel(
+            'download:binary:linux',
+            'download:models',
+            'download:modules:linux'
+        )(() => {
             cb()
             finish()
         })
@@ -263,49 +275,93 @@ const buildResource = (path, done) => {
 
     log.info(`Resource ${resourceName} ${resourceType} changed, rebuilding...`)
 
+    let esbuildConfig = {}
+
+    switch (resourceType) {
+        case 'client':
+            esbuildConfig = {
+                outfile: 'index.js',
+                format: 'esm',
+                platform: 'node',
+                bundle: true,
+                external: [
+                    'alt-client',
+                    'natives'
+                ]
+            }
+            break
+        case 'server':
+            esbuildConfig = {
+                outfile: 'index.js',
+                format: 'esm',
+                platform: 'node',
+                bundle: true,
+                external: [
+                    'alt-server',
+                    'dotenv',
+                    'mongoose'
+                ]
+            }
+            break
+        default:
+            throw `Can not determine resource ${resourceName} type. Expected server/client, got ${resourceType}`
+    }
+
     gulp.src(path)
-        .pipe(gulpEsbuild({
-            outfile: 'index.js',
-            format: 'esm',
-            platform: 'node'
-        }))
+        .pipe(
+            gulpEsbuild(esbuildConfig)
+        )
         .on('error', (err) => {
             if (err) {
-                log.error(`Error while building resource ${resourceName} ${resourceType}`)
+                log.error(
+                    `Error while building resource ${resourceName} ${resourceType}`
+                )
                 throw err
             }
         })
-        .pipe(gulp.dest(`${DIST_FOLDER}/resources/${resourceName}/${resourceType}/`))
+        .pipe(
+            gulp.dest(
+                `${DIST_FOLDER}/resources/${resourceName}/${resourceType}/`
+            )
+        )
         .on('end', () => {
             if (done) done()
-            else log.info(`Successfully built resource ${resourceName} ${resourceType}`)
+            else
+                log.info(
+                    `Successfully built resource ${resourceName} ${resourceType}`
+                )
         })
 }
 
 gulp.task('build:resources', (done) => {
     gulp.series(
         async function buildClientScripts(done) {
-            const directories = fs.readdirSync('./src/resources/', { withFileTypes: true })
-                .filter(dirent => dirent.isDirectory())
-                .map(dirent => dirent.name)
+            const directories = fs
+                .readdirSync('./src/resources/', {withFileTypes: true})
+                .filter((dirent) => dirent.isDirectory())
+                .map((dirent) => dirent.name)
 
             directories.forEach((resource) => {
-                buildResource(`./src/resources/${resource}/client/index.ts`, done)
+                buildResource(
+                    `./src/resources/${resource}/client/index.ts`,
+                    done
+                )
             })
         },
         async function buildServerScripts(done) {
-            const directories = fs.readdirSync('./src/resources/', { withFileTypes: true })
-                .filter(dirent => dirent.isDirectory())
-                .map(dirent => dirent.name)
+            const directories = fs
+                .readdirSync('./src/resources/', {withFileTypes: true})
+                .filter((dirent) => dirent.isDirectory())
+                .map((dirent) => dirent.name)
 
             directories.forEach((resource) => {
                 buildResource(`./src/resources/${resource}/server/index.ts`, done)
             })
         },
         async function moveClientAssets(done) {
-          gulp.src('./src/resources/**/client/assets')
-              .pipe(gulp.dest('./dist/resources/'))
-              .on('end', done)
+            gulp.src('./src/resources/**/client/assets')
+                .pipe(gulp.dest('./dist/resources/'))
+                .on('end', done)
         },
         async function buildConfigs(done) {
             gulp.src('./src/resources/**/*.cfg')
@@ -316,16 +372,13 @@ gulp.task('build:resources', (done) => {
 })
 
 const build = (done) => {
-    return gulp.series(
-        'build:resources',
-        function buildServerCfg(done) {
-            let cfg = ServerConfigUtils.getAsCfg(ServerConfig)
+    return gulp.series('build:resources', function buildServerCfg(done) {
+        let cfg = ServerConfigUtils.getAsCfg(ServerConfig)
 
-            fs.writeFileSync('dist/server.cfg', cfg.toString());
+        fs.writeFileSync('dist/server.cfg', cfg.toString())
 
-            done()
-        }
-    )(done)
+        done()
+    })(done)
 }
 
 const watchClientScripts = () => {
@@ -350,7 +403,7 @@ const watchServerScripts = () => {
     })
 
     watcher.on('all', (_, path) => {
-      buildResource(path)
+        buildResource(path)
     })
 }
 
@@ -369,7 +422,11 @@ const watchClientAssets = () => {
 
         gulp.src(`./src/resources/${resourceName}/client/assets/`)
             .pipe(gulp.dest(`./dist/resources/${resourceName}/client/assets`))
-            .on('end', () => { log.info(`Successfully distributed changed ${resourceName} assets`) })
+            .on('end', () => {
+                log.info(
+                    `Successfully distributed changed ${resourceName} assets`
+                )
+            })
     })
 }
 
@@ -388,7 +445,9 @@ const watchResourceConfig = () => {
 
         gulp.src(`./src/resources/${resourceName}/resource.cfg`)
             .pipe(gulp.dest(`./dist/resources/${resourceName}/`))
-            .on('end', () => { log.info(`Successfully distributed ${resourceName} config`) })
+            .on('end', () => {
+                log.info(`Successfully distributed ${resourceName} config`)
+            })
     })
 }
 
@@ -396,7 +455,8 @@ gulp.task('download:binary:windows', downloadBinaryWindows)
 gulp.task('download:binary:linux', downloadBinaryLinux)
 gulp.task('download:binary', downloadBinary)
 gulp.task('download:models', downloadModels)
-gulp.task('download:modules:windows',
+gulp.task(
+    'download:modules:windows',
     gulp.series(
         async function downloadingJSModule() {
             return downloadJSModule('win32')
@@ -407,7 +467,8 @@ gulp.task('download:modules:windows',
     )
 )
 
-gulp.task('download:modules:linux',
+gulp.task(
+    'download:modules:linux',
     gulp.series(
         async (cb) => {
             await downloadJSModule('linux')
@@ -430,6 +491,14 @@ gulp.task('watch:client', watchClientScripts)
 gulp.task('watch:server', watchServerScripts)
 gulp.task('watch:assets', watchClientAssets)
 gulp.task('watch:config', watchResourceConfig)
-gulp.task('watch', gulp.parallel('watch:client', 'watch:server', 'watch:assets', 'watch:config'))
+gulp.task(
+    'watch',
+    gulp.parallel(
+        'watch:client',
+        'watch:server',
+        'watch:assets',
+        'watch:config'
+    )
+)
 
 export default build
