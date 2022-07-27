@@ -536,6 +536,16 @@ const watchResourceConfig = () => {
     })
 }
 
+const watch = () => {
+    gulp.series('build', gulp.parallel(
+        'watch:client',
+        'watch:server',
+        'watch:webview',
+        'watch:assets',
+        'watch:config'
+    ))()
+}
+
 gulp.task('download:binary:windows', downloadBinaryWindows)
 gulp.task('download:binary:linux', downloadBinaryLinux)
 gulp.task('download:binary', downloadBinary)
@@ -579,15 +589,6 @@ gulp.task('watch:config', watchResourceConfig)
 gulp.task('watch:webview:entry', watchWebviewsEntry)
 gulp.task('watch:webview:svelte', watchWebviewsSvelte)
 gulp.task('watch:webview', gulp.parallel('watch:webview:entry', 'watch:webview:svelte'))
-gulp.task(
-    'watch',
-    gulp.parallel(
-        'watch:client',
-        'watch:server',
-        'watch:webview',
-        'watch:assets',
-        'watch:config'
-    )
-)
+gulp.task('watch', watch)
 
-export default build
+export default watch
