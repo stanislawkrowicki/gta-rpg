@@ -11,7 +11,7 @@ async function getResourcesInFolder(path) {
 
 export default {
     name: "RPG Server",
-    host: '127.0.0.1',
+    host: process.env['SERVER_HOST'],
     port: 7788,
     players: 512,
     announce: false,
@@ -19,7 +19,7 @@ export default {
     website: '<website>',
     language: 'en',
     description: "RPG Server",
-    debug: process.env.ENVIRONMENT===PRODUCTION_ENVIRONMENT,
+    debug: process.env['ENVIRONMENT'] === PRODUCTION_ENVIRONMENT,
     modules: [
         'js-module',
         'js-bytecode-module'
