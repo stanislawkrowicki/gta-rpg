@@ -376,6 +376,51 @@ gulp.task('build:resources', (done) => {
     )(done)
 })
 
+const buildWebview = (path, done) => {
+    path = path.replace(/\\/g, '/')
+
+    const resourceName = path.split('/resources/')[1].split('/')[0]
+    const webviewName = path.split('/webviews/')[1].split('/')[0]
+
+    const distWebviewPath = `${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/`
+    if (!fs.existsSync(distWebviewPath))
+        fs.mkdirSync(distWebviewPath, {recursive: true})
+
+    fs.writeFileSync(`${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/index.html`,
+        '<!DOCTYPE html>\n' +
+        '<html lang="en">\n' +
+        '<head>\n' +
+        '    <meta charset="UTF-8">\n' +
+        '    <script src="index.js" defer></script>\n' +
+        '    <link rel="stylesheet" href="index.css">\n' +
+        '</head>\n' +
+        '<body>\n' +
+        '</body>\n' +
+        '</html>')
+
+    gulp.src(path)
+        .pipe(gulpEsbuild({
+            entryPoints: [`./index.ts`],
+            bundle: true,
+            outdir: `./`,
+            mainFields: ["svelte", "browser", "module", "main"],
+            minify: false,
+            sourcemap: "inline",
+            splitting: true,
+            write: true,
+            format: `esm`,
+            plugins: [
+                esbuildSvelte({
+                    preprocess: sveltePreprocess(),
+                }),
+            ],
+        }))
+        .pipe(gulp.dest(`./${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/`))
+        .on('end', () => {
+            if (done) done()
+        })
+}
+
 const build = (done) => {
     return gulp.series('build:resources', function buildServerCfg(done) {
         let cfg = ServerConfigUtils.getAsCfg(ServerConfig)
@@ -437,9 +482,7 @@ const watchClientAssets = () => {
     })
 }
 
-const watchWebviews = () => {
-    const watcher = gulp.watch('./src/resources/**/client/webviews/**/*.ts', { ignoreInitial: false })
-
+const watchWebviews = (watcher) => {
     watcher.on('error', (err) => {
         log.error('Client web watcher threw an error.')
         throw err
@@ -451,46 +494,20 @@ const watchWebviews = () => {
         const resourceName = path.split('/resources/')[1].split('/')[0]
         const webviewName = path.split('/webviews/')[1].split('/')[0]
 
-        log.info(`Resource ${resourceName} web changed, running Svelte compiler...`)
+        log.info(`Detected change in ${resourceName} webview ${webviewName}, running Svelte compiler...`)
 
-        const distWebviewPath = `${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/`
-        if (!fs.existsSync(distWebviewPath))
-            fs.mkdirSync(distWebviewPath, {recursive: true})
-
-        fs.writeFileSync(`${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/index.html`,
-            '<!DOCTYPE html>\n' +
-            '<html lang="en">\n' +
-            '<head>\n' +
-            '    <meta charset="UTF-8">\n' +
-            '    <script src="index.js" defer></script>\n' +
-            '    <link rel="stylesheet" href="index.css">\n' +
-            '</head>\n' +
-            '<body>\n' +
-            '</body>\n' +
-            '</html>')
-
-        gulp.src(path)
-            .pipe(gulpEsbuild({
-                entryPoints: [`./index.ts`],
-                bundle: true,
-                outdir: `./`,
-                mainFields: ["svelte", "browser", "module", "main"],
-                minify: false,
-                sourcemap: "inline",
-                splitting: true,
-                write: true,
-                format: `esm`,
-                plugins: [
-                    esbuildSvelte({
-                        preprocess: sveltePreprocess(),
-                    }),
-                ],
-            }))
-            .pipe(gulp.dest(`./${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/`))
-            .on('end', () => {
-                log.info(`Successfully compiled ${resourceName} webviews`)
-            })
+        buildWebview(path, () => {
+            log.info(`Successfully compiled ${resourceName} webview ${webviewName}.`)
+        })
     })
+}
+
+const watchWebviewsEntry = () => {
+    watchWebviews(gulp.watch('./src/resources/**/client/webviews/**/*.ts'))
+}
+
+const watchWebviewsSvelte = () => {
+    watchWebviews(gulp.watch('./src/resources/**/client/webviews/**/*.svelte'))
 }
 
 const watchResourceConfig = () => {
@@ -555,13 +572,15 @@ gulp.task('watch:client', watchClientScripts)
 gulp.task('watch:server', watchServerScripts)
 gulp.task('watch:assets', watchClientAssets)
 gulp.task('watch:config', watchResourceConfig)
-gulp.task('watch:web', watchWebviews)
+gulp.task('watch:webview:entry', watchWebviewsEntry)
+gulp.task('watch:webview:svelte', watchWebviewsSvelte)
+gulp.task('watch:webview', gulp.parallel('watch:webview:entry', 'watch:webview:svelte'))
 gulp.task(
     'watch',
     gulp.parallel(
         'watch:client',
         'watch:server',
-        'watch:web',
+        'watch:webview',
         'watch:assets',
         'watch:config'
     )
