@@ -20,7 +20,7 @@
       ]
 
     },
-
+  "extends": "@tsconfig/svelte/tsconfig.json",
     "include": [
       "./**/*.ts",
       "../../node_modules/.pnpm/@altv+types-webview@1.0.3/node_modules/@altv/types-webview/index.d.ts"
