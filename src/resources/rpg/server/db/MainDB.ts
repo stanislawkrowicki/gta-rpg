@@ -31,13 +31,13 @@ export default class MainDB {
 
     static connect() {
         return MainDB.connection = mongoose.createConnection(`mongodb://127.0.0.1:${process.env.MONGODB_PORT}/${MainDB.NAME}`)
-            .on('error', (error) => {
+            .on('error', (error: unknown) => {
                 alt.logError('~r~' + `Failed to connect to the database ${MainDB.NAME}`)
-            }).on('connected', (event) => {
+            }).on('connected', (event: unknown) => {
                 alt.log('~lg~' + `Successfully connected to the database ~lb~${MainDB.NAME}`)
 
                 MainDB.initializeCollections()
-            }).on('disconnect', (error) => {
+            }).on('disconnect', (error: unknown) => {
                 alt.logError('~lr~' + 'Disconnected from the database')
             })
     }
