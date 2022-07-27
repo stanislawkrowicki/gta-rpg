@@ -275,8 +275,6 @@ const buildResource = (path, done) => {
     const resourceName = path.split('/resources/')[1].split('/')[0]
     const resourceType = path.split(`/${resourceName}/`)[1].split('/')[0]
 
-    log.info(`Resource ${resourceName} ${resourceType} changed, rebuilding...`)
-
     let esbuildConfig = {}
 
     switch (resourceType) {
@@ -328,10 +326,6 @@ const buildResource = (path, done) => {
         )
         .on('end', () => {
             if (done) done()
-            else
-                log.info(
-                    `Successfully built resource ${resourceName} ${resourceType}`
-                )
         })
 }
 
@@ -440,7 +434,12 @@ const watchClientScripts = () => {
     })
 
     watcher.on('all', (_, path) => {
-        buildResource(path)
+        path = path.replace(/\\/g, '/')
+
+        const resourceName = path.split('/resources/')[1].split('/')[0]
+
+        log.info(`Resource ${resourceName} client changed, rebuilding...`)
+        buildResource(path, () => { log.info(`Successfully rebuilt ${resourceName} client`)})
     })
 }
 
@@ -453,7 +452,12 @@ const watchServerScripts = () => {
     })
 
     watcher.on('all', (_, path) => {
-        buildResource(path)
+        path = path.replace(/\\/g, '/')
+
+        const resourceName = path.split('/resources/')[1].split('/')[0]
+
+        log.info(`Resource ${resourceName} client changed, rebuilding...`)
+        buildResource(path, () => { log.info(`Successfully rebuilt ${resourceName} server`)})
     })
 }
 
