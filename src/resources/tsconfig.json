@@ -17,15 +17,15 @@
 
       "typeRoots": [
         "../../node_modules/@altv"
-      ],
+      ]
 
     },
 
     "include": [
-      "./**/*.ts"
+      "./**/*.ts",
+      "../../node_modules/.pnpm/@altv+types-webview@1.0.3/node_modules/@altv/types-webview/index.d.ts"
     ],
-    
-    "exclude": [
+  "exclude": [
       "node_modules"
-    ],
+    ]
 }
