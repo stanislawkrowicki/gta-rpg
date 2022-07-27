@@ -20,7 +20,13 @@ export const SessionSchema = new Schema({
         },
 
         loggedAccount: Types.ObjectId
-    }
+    },
+
+    movement: [{
+        x: Number,
+        y: Number,
+        z: Number
+    }]
 })
 
 export default SessionSchema

@@ -1,11 +1,13 @@
 import mongoose from 'mongoose'
 import alt from 'alt-server'
+
 import GroupSchema from '../../../../db/schemas/groups/Group.schema'
 import AccountSchema from '../../../../db/schemas/accounts/Account.schema'
 import SessionSchema from '../../../../db/schemas/sessions/Session.schema'
 import PropertySchema from '../../../../db/schemas/properties/Property.schema'
 import VehicleSchema from '../../../../db/schemas/vehicles/Vehicle.schema'
 import VehicleEquipmentSchema from '../../../../db/schemas/equipments/VehicleEquipment.schema'
+import NPCSchema from '../../../../db/schemas/npcs/NPC.schema'
 
 
 export default class MainDB {
@@ -52,5 +54,7 @@ export default class MainDB {
         MainDB.addCollection('Vehicle', VehicleSchema, 'vehicles')
 
         MainDB.addCollection('VehicleEquipment', VehicleEquipmentSchema, 'vehicleEquipments')
+
+        MainDB.addCollection('NPC', NPCSchema, 'npcs')
     }
 }
