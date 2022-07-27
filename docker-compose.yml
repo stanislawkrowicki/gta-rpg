@@ -1,6 +1,6 @@
 services:
   rpg-mongo:
-    build: mongo
+    build: docker/mongo
     restart: always
     volumes:
       - data_mongo:/data/mongo
@@ -8,7 +8,7 @@ services:
       - ${MONGODB_PORT}:27017
 
   rpg-mongo-express:
-      build: mongo-express
+      build: docker/mongo-express
       restart: always
       ports:
         - ${MONGO_EXPRESS_PORT}:8081

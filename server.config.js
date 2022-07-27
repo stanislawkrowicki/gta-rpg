@@ -1,7 +1,5 @@
 import fs from 'fs'
-import dotenv from 'dotenv'
-
-dotenv.config({path: './docker/.env'})
+import 'dotenv/config'
 
 const PRODUCTION_ENVIRONMENT = 'prod'
 

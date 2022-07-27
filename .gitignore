@@ -119,4 +119,4 @@ server.cfg
 cache/
 
 # Environment file
-docker/.env
+.env
