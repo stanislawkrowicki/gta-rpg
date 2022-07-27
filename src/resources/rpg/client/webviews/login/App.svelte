@@ -4,9 +4,13 @@
     let message = '';
 
     function checkCredentials() {
-        message = 'test'
         alt.emit('LOGIN:ATTEMPT', login, password)
     }
+
+    alt.on('LOGIN:ERROR', (error) => {
+        message = error
+    })
+
 </script>
 
 <div class="container">
@@ -16,12 +20,12 @@
 
     <div class="login">
         <label for="login">Login:</label>
-        <input type="text" id="login" name="login" value={login}>
+        <input type="text" id="login" name="login" bind:value={login}>
     </div>
 
     <div class="password">
         <label for="password">Hasło:</label>
-        <input type="text" id="password" name="password" value={password}>
+        <input type="text" id="password" name="password" bind:value={password}>
     </div>
 
     <button id="login-btn" on:click={checkCredentials}>Zaloguj</button>
