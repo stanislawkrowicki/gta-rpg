@@ -385,8 +385,8 @@ const buildWebview = (path, done) => {
         '<html lang="en">\n' +
         '<head>\n' +
         '    <meta charset="UTF-8">\n' +
-        '    <script src="index.js" defer></script>\n' +
-        '    <link rel="stylesheet" href="index.css">\n' +
+        '    <script src="App.js" defer></script>\n' +
+        '    <link rel="stylesheet" href="App.css">\n' +
         '</head>\n' +
         '<body>\n' +
         '</body>\n' +
@@ -416,8 +416,8 @@ const buildWebview = (path, done) => {
 }
 
 const build = (done) => {
-    return gulp.series('build:resources', function buildServerCfg(done) {
-        let cfg = ServerConfigUtils.getAsCfg(ServerConfig)
+    return gulp.series('build:resources', async function buildServerCfg(done) {
+        let cfg = ServerConfigUtils.getAsCfg(await ServerConfig())
 
         fs.writeFileSync('dist/server.cfg', cfg.toString())
 
@@ -426,7 +426,7 @@ const build = (done) => {
 }
 
 const watchClientScripts = () => {
-    const watcher = gulp.watch('./src/resources/**/client/*.ts')
+    const watcher = gulp.watch('./src/resources/**/client/**/*.ts')
 
     watcher.on('error', (err) => {
         log.error('Client file watcher threw an error.')
@@ -444,7 +444,7 @@ const watchClientScripts = () => {
 }
 
 const watchServerScripts = () => {
-    const watcher = gulp.watch('./src/resources/**/server/*.ts')
+    const watcher = gulp.watch('./src/resources/**/server/**/*.ts')
 
     watcher.on('error', (err) => {
         log.error('Server file watcher threw an error.')

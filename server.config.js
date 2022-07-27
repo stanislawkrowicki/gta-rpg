@@ -9,21 +9,23 @@ async function getResourcesInFolder(path) {
         .map(file => file.name)
 }
 
-export default {
-    name: "RPG Server",
-    host: process.env['SERVER_HOST'],
-    port: 7788,
-    players: 512,
-    announce: false,
-    gamemode: "RPG",
-    website: '<website>',
-    language: 'en',
-    description: "RPG Server",
-    debug: process.env['ENVIRONMENT'] !== PRODUCTION_ENVIRONMENT,
-    modules: [
-        'js-module',
-        'js-bytecode-module'
-    ],
-    resources: await getResourcesInFolder('./src/resources/')
+export default async () => {
+    return {
+        name: "RPG Server",
+        host: process.env['SERVER_HOST'],
+        port: 7788,
+        players: 512,
+        announce: false,
+        gamemode: "RPG",
+        website: '<website>',
+        language: 'en',
+        description: "RPG Server",
+        debug: process.env['ENVIRONMENT'] !== PRODUCTION_ENVIRONMENT,
+        modules: [
+            'js-module',
+            'js-bytecode-module'
+        ],
+        resources: await getResourcesInFolder('./src/resources/')
+    }
 }
 

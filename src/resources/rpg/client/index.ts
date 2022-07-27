@@ -1,5 +1,6 @@
 import * as alt from 'alt-client'
 import * as game from 'natives'
+import WebView2DPool from './pools/WebView2DPool'
 
 class Interactivity {
 
@@ -60,3 +61,5 @@ function clearAmbientAudio() {
 }
 
 clearAmbientAudio()
+
+// WebView2DPool.initialize()

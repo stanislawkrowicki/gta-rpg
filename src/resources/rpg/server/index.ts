@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import MainDB from './db/MainDB'
-import * as alt from 'alt-server'
+import alt from 'alt-server'
 
 dotenv.config({
     path: '../.env'
