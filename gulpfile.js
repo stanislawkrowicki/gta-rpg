@@ -4,7 +4,7 @@ import https from 'https'
 import fs from 'fs'
 import {createGulpEsbuild} from 'gulp-esbuild'
 import esbuildSvelte from 'esbuild-svelte'
-import sveltePreprocess from "svelte-preprocess";
+import sveltePreprocess from "svelte-preprocess"
 
 import ServerConfig from './server.config.js'
 import ServerConfigUtils from './utils/ServerConfigUtils.js'
@@ -100,15 +100,15 @@ const downloadBinaryWindows = (cb) => {
 
 const downloadBinary = async (cb) => {
     switch (process.platform) {
-        case 'win32':
-            await downloadBinaryWindows(cb)
-            break
-        case 'linux':
-            await downloadBinaryLinux(cb)
-            break
-        default:
-            log.error('There are no alt:V binaries for your OS.')
-            throw 'There are no alt:V binaries for your OS.'
+    case 'win32':
+        await downloadBinaryWindows(cb)
+        break
+    case 'linux':
+        await downloadBinaryLinux(cb)
+        break
+    default:
+        log.error('There are no alt:V binaries for your OS.')
+        throw 'There are no alt:V binaries for your OS.'
     }
 }
 
@@ -259,14 +259,14 @@ const downloadAllLinux = async (cb) => {
 
 const downloadAll = async (cb) => {
     switch (process.platform) {
-        case 'win32':
-            await downloadAllWindows(cb)
-            break
-        case 'linux':
-            await downloadAllLinux(cb)
-            break
-        default:
-            throw 'There are no required alt:V files for your OS.'
+    case 'win32':
+        await downloadAllWindows(cb)
+        break
+    case 'linux':
+        await downloadAllLinux(cb)
+        break
+    default:
+        throw 'There are no required alt:V files for your OS.'
     }
 }
 
@@ -278,33 +278,33 @@ const buildResource = (path, done) => {
     let esbuildConfig = {}
 
     switch (resourceType) {
-        case 'client':
-            esbuildConfig = {
-                outfile: 'index.js',
-                format: 'esm',
-                platform: 'node',
-                bundle: true,
-                external: [
-                    'alt-client',
-                    'natives'
-                ]
-            }
-            break
-        case 'server':
-            esbuildConfig = {
-                outfile: 'index.js',
-                format: 'esm',
-                platform: 'node',
-                bundle: true,
-                external: [
-                    'alt-server',
-                    'dotenv',
-                    'mongoose'
-                ]
-            }
-            break
-        default:
-            throw `Can not determine resource ${resourceName} type. Expected server/client, got ${resourceType}`
+    case 'client':
+        esbuildConfig = {
+            outfile: 'index.js',
+            format: 'esm',
+            platform: 'node',
+            bundle: true,
+            external: [
+                'alt-client',
+                'natives'
+            ]
+        }
+        break
+    case 'server':
+        esbuildConfig = {
+            outfile: 'index.js',
+            format: 'esm',
+            platform: 'node',
+            bundle: true,
+            external: [
+                'alt-server',
+                'dotenv',
+                'mongoose'
+            ]
+        }
+        break
+    default:
+        throw `Can not determine resource ${resourceName} type. Expected server/client, got ${resourceType}`
     }
 
     gulp.src(path)
@@ -361,7 +361,7 @@ gulp.task('build:resources', (done) => {
                 .map((dirent) => dirent.name)
 
             for (const resource of directories) {
-                const path = `./src/resources/${resource}/client/webviews/`
+                const path = `./src/resources/${resource}/client/webviews`
                 if (!fs.existsSync(path)) continue
 
                 const webViews = fs
@@ -394,6 +394,8 @@ const buildWebView = (path, done) => {
     const webviewName = path.split('/webviews/')[1].split('/')[0]
 
     const distWebviewPath = `${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/`
+
+    console.log(distWebviewPath)
     if (!fs.existsSync(distWebviewPath))
         fs.mkdirSync(distWebviewPath, {recursive: true})
 
@@ -402,8 +404,8 @@ const buildWebView = (path, done) => {
         '<html lang="en">\n' +
         '<head>\n' +
         '    <meta charset="UTF-8">\n' +
-        '    <script src="App.js" defer></script>\n' +
-        '    <link rel="stylesheet" href="App.css">\n' +
+        '    <script src="index.js" defer></script>\n' +
+        '    <link rel="stylesheet" href="index.css">\n' +
         '</head>\n' +
         '<body>\n' +
         '</body>\n' +
