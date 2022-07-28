@@ -194,8 +194,8 @@ const downloadJSModule = async (platform) => {
                 })
                 .catch((err) => {
                     log.error('Error downloading platform file')
-                    throw err
                     fail()
+                    throw err
                 })
         }
     })
