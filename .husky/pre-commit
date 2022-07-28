@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# https://github.com/okonet/lint-staged/issues/693#issuecomment-1079759224
-export FORCE_COLOR=1
+# https://github.com/okonet/lint-staged/issues/1164
+export FORCE_COLOR=0
 
 pnpm run lint
