@@ -6,6 +6,7 @@ class GameDefaultsInitiator {
     static initiate() {
         alt.everyTick(() => {
             game.setPauseMenuActive(false)
+            game.hudWeaponWheelIgnoreControlInput(true)
         })
 
         GameDefaultsInitiator.initiateAudio()
@@ -28,6 +29,30 @@ class GameDefaultsInitiator {
 }
 
 GameDefaultsInitiator.initiate()
+
+class GameScreenProvider {
+    static listeners: ((buffer: string) => void)[] = []
+
+    static initialize() {
+        alt.setInterval(() => {
+            if(GameScreenProvider.listeners.length > 0) {
+                alt.takeScreenshotGameOnly().then((buffer) => {
+                    for(let i = 0; i < GameScreenProvider.listeners.length; i++) {
+                        GameScreenProvider.listeners[i](buffer)
+                    }
+                })
+            }
+        }, 10000)
+    }
+    static addBufferListener(listener: (data: string) => void) {
+        GameScreenProvider.listeners.push(listener)
+    }
+    static removeBufferListener(listener: Function) {
+        for(let i = 0; GameScreenProvider.listeners.length; i++) {
+            GameScreenProvider.listeners.splice(i, 1)
+        }
+    }
+}
 
 class Interactivity {
 
@@ -60,18 +85,22 @@ alt.on('GAME:USER_SHOULD_LOGIN', () => {})
 alt.on('beforePlayerConnect', (connectionInfo) => {})
 
 
-alt.onServer('GAME:LOGIN_PANEL:SHOW', () => {
+alt.onServer('GAME:LOGIN_PANEL:SHOW', async () => {
+    const loginView = new alt.WebView('http://resource/client/webviews/login/index.html')
 
-    // const loginView = new alt.WebView('http://resource/client/webviews/login/index.html')
-    //
-    // loginView.focus()
-    // alt.setCamFrozen(true)
-    // alt.showCursor(true)
-    //
-    // loginView.on('LOGIN:ATTEMPT', (login: string, password: string) => {
-    //     alt.emitServer('GAME:LOGIN_PANEL:LOGIN_ACTION', login, password)
-    // })
+    alt.setCamFrozen(true)
+    alt.showCursor(true)
+    loginView.focus()
+
+    GameScreenProvider.addBufferListener((buffer) => {
+        loginView.emit('GAME:SCREEN', buffer)
+    })
+
+    loginView.on('LOGIN:ATTEMPT', (login: string, password: string) => {
+        alt.emitServer('GAME:LOGIN_PANEL:LOGIN_ACTION', login, password)
+    })
 
 })
 
+GameScreenProvider.initialize()
 // WebView2DPool.initialize()

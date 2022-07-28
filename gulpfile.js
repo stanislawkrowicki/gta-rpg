@@ -5,6 +5,7 @@ import fs from 'fs'
 import {createGulpEsbuild} from 'gulp-esbuild'
 import esbuildSvelte from 'esbuild-svelte'
 import sveltePreprocess from "svelte-preprocess"
+import esbuildPluginGLSL from 'esbuild-plugin-glsl'
 
 import ServerConfig from './server.config.js'
 import ServerConfigUtils from './utils/ServerConfigUtils.js'
@@ -417,11 +418,12 @@ const buildWebView = (path, done) => {
             outdir: `./`,
             mainFields: ["svelte", "browser", "module", "main"],
             minify: false,
-            sourcemap: "inline",
+            sourcemap: false,
             splitting: true,
             write: true,
             format: `esm`,
             plugins: [
+                esbuildPluginGLSL(),
                 esbuildSvelte({
                     preprocess: sveltePreprocess(),
                 }),
