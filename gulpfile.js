@@ -376,12 +376,12 @@ gulp.task('build:resources', (done) => {
         },
         async function moveClientAssets(done) {
             gulp.src('./src/resources/**/client/assets')
-                .pipe(gulp.dest('./dist/resources/'))
+                .pipe(gulp.dest(`./${DIST_FOLDER}/resources/`))
                 .on('end', done)
         },
         async function buildConfigs(done) {
             gulp.src('./src/resources/**/*.cfg')
-                .pipe(gulp.dest('./dist/resources/'))
+                .pipe(gulp.dest(`./${DIST_FOLDER}/resources/`))
                 .on('end', done)
         }
     )(done)
@@ -500,7 +500,7 @@ const watchClientAssets = () => {
         log.info(`Resource ${resourceName} assets changed, distributing...`)
 
         gulp.src(`./src/resources/${resourceName}/client/assets/`)
-            .pipe(gulp.dest(`./dist/resources/${resourceName}/client/assets`))
+            .pipe(gulp.dest(`./${DIST_FOLDER}/resources/${resourceName}/client/assets`))
             .on('end', () => {
                 log.info(
                     `Successfully distributed changed ${resourceName} assets`
@@ -552,7 +552,7 @@ const watchResourceConfig = () => {
         log.info(`Resource ${resourceName} config changed, distributing...`)
 
         gulp.src(`./src/resources/${resourceName}/resource.cfg`)
-            .pipe(gulp.dest(`./dist/resources/${resourceName}/`))
+            .pipe(gulp.dest(`./${DIST_FOLDER}/resources/${resourceName}/`))
             .on('end', () => {
                 log.info(`Successfully distributed ${resourceName} config`)
             })
