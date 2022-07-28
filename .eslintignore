@@ -1,0 +1,6 @@
+dist/
+data/
+cache/
+modules/
+node_modules/
+
