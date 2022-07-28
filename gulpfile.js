@@ -414,11 +414,10 @@ const buildWebView = (path, done) => {
         .pipe(gulpEsbuild({
             entryPoints: [`./index.ts`],
             bundle: true,
-            outdir: `./`,
+            outfile: 'index.js',
             mainFields: ["svelte", "browser", "module", "main"],
             minify: false,
             sourcemap: "inline",
-            splitting: true,
             write: true,
             format: `esm`,
             plugins: [
