@@ -462,7 +462,9 @@ const watchClientScripts = () => {
         const resourceName = path.split('/resources/')[1].split('/')[0]
 
         log.info(`Resource ${resourceName} client changed, rebuilding...`)
-        buildResource(path, () => { log.info(`Successfully rebuilt ${resourceName} client`)})
+        buildResource(path, () => {
+            log.info(`Successfully rebuilt ${resourceName} client`)
+        })
     })
 }
 
@@ -480,7 +482,9 @@ const watchServerScripts = () => {
         const resourceName = path.split('/resources/')[1].split('/')[0]
 
         log.info(`Resource ${resourceName} client changed, rebuilding...`)
-        buildResource(path, () => { log.info(`Successfully rebuilt ${resourceName} server`)})
+        buildResource(path, () => {
+            log.info(`Successfully rebuilt ${resourceName} server`)
+        })
     })
 }
 
