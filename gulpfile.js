@@ -354,8 +354,25 @@ gulp.task('build:resources', (done) => {
                 buildResource(`./src/resources/${resource}/server/index.ts`, done)
             })
         },
-        async function buildWebviews(done) {
-            // TODO
+        async function buildWebViews() {
+            const directories = fs
+                .readdirSync('./src/resources/', {withFileTypes: true})
+                .filter((dirent) => dirent.isDirectory())
+                .map((dirent) => dirent.name)
+
+            for (const resource of directories) {
+                const path = `./src/resources/${resource}/client/webviews/`
+                if (!fs.existsSync(path)) continue
+
+                const webViews = fs
+                    .readdirSync(path, {withFileTypes: true})
+                    .filter((dirent) => dirent.isDirectory())
+                    .map((dirent) => dirent.name)
+
+                for (const webView of webViews) {
+                    await buildWebViewAsync(`${path}/${webView}/index.ts`)
+                }
+            }
         },
         async function moveClientAssets(done) {
             gulp.src('./src/resources/**/client/assets')
@@ -370,7 +387,7 @@ gulp.task('build:resources', (done) => {
     )(done)
 })
 
-const buildWebview = (path, done) => {
+const buildWebView = (path, done) => {
     path = path.replace(/\\/g, '/')
 
     const resourceName = path.split('/resources/')[1].split('/')[0]
@@ -413,6 +430,12 @@ const buildWebview = (path, done) => {
         .on('end', () => {
             if (done) done()
         })
+}
+
+const buildWebViewAsync = async (path) => {
+    return new Promise((resolve) => {
+        buildWebView(path, resolve)
+    })
 }
 
 const build = (done) => {
@@ -486,7 +509,7 @@ const watchClientAssets = () => {
     })
 }
 
-const watchWebviews = (watcher) => {
+const watchWebViews = (watcher) => {
     watcher.on('error', (err) => {
         log.error('Client web watcher threw an error.')
         throw err
@@ -500,18 +523,18 @@ const watchWebviews = (watcher) => {
 
         log.info(`Detected change in ${resourceName} webview ${webviewName}, running Svelte compiler...`)
 
-        buildWebview(path, () => {
+        buildWebView(path, () => {
             log.info(`Successfully compiled ${resourceName} webview ${webviewName}.`)
         })
     })
 }
 
-const watchWebviewsEntry = () => {
-    watchWebviews(gulp.watch('./src/resources/**/client/webviews/**/*.ts'))
+const watchWebViewsEntry = () => {
+    watchWebViews(gulp.watch('./src/resources/**/client/webviews/**/*.ts'))
 }
 
-const watchWebviewsSvelte = () => {
-    watchWebviews(gulp.watch('./src/resources/**/client/webviews/**/*.svelte'))
+const watchWebViewsSvelte = () => {
+    watchWebViews(gulp.watch('./src/resources/**/client/webviews/**/*.svelte'))
 }
 
 const watchResourceConfig = () => {
@@ -586,8 +609,8 @@ gulp.task('watch:client', watchClientScripts)
 gulp.task('watch:server', watchServerScripts)
 gulp.task('watch:assets', watchClientAssets)
 gulp.task('watch:config', watchResourceConfig)
-gulp.task('watch:webview:entry', watchWebviewsEntry)
-gulp.task('watch:webview:svelte', watchWebviewsSvelte)
+gulp.task('watch:webview:entry', watchWebViewsEntry)
+gulp.task('watch:webview:svelte', watchWebViewsSvelte)
 gulp.task('watch:webview', gulp.parallel('watch:webview:entry', 'watch:webview:svelte'))
 gulp.task('watch', watch)
 
