@@ -395,7 +395,6 @@ const buildWebView = (path, done) => {
 
     const distWebviewPath = `${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/`
 
-    console.log(distWebviewPath)
     if (!fs.existsSync(distWebviewPath))
         fs.mkdirSync(distWebviewPath, {recursive: true})
 
