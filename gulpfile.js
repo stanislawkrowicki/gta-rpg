@@ -528,6 +528,12 @@ const watchWebViews = (watcher) => {
 
         log.info(`Detected change in ${resourceName} webview ${webviewName}, running Svelte compiler...`)
 
+        if (path.endsWith('.svelte')) {
+            let split = path.split('/')
+            split[split.length - 1] = 'index.ts'
+            path = split.join('/')
+        }
+
         buildWebView(path, () => {
             log.info(`Successfully compiled ${resourceName} webview ${webviewName}.`)
         })
