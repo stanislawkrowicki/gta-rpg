@@ -1,6 +1,33 @@
 import * as alt from 'alt-client'
-import * as game from 'natives'
+import game from 'natives'
 import WebView2DPool from './pools/WebView2DPool'
+
+class GameDefaultsInitiator {
+    static initiate() {
+        alt.everyTick(() => {
+            game.setPauseMenuActive(false)
+        })
+
+        GameDefaultsInitiator.initiateAudio()
+    }
+
+    static initiateAudio() {
+        game.startAudioScene("FBI_HEIST_H5_MUTE_AMBIENCE_SCENE")
+        game.cancelCurrentPoliceReport()
+        game.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_GENERAL", true)
+        game.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_WARNING", true)
+        game.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_ALARM", true)
+        // @ts-ignore
+        game.setAmbientZoneState(0, 0, 0)
+        game.clearAmbientZoneState("AZ_DISTANT_SASQUATCH", false)
+        game.setAudioFlag("LoadMPData", true)
+        game.setAudioFlag("DisableFlightMusic", true)
+        game.setWind(0)
+        game.setWeatherTypeNow("CLEAR")
+    }
+}
+
+GameDefaultsInitiator.initiate()
 
 class Interactivity {
 
@@ -15,16 +42,16 @@ class Interactivities {
             const interactivitiesToRemove = []
 
             NEW_INTERACTIVITIES_LOOP:
-            for(let i = 0; i < interactivities.list.length; ++i) {
-                const newInteractivity = interactivities[i]
+                for(let i = 0; i < interactivities.list.length; ++i) {
+                    const newInteractivity = interactivities[i]
 
-                LOCAL_INTERACTIVITIES_LOOP:
-                for(let j = 0; j < Interactivities.list.length; ++j) {
-                    const localInteractivity = Interactivities.list[j]
+                    LOCAL_INTERACTIVITIES_LOOP:
+                        for(let j = 0; j < Interactivities.list.length; ++j) {
+                            const localInteractivity = Interactivities.list[j]
 
 
+                        }
                 }
-            }
         })
     }
 }
@@ -32,34 +59,19 @@ class Interactivities {
 alt.on('GAME:USER_SHOULD_LOGIN', () => {})
 alt.on('beforePlayerConnect', (connectionInfo) => {})
 
+
 alt.onServer('GAME:LOGIN_PANEL:SHOW', () => {
-    const loginView = new alt.WebView('resource/client/webviews/login/index.html')
 
-    loginView.focus()
-    alt.setCamFrozen(true)
-    alt.showCursor(true)
-
-    loginView.on('LOGIN:ATTEMPT', (login: string, password: string) => {
-        alt.emitServer('GAME:LOGIN_PANEL:LOGIN_ACTION', login, password)
-    })
+    // const loginView = new alt.WebView('http://resource/client/webviews/login/index.html')
+    //
+    // loginView.focus()
+    // alt.setCamFrozen(true)
+    // alt.showCursor(true)
+    //
+    // loginView.on('LOGIN:ATTEMPT', (login: string, password: string) => {
+    //     alt.emitServer('GAME:LOGIN_PANEL:LOGIN_ACTION', login, password)
+    // })
 
 })
-
-function clearAmbientAudio() {
-    game.startAudioScene("FBI_HEIST_H5_MUTE_AMBIENCE_SCENE")
-    game.cancelCurrentPoliceReport()
-    game.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_GENERAL", true)
-    game.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_WARNING", true)
-    game.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_ALARM", true)
-    // @ts-ignore
-    game.setAmbientZoneState(0, 0, 0)
-    game.clearAmbientZoneState("AZ_DISTANT_SASQUATCH", false)
-    game.setAudioFlag("LoadMPData", true)
-    game.setAudioFlag("DisableFlightMusic", true)
-    game.setWind(0)
-    game.setWeatherTypeNow("CLEAR")
-}
-
-clearAmbientAudio()
 
 // WebView2DPool.initialize()
