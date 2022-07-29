@@ -1,0 +1,21 @@
+<script>
+    const lastMovePosition = { x: 0, y: 0 }
+
+    document.addEventListener('mousedown', (event) => {
+        alt.emit('MOUSE:DOWN', event.x, event.y, event.button)
+    })
+    document.addEventListener('mouseup', (event) => {
+        alt.emit('MOUSE:UP', event.x, event.y, event.button)
+    })
+    document.addEventListener('mousemove', (event) => {
+        if(event.x !== lastMovePosition.x || event.y !== lastMovePosition.y) {
+            alt.emit('MOUSE:MOVE', event.x, event.y)
+        }
+
+        lastMovePosition.x = event.x
+        lastMovePosition.y = event.y
+    })
+    document.addEventListener('wheel', (event) => {
+        alt.emit('MOUSE:WHEEL', event.deltaX, event.deltaY)
+    })
+</script>

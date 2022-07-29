@@ -5,23 +5,53 @@ export enum MouseMode {
     SCREEN_POINTING
 }
 
-export type MouseListenerCallback = (x: number, y: number, button: number) => void
+export type MouseDownListenerCallback = (x: number, y: number, button: number) => void
+export type MouseUpListenerCallback = (x: number, y: number, button: number) => void
+
+export type MouseMoveListenerCallback = (x: number, y: number) => void
+
+export type MouseWheelListenerCallback = (deltaX: number, deltaY: number) => void
 
 export default class Mouse {
-    static LISTENING_INTERVAL = 15
-
     static eventProvider: WebView
 
     static mode: MouseMode = MouseMode.CAMERA_CONTROL
 
-    static listeners: MouseListenerCallback[] = []
+    static mouseDownListeners: MouseDownListenerCallback[] = []
+    static mouseUpListeners: MouseUpListenerCallback[] = []
+
+    static mouseMoveListeners: MouseMoveListenerCallback[] = []
+
+    static mouseWheelListeners: MouseWheelListenerCallback[] = []
 
     static initialize() {
-        Mouse.eventProvider = new WebView('')
+        Mouse.eventProvider = new WebView('resource/client/webviews/MouseProvider.html')
 
-        alt.setInterval(() => {
-            // TODO: Receive mouse event from WebView
-        }, Mouse.LISTENING_INTERVAL)
+        Mouse.eventProvider.focus()
+
+        Mouse.eventProvider.on('MOUSE:DOWN', (x, y, button) => {
+            for(let i = 0; i < Mouse.mouseDownListeners.length; i++) {
+                Mouse.mouseDownListeners[i](x, y, button)
+            }
+        })
+
+        Mouse.eventProvider.on('MOUSE:UP', (x, y, button) => {
+            for(let i = 0; i < Mouse.mouseUpListeners.length; i++) {
+                Mouse.mouseUpListeners[i](x, y, button)
+            }
+        })
+
+        Mouse.eventProvider.on('MOUSE:MOVE', (x, y) => {
+            for(let i = 0; i < Mouse.mouseMoveListeners.length; i++) {
+                Mouse.mouseMoveListeners[i](x, y)
+            }
+        })
+
+        Mouse.eventProvider.on('MOUSE:WHEEL', (deltaX, deltaY) => {
+            for(let i = 0; i < Mouse.mouseMoveListeners.length; i++) {
+                Mouse.mouseWheelListeners[i](deltaX, deltaY)
+            }
+        })
     }
     static setMode(mode: MouseMode) {
         if(mode === MouseMode.CAMERA_CONTROL) {
@@ -35,12 +65,39 @@ export default class Mouse {
         Mouse.mode = mode
     }
 
-    static addListener(listener: MouseListenerCallback) {
-        Mouse.listeners.push(listener)
+    static addMouseDownListener(listener: MouseDownListenerCallback) {
+        Mouse.mouseDownListeners.push(listener)
     }
-    static removeListener(listener: MouseListenerCallback) {
-        for (let i = 0; Mouse.listeners.length; i++) {
-            Mouse.listeners.splice(i, 1)
+    static removeMouseDownListener(listener: MouseDownListenerCallback) {
+        for (let i = 0; Mouse.mouseDownListeners.length; i++) {
+            Mouse.mouseDownListeners.splice(i, 1)
+        }
+    }
+
+    static addMouseUpListener(listener: MouseUpListenerCallback) {
+        Mouse.mouseUpListeners.push(listener)
+    }
+    static removeMouseUpListener(listener: MouseUpListenerCallback) {
+        for (let i = 0; Mouse.mouseUpListeners.length; i++) {
+            Mouse.mouseUpListeners.splice(i, 1)
+        }
+    }
+
+    static addMouseMoveListener(listener: MouseMoveListenerCallback) {
+        Mouse.mouseMoveListeners.push(listener)
+    }
+    static removeMouseMoveListener(listener: MouseMoveListenerCallback) {
+        for (let i = 0; Mouse.mouseMoveListeners.length; i++) {
+            Mouse.mouseMoveListeners.splice(i, 1)
+        }
+    }
+
+    static addMouseWheelListener(listener: MouseWheelListenerCallback) {
+        Mouse.mouseWheelListeners.push(listener)
+    }
+    static removeMouseWheelListener(listener: MouseWheelListenerCallback) {
+        for (let i = 0; Mouse.mouseWheelListeners.length; i++) {
+            Mouse.mouseWheelListeners.splice(i, 1)
         }
     }
 }

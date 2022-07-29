@@ -1,6 +1,8 @@
 import * as alt from 'alt-client'
 import game from 'natives'
+import Mouse, { MouseMode } from './input/Mouse'
 import WebView2DPool from './pools/WebView2DPool'
+import MapEditor from './MapEditor'
 
 class GameDefaultsInitiator {
     static initiate() {
@@ -104,5 +106,16 @@ alt.onServer('GAME:LOGIN_PANEL:SHOW', async () => {
 
 })
 
-GameScreenProvider.initialize()
+// GameScreenProvider.initialize()
+Mouse.initialize()
+
+alt.setTimeout(() => {
+    Mouse.addMouseMoveListener((x, y) => {
+        alt.log(x, y)
+    })
+
+    MapEditor.initialize()
+
+    Mouse.setMode(MouseMode.SCREEN_POINTING)
+}, 100)
 // WebView2DPool.initialize()
