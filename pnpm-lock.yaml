@@ -22,6 +22,7 @@ specifiers:
   husky: ^8.0.1
   lint-staged: ^12.0.3
   mongoose: ^6.4.7
+  node-watch: ^0.7.3
   sass: ^1.54.0
   svelte: 3.39.0
   svelte-check: ^2.8.0
@@ -35,6 +36,7 @@ dependencies:
   fancy-log: 2.0.0
   gulp-esbuild: 0.10.4
   mongoose: 6.4.7
+  node-watch: 0.7.3
   svelte: 3.39.0
 
 devDependencies:
@@ -2659,6 +2661,11 @@ packages:
   /next-tick/1.1.0:
     resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
     dev: true
+
+  /node-watch/0.7.3:
+    resolution: {integrity: sha512-3l4E8uMPY1HdMMryPRUAl+oIHtXtyiTlIiESNSVSNxcPfzAFzeTbXFQkZfAwBbo0B1qMSG8nUABx+Gd+YrbKrQ==}
+    engines: {node: '>=6'}
+    dev: false
 
   /normalize-package-data/2.5.0:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}

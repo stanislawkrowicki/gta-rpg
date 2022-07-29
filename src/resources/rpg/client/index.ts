@@ -30,8 +30,10 @@ class GameDefaultsInitiator {
 
 GameDefaultsInitiator.initiate()
 
+type GameScreenProviderCallback = (buffer: string) => void
+
 class GameScreenProvider {
-    static listeners: ((buffer: string) => void)[] = []
+    static listeners: GameScreenProviderCallback[] = []
 
     static initialize() {
         alt.setInterval(() => {
@@ -44,10 +46,10 @@ class GameScreenProvider {
             }
         }, 10000)
     }
-    static addBufferListener(listener: (data: string) => void) {
+    static addBufferListener(listener: GameScreenProviderCallback) {
         GameScreenProvider.listeners.push(listener)
     }
-    static removeBufferListener(listener: Function) {
+    static removeBufferListener(listener: GameScreenProviderCallback) {
         for(let i = 0; GameScreenProvider.listeners.length; i++) {
             GameScreenProvider.listeners.splice(i, 1)
         }
@@ -67,16 +69,16 @@ class Interactivities {
             const interactivitiesToRemove = []
 
             NEW_INTERACTIVITIES_LOOP:
-                for(let i = 0; i < interactivities.list.length; ++i) {
-                    const newInteractivity = interactivities[i]
+            for(let i = 0; i < interactivities.list.length; ++i) {
+                const newInteractivity = interactivities[i]
 
-                    LOCAL_INTERACTIVITIES_LOOP:
-                        for(let j = 0; j < Interactivities.list.length; ++j) {
-                            const localInteractivity = Interactivities.list[j]
+                LOCAL_INTERACTIVITIES_LOOP:
+                for(let j = 0; j < Interactivities.list.length; ++j) {
+                    const localInteractivity = Interactivities.list[j]
 
 
-                        }
                 }
+            }
         })
     }
 }

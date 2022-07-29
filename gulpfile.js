@@ -300,7 +300,8 @@ const buildResource = (path, done) => {
             external: [
                 'alt-server',
                 'dotenv',
-                'mongoose'
+                'mongoose',
+                'node-watch'
             ]
         }
         break
