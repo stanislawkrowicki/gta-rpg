@@ -1,13 +1,13 @@
 import mongoose from 'mongoose'
 import alt from 'alt-server'
 
-import GroupSchema from '../../../../db/schemas/groups/Group.schema'
-import AccountSchema from '../../../../db/schemas/accounts/Account.schema'
-import SessionSchema from '../../../../db/schemas/sessions/Session.schema'
-import PropertySchema from '../../../../db/schemas/properties/Property.schema'
-import VehicleSchema from '../../../../db/schemas/vehicles/Vehicle.schema'
-import VehicleEquipmentSchema from '../../../../db/schemas/equipments/VehicleEquipment.schema'
-import NPCSchema from '../../../../db/schemas/npcs/NPC.schema'
+import GroupSchema from '../../../../db/MainDB/schemas/groups/Group.schema'
+import AccountSchema from '../../../../db/MainDB/schemas/accounts/Account.schema'
+import SessionSchema from '../../../../db/MainDB/schemas/sessions/Session.schema'
+import PropertySchema from '../../../../db/MainDB/schemas/properties/Property.schema'
+import VehicleSchema from '../../../../db/MainDB/schemas/vehicles/Vehicle.schema'
+import VehicleEquipmentSchema from '../../../../db/MainDB/schemas/equipments/VehicleEquipment.schema'
+import NPCSchema from '../../../../db/MainDB/schemas/npcs/NPC.schema'
 
 
 export default class MainDB {

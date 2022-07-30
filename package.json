@@ -43,6 +43,7 @@
     "gulp-esbuild": "^0.10.4",
     "mongoose": "^6.4.7",
     "node-watch": "^0.7.3",
+    "redis-om": "^0.3.6",
     "svelte": "3.39.0"
   },
   "lint-staged": {

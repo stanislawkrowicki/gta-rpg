@@ -62,6 +62,12 @@ export default class Mouse {
             alt.setCamFrozen(true)
         }
 
+        const resolution = alt.getScreenResolution()
+        alt.setCursorPos({
+            x: resolution.x / 2,
+            y: resolution.y / 2
+        })
+
         Mouse.mode = mode
     }
 

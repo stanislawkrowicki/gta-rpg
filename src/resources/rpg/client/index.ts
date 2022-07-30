@@ -1,8 +1,11 @@
-import * as alt from 'alt-client'
 import game from 'natives'
 import Mouse, { MouseMode } from './input/Mouse'
-import WebView2DPool from './pools/WebView2DPool'
 import MapEditor from './MapEditor'
+
+import alt from 'alt-client'
+import type { Player } from 'alt-client'
+
+const LocalPlayer: Player = null
 
 class GameDefaultsInitiator {
     static initiate() {
@@ -88,9 +91,12 @@ class Interactivities {
 alt.on('GAME:USER_SHOULD_LOGIN', () => {})
 alt.on('beforePlayerConnect', (connectionInfo) => {})
 
+alt.onServer('GAME:SPAWN', () => {
+    game.setPedDefaultComponentVariation(alt.Player.local.scriptID)
+})
 
 alt.onServer('GAME:LOGIN_PANEL:SHOW', async () => {
-    const loginView = new alt.WebView('http://resource/client/webviews/login/index.html')
+    const loginView = new alt.WebView('resource/client/webviews/login/index.html')
 
     alt.setCamFrozen(true)
     alt.showCursor(true)
@@ -109,13 +115,17 @@ alt.onServer('GAME:LOGIN_PANEL:SHOW', async () => {
 // GameScreenProvider.initialize()
 Mouse.initialize()
 
+alt.on('keydown', (key) => {
+    // if(key === 113) {
+    //     if(Mouse.mode === MouseMode.CAMERA_CONTROL) {
+    //         Mouse.setMode(MouseMode.SCREEN_POINTING)
+    //     } else {
+    //         Mouse.setMode(MouseMode.CAMERA_CONTROL)
+    //     }
+    // }
+})
+
 alt.setTimeout(() => {
-    Mouse.addMouseMoveListener((x, y) => {
-        alt.log(x, y)
-    })
-
-    MapEditor.initialize()
-
-    Mouse.setMode(MouseMode.SCREEN_POINTING)
+    // MapEditor.initialize()
 }, 100)
 // WebView2DPool.initialize()
