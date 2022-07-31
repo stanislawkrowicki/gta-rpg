@@ -287,6 +287,7 @@ const buildResource = (path, done) => {
             bundle: true,
             external: [
                 'alt-client',
+                'alt-shared',
                 'natives'
             ]
         }
@@ -299,6 +300,7 @@ const buildResource = (path, done) => {
             bundle: true,
             external: [
                 'alt-server',
+                'alt-shared',
                 'dotenv',
                 'mongoose',
                 'node-watch'

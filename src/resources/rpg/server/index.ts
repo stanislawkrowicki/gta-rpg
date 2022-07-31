@@ -49,15 +49,15 @@ class HubCamera {
 alt.on('playerConnect', (player) => {
     // alt.emitClient(player, "GAME:LOGIN_PANEL:SHOW")
 
-    player.spawn(spawn.x, spawn.y, spawn.z, 0)
-
-    alt.emitClient(player,'GAME:SPAWN')
-
-    try {
-        const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
-    } catch (e) {
-        alt.log(e)
-    }
+    // player.spawn(spawn.x, spawn.y, spawn.z, 0)
+    //
+    // alt.emitClient(player,'GAME:SPAWN')
+    //
+    // try {
+    //     const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
+    // } catch (e) {
+    //     alt.log(e)
+    // }
 })
 
 

@@ -4,6 +4,8 @@ import MapEditor from './MapEditor'
 
 import alt from 'alt-client'
 import type { Player } from 'alt-client'
+import Camera from './Camera'
+import View from './View'
 
 const LocalPlayer: Player = null
 
@@ -126,6 +128,11 @@ alt.on('keydown', (key) => {
 })
 
 alt.setTimeout(() => {
+    const camera = new Camera()
+
+    camera.setPosition(100, 1000, 1000)
+
+    View.setCamera(camera)
     // MapEditor.initialize()
 }, 100)
 // WebView2DPool.initialize()
