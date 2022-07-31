@@ -303,7 +303,8 @@ const buildResource = (path, done) => {
                 'alt-shared',
                 'dotenv',
                 'mongoose',
-                'node-watch'
+                'node-watch',
+                '@elastic/elasticsearch'
             ]
         }
         break
@@ -487,7 +488,7 @@ const watchServerScripts = () => {
 
         const resourceName = path.split('/resources/')[1].split('/')[0]
 
-        log.info(`Resource ${resourceName} client changed, rebuilding...`)
+        log.info(`Resource ${resourceName} server changed, rebuilding...`)
         buildResource(path, () => {
             log.info(`Successfully rebuilt ${resourceName} server`)
         })
