@@ -3,8 +3,10 @@ import dotenv from 'dotenv'
 import alt from 'alt-server'
 
 import MainDB from './db/MainDB'
+import LogDB from "./db/LogDB"
 import HotReload from './HotReload'
 import { Vector3 } from 'alt-shared'
+import Logger from "./logger/logger"
 
 {
     console.log = alt.log
@@ -58,6 +60,7 @@ alt.on('playerConnect', (player) => {
     // } catch (e) {
     //     alt.log(e)
     // }
+    Logger.auth.login.success(player)
 })
 
 
@@ -68,3 +71,5 @@ alt.onClient("GAME:LOGIN_PANEL:LOGIN_ACTION", (player: alt.Player, login: string
 HotReload.startWatching()
 
 MainDB.connect()
+
+LogDB.connect()

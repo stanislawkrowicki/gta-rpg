@@ -1,5 +1,5 @@
 services:
-  rpg-mongo:
+  mongo:
     build: docker/mongo
     restart: always
     volumes:
@@ -7,17 +7,17 @@ services:
     ports:
       - ${MONGODB_PORT}:27017
 
-  rpg-mongo-express:
+  mongo-express:
       build: docker/mongo-express
       restart: always
       ports:
         - ${MONGO_EXPRESS_PORT}:8081
       environment:
-        ME_CONFIG_MONGODB_SERVER: rpg-mongo
+        ME_CONFIG_MONGODB_SERVER: mongo
       depends_on:
-        - rpg-mongo
+        - mongo
 
-  rpg-redis:
+  redis:
     build: docker/redis
     restart: always
     volumes:
@@ -25,23 +25,27 @@ services:
     ports:
       - ${REDIS_PORT}:6379
 
-  rpg-elasticsearch:
+  elasticsearch:
     build: docker/elasticsearch
     restart: always
     volumes:
       - data_elastic:/data/elastic
     environment:
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+    mem_limit: 1024M
+    mem_reservation: 1024M
     ports:
       - ${ELASTICSEARCH_PORT}:9200
 
-  rpg-kibana:
+  kibana:
     build: docker/kibana
     restart: always
+    environment:
+      ELASTICSEARCH_HOST: elasticsearch
+      ELASTICSEARCH_PORT: 9200
     depends_on:
-      - rpg-elasticsearch
+      - elasticsearch
     ports:
       - ${KIBANA_PORT}:5601
 
