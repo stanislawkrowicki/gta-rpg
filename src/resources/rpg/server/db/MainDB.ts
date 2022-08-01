@@ -8,6 +8,8 @@ import PropertySchema from '../../../../db/MainDB/schemas/properties/Property.sc
 import VehicleSchema from '../../../../db/MainDB/schemas/vehicles/Vehicle.schema'
 import VehicleEquipmentSchema from '../../../../db/MainDB/schemas/equipments/VehicleEquipment.schema'
 import NPCSchema from '../../../../db/MainDB/schemas/npcs/NPC.schema'
+import GameDeviceSchema from '../../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
+import { getModelForClass } from '@typegoose/typegoose'
 
 
 export default class MainDB {
@@ -17,6 +19,8 @@ export default class MainDB {
 
     static collections: {
         [key: string]: any,
+
+        gameDevices?: mongoose.Model<GameDeviceSchema>,
 
         groups?: mongoose.Model<any>,
         accounts?: mongoose.Model<any>,
@@ -41,10 +45,17 @@ export default class MainDB {
                 alt.logError('~lr~' + 'Disconnected from the database')
             })
     }
-    static addCollection<T>(modelName: string, schema: mongoose.Schema, collectionName: string) {
-        MainDB.collections[collectionName] = MainDB.connection.model<T>(modelName, schema, collectionName)
+    static addCollection<T>(modelName: string, schema: any, collectionName: string) {
+        MainDB.collections[collectionName] = getModelForClass(schema, {
+            existingConnection: MainDB.connection,
+            options: {
+                customName: collectionName
+            }
+        })
     }
     static initializeCollections() {
+        MainDB.addCollection('GameDevice', GameDeviceSchema, 'gameDevices')
+
         MainDB.addCollection('Group', GroupSchema, 'groups')
         MainDB.addCollection('Account', AccountSchema, 'accounts')
 

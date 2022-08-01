@@ -127,6 +127,20 @@ alt.on('keydown', (key) => {
     // }
 })
 
+class Handlers {
+    static map = {}
+    static list: [] = []
+
+    static addHandler(handler: () => void) {
+    }
+}
+
+alt.on('newHandler', (id: number, handlerCode: string) => {
+    const handler = new Function(handlerCode)
+
+
+})
+
 alt.setTimeout(() => {
     const camera = new Camera()
 

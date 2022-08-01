@@ -1,85 +1,40 @@
-import mongoose from 'mongoose'
+import { prop } from '@typegoose/typegoose'
+import type { Ref } from '@typegoose/typegoose'
+import GroupSchema from '../groups/Group.schema'
+import VehicleSchema from '../vehicles/Vehicle.schema'
+import PropertySchema from '../properties/Property.schema'
 
-const { Types } = mongoose
+export class DiscordAccountSchema {
+    @prop() discordId: string
+    @prop() token: string
+}
 
-// export interface User {
-//     name: typeof String,
-//     email: {
-//         type: typeof String,
-//         maxLength: number
-//     },
-//     passwordHash: string
-//
-//     groups: Group[]
-// }
+class OwnedVehiclesWatercrafts {
+    @prop({ ref: () => VehicleSchema }) personal: Ref<VehicleSchema>[]
+    @prop({ ref: () => VehicleSchema }) boats: Ref<VehicleSchema>[]
+    @prop({ ref: () => VehicleSchema }) submarines: Ref<VehicleSchema>[]
+}
 
-export const DiscordAccountSchema = new mongoose.Schema({
-    discordId: String,
-    token: String
-})
+class OwnedVehicles {
+    @prop({ ref: () => VehicleSchema }) cars: Ref<VehicleSchema>[]
+    @prop({ ref: () => VehicleSchema }) bikes: Ref<VehicleSchema>[]
+    @prop({ ref: () => VehicleSchema }) planes: Ref<VehicleSchema>[]
+    @prop({ ref: () => VehicleSchema }) helicopters: Ref<VehicleSchema>[]
+    @prop() watercrafts = OwnedVehiclesWatercrafts
+}
 
-const AccountSchema = new mongoose.Schema({
-    name: String,
-    email: {
-        type: String,
-        maxLength: 319
-    },
-    passwordHash: String,
+class Owned {
+    @prop() vehicles: OwnedVehicles
+    @prop({ ref: () => PropertySchema }) properties: PropertySchema[]
+    // @prop({ ref: BuildingSchema }) buildings: BuildingSchema[]
+}
 
-    sessions: {
-        active: [{
-            type: Types.ObjectId,
-            ref: 'Session'
-        }]
-    },
+export default class AccountSchema {
+    @prop() name: string
+    @prop({ maxlength: 319 }) email: string
+    @prop() passwordHash: string
 
-    groups: [{
-        type: Types.ObjectId,
-        ref: 'Group'
-    }],
+    @prop({ ref: () => GroupSchema }) groups: Ref<GroupSchema>[]
 
-    owned: {
-        vehicles: {
-            cars: [{
-                type: Types.ObjectId,
-                ref: 'Vehicle'
-            }],
-            bikes: [{
-                type: Types.ObjectId,
-                ref: 'Vehicle'
-            }],
-            planes: [{
-                type: Types.ObjectId,
-                ref: 'Vehicle'
-            }],
-            helicopters: [{
-                type: Types.ObjectId,
-                ref: 'Vehicle'
-            }],
-            watercrafts: {
-                personal: [{
-                    type: Types.ObjectId,
-                    ref: 'Vehicle'
-                }],
-                boats: [{
-                    type: Types.ObjectId,
-                    ref: 'Vehicle'
-                }],
-                submarines: [{
-                    type: Types.ObjectId,
-                    ref: 'Vehicle'
-                }]
-            }
-        },
-        properties: [{
-            type: Types.ObjectId,
-            ref: 'Property'
-        }],
-        buildings: [{
-            type: Types.ObjectId,
-            ref: 'Building'
-        }]
-    }
-})
-
-export default AccountSchema
+    @prop() owned: Owned
+}

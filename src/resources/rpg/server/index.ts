@@ -6,6 +6,8 @@ import MainDB from './db/MainDB'
 import HotReload from './HotReload'
 import { Vector3 } from 'alt-shared'
 
+import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
+
 {
     console.log = alt.log
     console.info = alt.log
@@ -46,7 +48,50 @@ class HubCamera {
     }
 }
 
+class ClientHandles {
+    map: any
+    list: any[]
+}
+
+class Client {
+    wrapped: alt.Player
+
+    handles = new ClientHandles()
+
+    constructor(wrapped: alt.Player) {
+        this.wrapped = wrapped
+    }
+}
+
+// class Clients {
+//     static map: Record<string, Client>
+// }
+
+function typeCheck<T>(value: T): T { return value }
+
+alt.on('beforePlayerConnect', (connectionInfo) => {
+    MainDB.collections.gameDevices.findOne({
+        $or: [ { hwidHash: connectionInfo.hwidHash }, { hwidExHash: connectionInfo.hwidExHash } ]
+    })
+        .then((device) => {
+            if(device) {
+                if(device.isBanned) {
+                    return
+                }
+            } else {
+                MainDB.collections.gameDevices.create(typeCheck<GameDeviceSchema>({
+                    hwidHash: connectionInfo.hwidHash,
+                    hwidExHash: connectionInfo.hwidExHash
+                })).catch(() => {
+                    alt.logError('There was an error with saving a new game device')
+                })
+            }
+        })
+})
+
 alt.on('playerConnect', (player) => {
+    const wrapper = new Client(player)
+    player.setMeta('wrapper', wrapper)
     // alt.emitClient(player, "GAME:LOGIN_PANEL:SHOW")
 
     // player.spawn(spawn.x, spawn.y, spawn.z, 0)
@@ -58,6 +103,10 @@ alt.on('playerConnect', (player) => {
     // } catch (e) {
     //     alt.log(e)
     // }
+})
+
+alt.on('playerDisconnect', (player) => {
+    player.deleteMeta('wrapper')
 })
 
 

@@ -1,16 +1,13 @@
-import mongoose from 'mongoose'
+import { prop } from '@typegoose/typegoose'
+import type { Ref } from '@typegoose/typegoose'
+import AccountSchema from '../accounts/Account.schema'
 
-const { Schema } = mongoose
+export class ProductionInfo {
+    @prop() date: Date
+}
 
-const VehicleEquipment = new Schema({
-    owners: [{
-        type: mongoose.Types.ObjectId,
-        ref: 'User'
-    }],
+export default class VehicleEquipment {
+    @prop({ ref: AccountSchema }) owners: Ref<AccountSchema>[]
 
-    production: {
-        date: Date
-    }
-})
-
-export default VehicleEquipment
+    @prop() productionInfo = ProductionInfo
+}

@@ -1,54 +1,35 @@
-import mongoose from 'mongoose'
+import { prop } from '@typegoose/typegoose'
+import type { Ref } from '@typegoose/typegoose'
+import AccountSchema from '../accounts/Account.schema'
+import Vector3Schema from '../Vector3'
 
-const { Schema, Types } = mongoose
+enum LockType {
+    ELECTRONIC,
+    MECHANICAL
+}
 
-const PropertySchema = new Schema({
-    owners: [{
-        type: Types.ObjectId,
-        ref: 'User'
-    }],
+class EntranceLockSchema {
+    @prop() position: Vector3Schema
 
-    lotArea: [{
-        x: Number,
-        y: Number,
-        z: Number
-    }],
+    @prop( { enum: LockType }) lockType: LockType
+}
 
-    buildings: [new Schema({
-        owners: [{
-            type: Types.ObjectId,
-            ref: 'User'
-        }],
+class BuildingEntranceSchema {
+    @prop() lock: EntranceLockSchema
+}
 
-        floorArea: [{
-            x: Number,
-            y: Number,
-            z: Number
-        }],
+class BuildingSchema {
+    @prop({ ref: () => AccountSchema }) owners: Ref<AccountSchema>[]
 
-        entrances: {
-            lock: {
-                position: {
-                    x: Number,
-                    y: Number,
-                    z: Number
-                },
+    @prop({ type: () => Vector3Schema }) floorArea: Vector3Schema[]
 
-                lockType: {
-                    type: String,
-                    enum: ['ELECTRONIC', 'MECHANICAL'],
-                },
-            }
-        },
+    @prop({ type: () => BuildingEntranceSchema }) entrances: BuildingEntranceSchema[]
+}
 
-        markers: [{
-            position: {
-                x: Number,
-                y: Number,
-                z: Number
-            },
-        }]
-    })]
-})
+export default class PropertySchema {
+    @prop( { ref: () => AccountSchema }) owners: Ref<AccountSchema>[]
 
-export default PropertySchema
+    @prop({ type: () => Vector3Schema }) lotArea: Vector3Schema[]
+
+    @prop({ type: () => BuildingSchema }) buildings: BuildingSchema[]
+}
