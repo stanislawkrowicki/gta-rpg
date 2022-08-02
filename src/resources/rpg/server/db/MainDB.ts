@@ -16,6 +16,8 @@ export default class MainDB {
 
     static connection: mongoose.Connection
 
+    static isConnected = false
+
     static collections: {
         [key: string]: any,
 
@@ -40,8 +42,16 @@ export default class MainDB {
                 alt.log('~lg~' + `Successfully connected to the database ~lb~${MainDB.NAME}`)
 
                 MainDB.initializeCollections()
+
+                MainDB.isConnected = true
             }).on('disconnect', (error: unknown) => {
                 alt.logError('~lr~' + 'Disconnected from the database')
+
+                for(let i = 0; i < alt.Player.all.length; ++i) {
+                    alt.Player.all[i].kick("Problem with the server... Try to connect again later...")
+                }
+
+                MainDB.isConnected = false
             })
     }
     static addCollection<T>(schema: any, collectionName: string) {

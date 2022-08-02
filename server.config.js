@@ -16,6 +16,7 @@ export default async () => {
         port: 7788,
         players: 512,
         announce: false,
+        connectionQueue: true,
         gamemode: "RPG",
         website: '<website>',
         language: 'en',

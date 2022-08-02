@@ -17,6 +17,9 @@ class GameDefaultsInitiator {
         })
 
         GameDefaultsInitiator.initiateAudio()
+
+        game.displayRadar(false)
+        game.triggerScreenblurFadeOut(0)
     }
 
     static initiateAudio() {
@@ -91,7 +94,6 @@ class Interactivities {
 }
 
 alt.on('GAME:USER_SHOULD_LOGIN', () => {})
-alt.on('beforePlayerConnect', (connectionInfo) => {})
 
 alt.onServer('GAME:SPAWN', () => {
     game.setPedDefaultComponentVariation(alt.Player.local.scriptID)
@@ -142,11 +144,11 @@ alt.on('newHandler', (id: number, handlerCode: string) => {
 })
 
 alt.setTimeout(() => {
-    const camera = new Camera()
-
-    camera.setPosition(100, 1000, 1000)
-
-    View.setCamera(camera)
+    // const camera = new Camera()
+    //
+    // camera.setPosition(100, 1000, 1000)
+    //
+    // View.setCamera(camera)
     // MapEditor.initialize()
 }, 100)
 // WebView2DPool.initialize()

@@ -69,42 +69,49 @@ class Client {
 
 function typeCheck<T>(value: T): T { return value }
 
-alt.on('beforePlayerConnect', (connectionInfo) => {
-    const hwidHash = connectionInfo.hwidHash
-    const hwidExHash = connectionInfo.hwidExHash
-    MainDB.collections.gameDevices.findOne({
-        $or: [ { hwidHash: hwidHash }, { hwidExHash: hwidExHash } ]
-    })
-        .then((device) => {
-            if(device) {
-                if(device.isBanned) {
-                    return
-                }
-            } else {
-                MainDB.collections.gameDevices.create(typeCheck<GameDeviceSchema>({
-                    hwidHash: hwidHash,
-                    hwidExHash: hwidExHash
-                })).catch(() => {
-                    alt.logError('There was an error with saving a new game device')
-                })
-            }
+alt.on('connectionQueueAdd', (connectionQueueInfo:  alt.IConnectionQueueInfo) => {
+    if(MainDB.isConnected) {
+        MainDB.collections.gameDevices.findOne({
+            $or: [{ hwidHash: connectionQueueInfo.hwidHash }, { hwidExHash: connectionQueueInfo.hwidExHash }]
         })
+            .then((device) => {
+                if (device) {
+                    if (device.isBanned) {
+                        connectionQueueInfo.decline('')
+                    } else {
+                        connectionQueueInfo.accept()
+                    }
+                } else {
+                    MainDB.collections.gameDevices.create(typeCheck<GameDeviceSchema>({
+                        hwidHash: connectionQueueInfo.hwidHash,
+                        hwidExHash: connectionQueueInfo.hwidExHash
+                    })).catch(() => {
+                        alt.logError("There was an error with saving a new game device")
+                    }).then(() => {
+                        connectionQueueInfo.accept()
+                    })
+                }
+            })
+    } else {
+        connectionQueueInfo.decline("The server hasn't started yet... Try to connect later...")
+    }
 })
 
 alt.on('playerConnect', (player) => {
     const wrapper = new Client(player)
     player.setMeta('wrapper', wrapper)
+
     // alt.emitClient(player, "GAME:LOGIN_PANEL:SHOW")
 
-    // player.spawn(spawn.x, spawn.y, spawn.z, 0)
+    player.spawn(spawn.x, spawn.y, spawn.z, 0)
     //
     // alt.emitClient(player,'GAME:SPAWN')
     //
-    // try {
-    //     const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
-    // } catch (e) {
-    //     alt.log(e)
-    // }
+    try {
+        const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
+    } catch (e) {
+        alt.log(e)
+    }
 })
 
 alt.on('playerDisconnect', (player) => {
