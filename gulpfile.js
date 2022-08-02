@@ -3,6 +3,7 @@ import * as log from 'fancy-log'
 import https from 'https'
 import fs from 'fs'
 import {createGulpEsbuild} from 'gulp-esbuild'
+import { esbuildDecorators } from '@anatine/esbuild-decorators'
 import esbuildSvelte from 'esbuild-svelte'
 import sveltePreprocess from "svelte-preprocess"
 import esbuildPluginGLSL from 'esbuild-plugin-glsl'
@@ -298,8 +299,12 @@ const buildResource = (path, done) => {
             format: 'esm',
             platform: 'node',
             bundle: true,
+            plugins: [
+                esbuildDecorators()
+            ],
             external: [
                 'alt-server',
+                '@typegoose/typegoose',
                 'alt-shared',
                 'dotenv',
                 'mongoose',

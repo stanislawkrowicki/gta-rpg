@@ -1,8 +1,10 @@
-import { prop } from '@typegoose/typegoose'
+import typegoose from '@typegoose/typegoose'
 import type { Ref } from '@typegoose/typegoose'
 import GroupSchema from '../groups/Group.schema'
 import VehicleSchema from '../vehicles/Vehicle.schema'
 import PropertySchema from '../properties/Property.schema'
+
+const { prop } = typegoose
 
 export class DiscordAccountSchema {
     @prop() discordId: string
@@ -20,7 +22,7 @@ class OwnedVehicles {
     @prop({ ref: () => VehicleSchema }) bikes: Ref<VehicleSchema>[]
     @prop({ ref: () => VehicleSchema }) planes: Ref<VehicleSchema>[]
     @prop({ ref: () => VehicleSchema }) helicopters: Ref<VehicleSchema>[]
-    @prop() watercrafts = OwnedVehiclesWatercrafts
+    @prop() watercrafts: OwnedVehiclesWatercrafts
 }
 
 class Owned {

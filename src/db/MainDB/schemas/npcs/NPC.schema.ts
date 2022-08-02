@@ -1,5 +1,7 @@
-import { prop } from '@typegoose/typegoose'
-import Vector3Schema from '../Vector3'
+import typegoose from '@typegoose/typegoose'
+import Vector3Schema from '../Vector3.schema'
+
+const { prop } = typegoose
 
 type Code = string
 

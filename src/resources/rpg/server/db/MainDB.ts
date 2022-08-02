@@ -3,7 +3,6 @@ import alt from 'alt-server'
 
 import GroupSchema from '../../../../db/MainDB/schemas/groups/Group.schema'
 import AccountSchema from '../../../../db/MainDB/schemas/accounts/Account.schema'
-import SessionSchema from '../../../../db/MainDB/schemas/sessions/Session.schema'
 import PropertySchema from '../../../../db/MainDB/schemas/properties/Property.schema'
 import VehicleSchema from '../../../../db/MainDB/schemas/vehicles/Vehicle.schema'
 import VehicleEquipmentSchema from '../../../../db/MainDB/schemas/equipments/VehicleEquipment.schema'
@@ -22,15 +21,15 @@ export default class MainDB {
 
         gameDevices?: mongoose.Model<GameDeviceSchema>,
 
-        groups?: mongoose.Model<any>,
-        accounts?: mongoose.Model<any>,
+        // groups?: mongoose.Model<any>,
+        // accounts?: mongoose.Model<any>,
 
-        sessions?: mongoose.Model<any>,
+        // sessions?: mongoose.Model<any>,
 
-        properties?: mongoose.Model<any>,
-        vehicles?: mongoose.Model<any>,
-
-        vehicleEquipments?: mongoose.Model<any>
+        // properties?: mongoose.Model<any>,
+        // vehicles?: mongoose.Model<any>,
+        //
+        // vehicleEquipments?: mongoose.Model<any>
     } = {}
 
     static connect() {
@@ -45,27 +44,30 @@ export default class MainDB {
                 alt.logError('~lr~' + 'Disconnected from the database')
             })
     }
-    static addCollection<T>(modelName: string, schema: any, collectionName: string) {
+    static addCollection<T>(schema: any, collectionName: string) {
         MainDB.collections[collectionName] = getModelForClass(schema, {
             existingConnection: MainDB.connection,
+            schemaOptions: {
+                versionKey: false
+            },
             options: {
                 customName: collectionName
             }
         })
     }
     static initializeCollections() {
-        MainDB.addCollection('GameDevice', GameDeviceSchema, 'gameDevices')
+        MainDB.addCollection(GameDeviceSchema, 'gameDevices')
 
-        MainDB.addCollection('Group', GroupSchema, 'groups')
-        MainDB.addCollection('Account', AccountSchema, 'accounts')
+        // MainDB.addCollection('Group', GroupSchema, 'groups')
+        // MainDB.addCollection('Account', AccountSchema, 'accounts')
 
-        MainDB.addCollection('Session', SessionSchema, 'sessions')
+        // MainDB.addCollection('Session', SessionSchema, 'sessions')
 
-        MainDB.addCollection('Property', PropertySchema, 'properties')
-        MainDB.addCollection('Vehicle', VehicleSchema, 'vehicles')
+        // MainDB.addCollection('Property', PropertySchema, 'properties')
+        // MainDB.addCollection('Vehicle', VehicleSchema, 'vehicles')
 
-        MainDB.addCollection('VehicleEquipment', VehicleEquipmentSchema, 'vehicleEquipments')
+        // MainDB.addCollection('VehicleEquipment', VehicleEquipmentSchema, 'vehicleEquipments')
 
-        MainDB.addCollection('NPC', NPCSchema, 'npcs')
+        // MainDB.addCollection('NPC', NPCSchema, 'npcs')
     }
 }

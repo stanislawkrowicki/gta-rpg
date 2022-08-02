@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onMount } from 'svelte'
 
-    import FragmentShader from './shaders/FragmentShader.glsl'
-    import VertexShader from './shaders/VertexShader.glsl'
+    // import FragmentShader from './shaders/FragmentShader.glsl'
+    // import VertexShader from './shaders/VertexShader.glsl'
 
     let login = ''
     let password = ''
@@ -186,5 +186,5 @@
 
     <p id="message">{message}</p>
 
-    <button id="login-btn" bind:value={checkCredentials}>ZALOGUJ</button>
+    <button id="login-btn" on:click={checkCredentials}>ZALOGUJ</button>
 </div>

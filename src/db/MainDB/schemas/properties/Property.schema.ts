@@ -1,7 +1,9 @@
-import { prop } from '@typegoose/typegoose'
+import typegoose from '@typegoose/typegoose'
 import type { Ref } from '@typegoose/typegoose'
 import AccountSchema from '../accounts/Account.schema'
-import Vector3Schema from '../Vector3'
+import Vector3Schema from '../Vector3.schema'
+
+const { prop } = typegoose
 
 enum LockType {
     ELECTRONIC,

@@ -70,8 +70,10 @@ class Client {
 function typeCheck<T>(value: T): T { return value }
 
 alt.on('beforePlayerConnect', (connectionInfo) => {
+    const hwidHash = connectionInfo.hwidHash
+    const hwidExHash = connectionInfo.hwidExHash
     MainDB.collections.gameDevices.findOne({
-        $or: [ { hwidHash: connectionInfo.hwidHash }, { hwidExHash: connectionInfo.hwidExHash } ]
+        $or: [ { hwidHash: hwidHash }, { hwidExHash: hwidExHash } ]
     })
         .then((device) => {
             if(device) {
@@ -80,8 +82,8 @@ alt.on('beforePlayerConnect', (connectionInfo) => {
                 }
             } else {
                 MainDB.collections.gameDevices.create(typeCheck<GameDeviceSchema>({
-                    hwidHash: connectionInfo.hwidHash,
-                    hwidExHash: connectionInfo.hwidExHash
+                    hwidHash: hwidHash,
+                    hwidExHash: hwidExHash
                 })).catch(() => {
                     alt.logError('There was an error with saving a new game device')
                 })
