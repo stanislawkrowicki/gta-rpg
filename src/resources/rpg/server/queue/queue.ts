@@ -1,18 +1,24 @@
+import alt from 'alt-server'
 import amqplib from 'amqplib'
 
-export default class Queues {
-    static channels: Record<string, amqplib.Channel> = {}
+export enum QueueChannels {
+    logs = 'log_channel'
+}
 
-    static async channel(name: string, useExisting: boolean): Promise<amqplib.Channel> {
-        if (name in Queues.channels && useExisting) return Queues.channels[name]
+export class Queues {
+    static channels: Record<QueueChannels, amqplib.Channel> = {log_channel: undefined}
+
+    static async channel(name: QueueChannels): Promise<amqplib.Channel> {
+        if (Queues.channels[name]) return Queues.channels[name]
 
         const channel = await Queues.openChannel()
         Queues.channels[name] = channel
 
+        alt.log('~lg~' + 'Successfully connected to RabbitMQ channel ~lb~', name)
         return channel
     }
 
-    static async openChannel(): Promise<amqplib.Channel> {
+    private static async openChannel(): Promise<amqplib.Channel> {
         const conn =  await amqplib.connect('amqp://localhost')
 
         const channel = await conn.createChannel()

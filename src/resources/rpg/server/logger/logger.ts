@@ -1,10 +1,9 @@
 import type alt from "alt-server"
-import Queues from '../queue/queue'
+import { Queues, QueueChannels } from '../queue/queue'
 
-const logQueueChannel = 'log_channel'
 const logQueue = 'logs'
 
-const qChannel = await Queues.channel(logQueueChannel, false)
+const qChannel = await Queues.channel(QueueChannels.logs)
 
 export default class Logger {
     static auth = {
