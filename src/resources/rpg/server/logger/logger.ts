@@ -12,8 +12,8 @@ export default class Logger {
                 qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.login.success',
                     username: player.name,
-                    hwid: player.hwidHash,
-                    hwidExtended: player.hwidExHash,
+                    hwidHash: player.hwidHash,
+                    hwidExHash: player.hwidExHash,
                     ip: player.ip,
                     timestamp: new Date().toISOString()
                 }))
@@ -24,8 +24,8 @@ export default class Logger {
                 qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.login.restore',
                     username: player.name,
-                    hwid: player.hwidHash,
-                    hwidExtended: player.hwidExHash,
+                    hwidHash: player.hwidHash,
+                    hwidExHash: player.hwidExHash,
                     ip: player.ip,
                     timestamp: new Date().toISOString()
                 }))
@@ -36,8 +36,8 @@ export default class Logger {
                 qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.login.error',
                     username: player.name,
-                    hwid: player.hwidHash,
-                    hwidExtended: player.hwidExHash,
+                    hwidHash: player.hwidHash,
+                    hwidExHash: player.hwidExHash,
                     ip: player.ip,
                     tryCount: tryCount,
                     timestamp: new Date().toISOString()
@@ -51,8 +51,8 @@ export default class Logger {
                 qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.register.success',
                     username: player.name,
-                    hwid: player.hwidHash,
-                    hwidExtended: player.hwidExHash,
+                    hwidHash: player.hwidHash,
+                    hwidExHash: player.hwidExHash,
                     ip: player.ip,
                     timestamp: new Date().toISOString()
                 }))
@@ -63,8 +63,8 @@ export default class Logger {
                 qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.register.error',
                     username: player.name,
-                    hwid: player.hwidHash,
-                    hwidExtended: player.hwidExHash,
+                    hwidHash: player.hwidHash,
+                    hwidExHash: player.hwidExHash,
                     ip: player.ip,
                     timestamp: new Date().toISOString()
                 }))
