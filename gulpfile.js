@@ -304,7 +304,8 @@ const buildResource = (path, done) => {
                 'dotenv',
                 'mongoose',
                 'node-watch',
-                '@elastic/elasticsearch'
+                '@elastic/elasticsearch',
+                'amqplib'
             ]
         }
         break

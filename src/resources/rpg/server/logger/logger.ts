@@ -1,82 +1,75 @@
 import type alt from "alt-server"
-import LogDB from "../db/LogDB"
+import Queues from '../queue/queue'
 
-const elasticIndex = 'logs'
+const logQueueChannel = 'log_channel'
+const logQueue = 'logs'
+
+const qChannel = await Queues.channel(logQueueChannel, false)
 
 export default class Logger {
     static auth = {
         login: {
-            success: async (player: alt.Player) => {
-                await LogDB.client.index({
-                    index: elasticIndex,
-                    document: {
-                        type: 'auth.login.success',
-                        username: player.name,
-                        hwid: player.hwidHash,
-                        hwidExtended: player.hwidExHash,
-                        ip: player.ip,
-                        timestamp: new Date().toISOString()
-                    }
-                })
+            success: (player: alt.Player) => {
+                qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
+                    type: 'auth.login.success',
+                    username: player.name,
+                    hwid: player.hwidHash,
+                    hwidExtended: player.hwidExHash,
+                    ip: player.ip,
+                    timestamp: new Date().toISOString()
+                }))
+                )
             },
 
-            restore: async(player: alt.Player) => {
-                await LogDB.client.index({
-                    index: elasticIndex,
-                    document: {
-                        type: 'auth.login.restore',
-                        username: player.name,
-                        hwid: player.hwidHash,
-                        hwidExtended: player.hwidExHash,
-                        ip: player.ip,
-                        timestamp: new Date().toISOString()
-                    }
-                })
+            restore: (player: alt.Player) => {
+                qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
+                    type: 'auth.login.restore',
+                    username: player.name,
+                    hwid: player.hwidHash,
+                    hwidExtended: player.hwidExHash,
+                    ip: player.ip,
+                    timestamp: new Date().toISOString()
+                }))
+                )
             },
 
-            error: async (player: alt.Player, tryCount: number) => {
-                await LogDB.client.index({
-                    index: elasticIndex,
-                    document: {
-                        type: 'auth.login.error',
-                        username: player.name,
-                        hwid: player.hwidHash,
-                        hwidExtended: player.hwidExHash,
-                        ip: player.ip,
-                        tryCount: tryCount,
-                        timestamp: new Date().toISOString()
-                    }
-                })
+            error: (player: alt.Player, tryCount: number) => {
+                qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
+                    type: 'auth.login.error',
+                    username: player.name,
+                    hwid: player.hwidHash,
+                    hwidExtended: player.hwidExHash,
+                    ip: player.ip,
+                    tryCount: tryCount,
+                    timestamp: new Date().toISOString()
+                }))
+                )
             }
         },
 
         register: {
-            success: async (player: alt.Player) => {
-                await LogDB.client.index({
-                    index: elasticIndex,
-                    document: {
-                        type: 'auth.register.success',
-                        username: player.name,
-                        hwid: player.hwidHash,
-                        hwidExtended: player.hwidExHash,
-                        ip: player.ip,
-                        timestamp: new Date().toISOString()
-                    }
-                })
+            success: (player: alt.Player) => {
+                qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
+                    type: 'auth.register.success',
+                    username: player.name,
+                    hwid: player.hwidHash,
+                    hwidExtended: player.hwidExHash,
+                    ip: player.ip,
+                    timestamp: new Date().toISOString()
+                }))
+                )
             },
 
-            error: async (player: alt.Player) => {
-                await LogDB.client.index({
-                    index: elasticIndex,
-                    document: {
-                        type: 'auth.register.error',
-                        username: player.name,
-                        hwid: player.hwidHash,
-                        hwidExtended: player.hwidExHash,
-                        ip: player.ip,
-                        timestamp: new Date().toISOString()
-                    }
-                })
+            error: (player: alt.Player) => {
+                qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
+                    type: 'auth.register.error',
+                    username: player.name,
+                    hwid: player.hwidHash,
+                    hwidExtended: player.hwidExHash,
+                    ip: player.ip,
+                    timestamp: new Date().toISOString()
+                }))
+                )
             }
         }
     }

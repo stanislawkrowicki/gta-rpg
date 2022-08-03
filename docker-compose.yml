@@ -49,6 +49,13 @@ services:
     ports:
       - ${KIBANA_PORT}:5601
 
+  rabbitmq:
+    build: docker/rabbitmq
+    restart: always
+    ports:
+      - ${RABBITMQ_PORT}:5672
+      - ${RABBITMQ_PANEL_PORT}:15672
+
 volumes:
   data_mongo:
   data_redis:
