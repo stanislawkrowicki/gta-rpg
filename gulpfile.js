@@ -464,12 +464,6 @@ const buildLogsConsumer = (done) => {
             platform: 'node',
             bundle: true,
             external: [
-                'alt-server',
-                'alt-shared',
-                'dotenv',
-                'mongoose',
-                'node-watch',
-                '@elastic/elasticsearch',
                 'amqplib'
             ]
         }))
