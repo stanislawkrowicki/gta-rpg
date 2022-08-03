@@ -453,7 +453,40 @@ const build = (done) => {
         fs.writeFileSync('dist/server.cfg', cfg.toString())
 
         done()
-    })(done)
+    }, buildLogsConsumer)(done)
+}
+
+const buildLogsConsumer = (done) => {
+    gulp.src('./src/logs-consumer/consumer.ts')
+        .pipe(gulpEsbuild({
+            outfile: 'index.js',
+            format: 'esm',
+            platform: 'node',
+            bundle: true,
+            external: [
+                'alt-server',
+                'alt-shared',
+                'dotenv',
+                'mongoose',
+                'node-watch',
+                '@elastic/elasticsearch',
+                'amqplib'
+            ]
+        }))
+        .on('error', (err) => {
+            if (err) {
+                log.error(
+                    `Error while building logs consumer`
+                )
+                throw err
+            }
+        })
+        .pipe(
+            gulp.dest(
+                `${DIST_FOLDER}/logs-consumer/`
+            )
+        )
+        .on('end', done)
 }
 
 const watchClientScripts = () => {
@@ -622,6 +655,7 @@ gulp.task('download:linux', downloadAllLinux)
 gulp.task('download', downloadAll)
 
 gulp.task('build', build)
+gulp.task('build:logs_consumer', buildLogsConsumer)
 
 gulp.task('watch:client', watchClientScripts)
 gulp.task('watch:server', watchServerScripts)
