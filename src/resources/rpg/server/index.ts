@@ -3,10 +3,10 @@ import dotenv from 'dotenv'
 import alt from 'alt-server'
 
 import MainDB from './db/MainDB'
-import LogDB from './db/LogDB'
 import HotReload from './HotReload'
 import { Vector3 } from 'alt-shared'
-import Logger from './logger/logger'
+import Logger from "./logger/logger"
+import QuickDB from "./db/QuickDB"
 
 import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
 
@@ -160,4 +160,6 @@ HotReload.startWatching()
 
 MainDB.connect()
 
-LogDB.connect()
+await QuickDB.connect()
+
+await Logger.initialize()

@@ -23,6 +23,7 @@
     "@altv/types-worker": "^1.0.7",
     "@anatine/esbuild-decorators": "^0.2.19",
     "@tsconfig/svelte": "^3.0.0",
+    "@types/amqplib": "^0.8.2",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.0.0",
     "esbuild-plugin-glsl": "^1.1.0",
@@ -39,6 +40,7 @@
   "dependencies": {
     "@elastic/elasticsearch": "^8.2.1",
     "@typegoose/typegoose": "^9.11.0",
+    "amqplib": "^0.10.1",
     "cli-spinners": "^2.6.1",
     "dotenv": "^16.0.1",
     "esbuild": "^0.14.50",
