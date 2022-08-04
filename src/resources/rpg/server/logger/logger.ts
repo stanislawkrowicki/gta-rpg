@@ -1,6 +1,13 @@
 import type alt from "alt-server"
 import { Queues, QueueChannels } from '../queue/queue'
-import { Error, CaughtError, errorSchema, caughtErrorSchema } from "../../../../db/QuickAccessDB/schemas/errors/Error.schema"
+import {
+    Error,
+    CaughtError,
+    Warn,
+    errorSchema,
+    caughtErrorSchema,
+    warnSchema
+} from "../../../../db/QuickAccessDB/schemas/errors/Error.schema"
 import QuickDB from "../db/QuickDB"
 import type { Channel } from "amqplib"
 import type { Repository } from "redis-om"
@@ -10,17 +17,29 @@ const logQueue = 'logs'
 export default class Logger {
     private static qChannel: Channel
 
+    private static warnRepository: Repository<Warn>
     private static errorRepository: Repository<Error>
     private static caughtErrorRepository: Repository<CaughtError>
 
     static initialize = async () => {
         Logger.qChannel = await Queues.channel(QueueChannels.logs)
 
+        Logger.warnRepository = QuickDB.client.fetchRepository(warnSchema)
         Logger.errorRepository = QuickDB.client.fetchRepository(errorSchema)
         Logger.caughtErrorRepository = QuickDB.client.fetchRepository(caughtErrorSchema)
     }
 
-    // ERRORS -> REDIS
+    // WARNS, ERRORS -> REDIS
+    static warn = async(resource: string, id: number, message: string) => {
+        const warn = Logger.warnRepository.createEntity()
+
+        warn.resource = resource
+        warn.id = id
+        warn.message = message
+
+        await Logger.warnRepository.save(warn)
+    }
+
     static error = async (resource: string, id: number, message: string) => {
         const error = Logger.errorRepository.createEntity()
 
