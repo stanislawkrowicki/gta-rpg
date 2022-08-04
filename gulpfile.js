@@ -305,7 +305,8 @@ const buildResource = (path, done) => {
                 'mongoose',
                 'node-watch',
                 '@elastic/elasticsearch',
-                'amqplib'
+                'amqplib',
+                'redis-om'
             ]
         }
         break

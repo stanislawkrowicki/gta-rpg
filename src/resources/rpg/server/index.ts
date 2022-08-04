@@ -6,6 +6,7 @@ import MainDB from './db/MainDB'
 import HotReload from './HotReload'
 import { Vector3 } from 'alt-shared'
 import Logger from "./logger/logger"
+import QuickDB from "./db/QuickDB"
 
 {
     console.log = alt.log
@@ -70,3 +71,7 @@ alt.onClient("GAME:LOGIN_PANEL:LOGIN_ACTION", (player: alt.Player, login: string
 HotReload.startWatching()
 
 MainDB.connect()
+
+await QuickDB.connect()
+
+await Logger.initialize()
