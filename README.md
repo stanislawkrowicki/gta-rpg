@@ -44,3 +44,15 @@ npx gulp
 ```shell
 npx gulp build
 ```
+
+### Checking queues
+Go to `localhost:15672` to see RabbitMQ panel. In dev mode credentials are login `guest` and password `guest`
+
+### Checking Kibana
+Go to `localhost:5601` to open Kibana panel. Then go to `Discovery` tab and create views.
+
+### Running log consumer
+Log consumer does not run with gulp. You need to start it yourself via 
+```shell
+node ./dist/logs-consumer/consumer.js
+```
