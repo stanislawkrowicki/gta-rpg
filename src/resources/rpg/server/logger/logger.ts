@@ -4,9 +4,9 @@ import {
     Error,
     CaughtError,
     Warn,
-    errorSchema,
-    caughtErrorSchema,
-    warnSchema
+    ErrorSchema,
+    CaughtErrorSchema,
+    WarnSchema
 } from "../../../../db/QuickAccessDB/schemas/errors/Error.schema"
 import QuickDB from "../db/QuickDB"
 import type { Channel } from "amqplib"
@@ -24,9 +24,9 @@ export default class Logger {
     static initialize = async () => {
         Logger.qChannel = await Queues.channel(QueueChannels.logs)
 
-        Logger.warnRepository = QuickDB.client.fetchRepository(warnSchema)
-        Logger.errorRepository = QuickDB.client.fetchRepository(errorSchema)
-        Logger.caughtErrorRepository = QuickDB.client.fetchRepository(caughtErrorSchema)
+        Logger.warnRepository = QuickDB.client.fetchRepository(WarnSchema)
+        Logger.errorRepository = QuickDB.client.fetchRepository(ErrorSchema)
+        Logger.caughtErrorRepository = QuickDB.client.fetchRepository(CaughtErrorSchema)
     }
 
     // WARNS, ERRORS -> REDIS

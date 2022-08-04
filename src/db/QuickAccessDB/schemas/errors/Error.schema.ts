@@ -8,7 +8,7 @@ export interface Warn {
 
 export class Warn extends Entity {}
 
-export const warnSchema = new Schema(Warn, {
+export const WarnSchema = new Schema(Warn, {
     resource: { type: 'string' },
     id: { type: 'number' },
     message: { type: 'string' }
@@ -22,7 +22,7 @@ export interface Error {
 
 export class Error extends Entity {}
 
-export const errorSchema = new Schema(Error, {
+export const ErrorSchema = new Schema(Error, {
     resource: { type: 'string' },
     id: { type: 'number' },
     message: { type: 'string' }
@@ -36,7 +36,7 @@ export interface CaughtError {
 
 export class CaughtError extends Entity {}
 
-export const caughtErrorSchema = new Schema(CaughtError, {
+export const CaughtErrorSchema = new Schema(CaughtError, {
     resource: { type: 'string' },
     id: { type: 'number' },
     stacktrace: { type: 'string' }
