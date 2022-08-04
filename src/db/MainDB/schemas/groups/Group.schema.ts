@@ -1,14 +1,10 @@
-import mongoose from 'mongoose'
+import typegoose from '@typegoose/typegoose'
+import type { Ref } from '@typegoose/typegoose'
 
-const { Schema, Types } = mongoose
+const { prop } = typegoose
 
-export const GroupSchema = new Schema({
-    name: String,
+export default class GroupSchema {
+    @prop() name: string
 
-    parents: [{
-        type: Types.ObjectId,
-        ref: 'Group'
-    }]
-})
-
-export default GroupSchema
+    @prop({ ref: () => GroupSchema }) parents: Ref<GroupSchema>[]
+}

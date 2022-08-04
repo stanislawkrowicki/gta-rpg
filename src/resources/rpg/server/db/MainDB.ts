@@ -3,11 +3,12 @@ import alt from 'alt-server'
 
 import GroupSchema from '../../../../db/MainDB/schemas/groups/Group.schema'
 import AccountSchema from '../../../../db/MainDB/schemas/accounts/Account.schema'
-import SessionSchema from '../../../../db/MainDB/schemas/sessions/Session.schema'
 import PropertySchema from '../../../../db/MainDB/schemas/properties/Property.schema'
 import VehicleSchema from '../../../../db/MainDB/schemas/vehicles/Vehicle.schema'
 import VehicleEquipmentSchema from '../../../../db/MainDB/schemas/equipments/VehicleEquipment.schema'
 import NPCSchema from '../../../../db/MainDB/schemas/npcs/NPC.schema'
+import GameDeviceSchema from '../../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
+import { getModelForClass } from '@typegoose/typegoose'
 
 
 export default class MainDB {
@@ -15,18 +16,22 @@ export default class MainDB {
 
     static connection: mongoose.Connection
 
+    static isConnected = false
+
     static collections: {
         [key: string]: any,
 
-        groups?: mongoose.Model<any>,
-        accounts?: mongoose.Model<any>,
+        gameDevices?: mongoose.Model<GameDeviceSchema>,
 
-        sessions?: mongoose.Model<any>,
+        // groups?: mongoose.Model<any>,
+        // accounts?: mongoose.Model<any>,
 
-        properties?: mongoose.Model<any>,
-        vehicles?: mongoose.Model<any>,
+        // sessions?: mongoose.Model<any>,
 
-        vehicleEquipments?: mongoose.Model<any>
+        // properties?: mongoose.Model<any>,
+        // vehicles?: mongoose.Model<any>,
+        //
+        // vehicleEquipments?: mongoose.Model<any>
     } = {}
 
     static connect() {
@@ -37,24 +42,42 @@ export default class MainDB {
                 alt.log('~lg~' + `Successfully connected to the database ~lb~${MainDB.NAME}`)
 
                 MainDB.initializeCollections()
+
+                MainDB.isConnected = true
             }).on('disconnect', (error: unknown) => {
                 alt.logError('~lr~' + 'Disconnected from the database')
+
+                for(let i = 0; i < alt.Player.all.length; ++i) {
+                    alt.Player.all[i].kick("Problem with the server... Try to connect again later...")
+                }
+
+                MainDB.isConnected = false
             })
     }
-    static addCollection<T>(modelName: string, schema: mongoose.Schema, collectionName: string) {
-        MainDB.collections[collectionName] = MainDB.connection.model<T>(modelName, schema, collectionName)
+    static addCollection<T>(schema: any, collectionName: string) {
+        MainDB.collections[collectionName] = getModelForClass(schema, {
+            existingConnection: MainDB.connection,
+            schemaOptions: {
+                versionKey: false
+            },
+            options: {
+                customName: collectionName
+            }
+        })
     }
     static initializeCollections() {
-        MainDB.addCollection('Group', GroupSchema, 'groups')
-        MainDB.addCollection('Account', AccountSchema, 'accounts')
+        MainDB.addCollection(GameDeviceSchema, 'gameDevices')
 
-        MainDB.addCollection('Session', SessionSchema, 'sessions')
+        // MainDB.addCollection('Group', GroupSchema, 'groups')
+        // MainDB.addCollection('Account', AccountSchema, 'accounts')
 
-        MainDB.addCollection('Property', PropertySchema, 'properties')
-        MainDB.addCollection('Vehicle', VehicleSchema, 'vehicles')
+        // MainDB.addCollection('Session', SessionSchema, 'sessions')
 
-        MainDB.addCollection('VehicleEquipment', VehicleEquipmentSchema, 'vehicleEquipments')
+        // MainDB.addCollection('Property', PropertySchema, 'properties')
+        // MainDB.addCollection('Vehicle', VehicleSchema, 'vehicles')
 
-        MainDB.addCollection('NPC', NPCSchema, 'npcs')
+        // MainDB.addCollection('VehicleEquipment', VehicleEquipmentSchema, 'vehicleEquipments')
+
+        // MainDB.addCollection('NPC', NPCSchema, 'npcs')
     }
 }

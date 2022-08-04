@@ -1,19 +1,14 @@
-import mongoose from 'mongoose'
+import typegoose from '@typegoose/typegoose'
+import Vector3Schema from '../Vector3.schema'
 
-const { Schema, Types } = mongoose
+const { prop } = typegoose
 
-const Code = String
+type Code = string
 
-const NPCSchema = new Schema({
-    name: String,
+export default class NPCSchema {
+    @prop() name: string
 
-    position: {
-        x: Number,
-        y: Number,
-        z: Number
-    },
+    @prop() position: Vector3Schema
 
-    logic: Code
-})
-
-export default NPCSchema
+    @prop() logic: Code
+}

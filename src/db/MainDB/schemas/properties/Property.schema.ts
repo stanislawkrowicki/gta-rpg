@@ -1,54 +1,37 @@
-import mongoose from 'mongoose'
+import typegoose from '@typegoose/typegoose'
+import type { Ref } from '@typegoose/typegoose'
+import AccountSchema from '../accounts/Account.schema'
+import Vector3Schema from '../Vector3.schema'
 
-const { Schema, Types } = mongoose
+const { prop } = typegoose
 
-const PropertySchema = new Schema({
-    owners: [{
-        type: Types.ObjectId,
-        ref: 'User'
-    }],
+enum LockType {
+    ELECTRONIC,
+    MECHANICAL
+}
 
-    lotArea: [{
-        x: Number,
-        y: Number,
-        z: Number
-    }],
+class EntranceLockSchema {
+    @prop() position: Vector3Schema
 
-    buildings: [new Schema({
-        owners: [{
-            type: Types.ObjectId,
-            ref: 'User'
-        }],
+    @prop( { enum: LockType }) lockType: LockType
+}
 
-        floorArea: [{
-            x: Number,
-            y: Number,
-            z: Number
-        }],
+class BuildingEntranceSchema {
+    @prop() lock: EntranceLockSchema
+}
 
-        entrances: {
-            lock: {
-                position: {
-                    x: Number,
-                    y: Number,
-                    z: Number
-                },
+class BuildingSchema {
+    @prop({ ref: () => AccountSchema }) owners: Ref<AccountSchema>[]
 
-                lockType: {
-                    type: String,
-                    enum: ['ELECTRONIC', 'MECHANICAL'],
-                },
-            }
-        },
+    @prop({ type: () => Vector3Schema }) floorArea: Vector3Schema[]
 
-        markers: [{
-            position: {
-                x: Number,
-                y: Number,
-                z: Number
-            },
-        }]
-    })]
-})
+    @prop({ type: () => BuildingEntranceSchema }) entrances: BuildingEntranceSchema[]
+}
 
-export default PropertySchema
+export default class PropertySchema {
+    @prop( { ref: () => AccountSchema }) owners: Ref<AccountSchema>[]
+
+    @prop({ type: () => Vector3Schema }) lotArea: Vector3Schema[]
+
+    @prop({ type: () => BuildingSchema }) buildings: BuildingSchema[]
+}

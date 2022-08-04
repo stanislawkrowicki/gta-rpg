@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+      "lib": [ "es5", "es6", "esnext", "dom" ],
+      "module": "esnext",
+      "moduleResolution": "node",
+      "target": "esnext",
+  
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "removeComments": true,
+      "strictPropertyInitialization": false,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "preserveConstEnums": true,
+  
+      "noImplicitAny": true,
+      "sourceMap": false,
+
+    },
+    "exclude": [
+      "node_modules"
+    ]
+}

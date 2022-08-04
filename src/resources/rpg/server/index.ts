@@ -3,10 +3,12 @@ import dotenv from 'dotenv'
 import alt from 'alt-server'
 
 import MainDB from './db/MainDB'
-import LogDB from "./db/LogDB"
+import LogDB from './db/LogDB'
 import HotReload from './HotReload'
 import { Vector3 } from 'alt-shared'
-import Logger from "./logger/logger"
+import Logger from './logger/logger'
+
+import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
 
 {
     console.log = alt.log
@@ -16,7 +18,7 @@ import Logger from "./logger/logger"
 }
 
 dotenv.config({
-    path: '../.env'
+    path: '../.env',
 })
 
 const DefaultSpawns = [
@@ -32,13 +34,10 @@ const spawn = DefaultSpawns[0]
 
 enum GameStage {
     LOGIN,
-    GAME
+    GAME,
 }
 
-const HubCameraWaypoints = [
-    new Vector3(0, 0, 0),
-    new Vector3(0, 100, 0)
-]
+const HubCameraWaypoints = [new Vector3(0, 0, 0), new Vector3(0, 100, 0)]
 
 class HubCamera {
     static currentGoalWaypoint: Vector3 = null
@@ -48,10 +47,80 @@ class HubCamera {
     }
 }
 
+class ClientHandles {
+    map: any
+    list: any[]
+}
+
+class Client {
+    wrapped: alt.Player
+
+    handles = new ClientHandles()
+
+    constructor(wrapped: alt.Player) {
+        this.wrapped = wrapped
+    }
+}
+
+// class Clients {
+//     static map: Record<string, Client>
+// }
+
+function typeCheck<T>(value: T): T {
+    return value
+}
+
+alt.on(
+    'connectionQueueAdd',
+    (connectionQueueInfo: alt.IConnectionQueueInfo) => {
+        if (MainDB.isConnected) {
+            MainDB.collections.gameDevices
+                .findOne({
+                    $or: [
+                        { hwidHash: connectionQueueInfo.hwidHash },
+                        { hwidExHash: connectionQueueInfo.hwidExHash },
+                    ],
+                })
+                .then((device) => {
+                    if (device) {
+                        if (device.isBanned) {
+                            connectionQueueInfo.decline('')
+                        } else {
+                            connectionQueueInfo.accept()
+                        }
+                    } else {
+                        MainDB.collections.gameDevices
+                            .create(
+                                typeCheck<GameDeviceSchema>({
+                                    hwidHash: connectionQueueInfo.hwidHash,
+                                    hwidExHash: connectionQueueInfo.hwidExHash,
+                                })
+                            )
+                            .catch(() => {
+                                alt.logError(
+                                    'There was an error with saving a new game device'
+                                )
+                            })
+                            .then(() => {
+                                connectionQueueInfo.accept()
+                            })
+                    }
+                })
+        } else {
+            connectionQueueInfo.decline(
+                "The server hasn't started yet... Try to connect later..."
+            )
+        }
+    }
+)
+
 alt.on('playerConnect', (player) => {
+    const wrapper = new Client(player)
+    player.setMeta('wrapper', wrapper)
+
     // alt.emitClient(player, "GAME:LOGIN_PANEL:SHOW")
 
-    // player.spawn(spawn.x, spawn.y, spawn.z, 0)
+    player.spawn(spawn.x, spawn.y, spawn.z, 0)
     //
     // alt.emitClient(player,'GAME:SPAWN')
     //
@@ -61,12 +130,31 @@ alt.on('playerConnect', (player) => {
     //     alt.log(e)
     // }
     Logger.auth.login.success(player)
+    try {
+        const veh = new alt.Vehicle(
+            'PARIAH',
+            spawn.x,
+            spawn.y,
+            spawn.z,
+            0,
+            0,
+            0
+        )
+    } catch (e) {
+        alt.log(e)
+    }
 })
 
-
-alt.onClient("GAME:LOGIN_PANEL:LOGIN_ACTION", (player: alt.Player, login: string, password: string) => {
-    alt.log(login, password)
+alt.on('playerDisconnect', (player) => {
+    player.deleteMeta('wrapper')
 })
+
+alt.onClient(
+    'GAME:LOGIN_PANEL:LOGIN_ACTION',
+    (player: alt.Player, login: string, password: string) => {
+        alt.log(login, password)
+    }
+)
 
 HotReload.startWatching()
 
