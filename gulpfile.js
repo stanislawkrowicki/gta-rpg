@@ -276,6 +276,7 @@ const buildResource = (path, done) => {
     path = path.replace(/\\/g, '/')
     const resourceName = path.split('/resources/')[1].split('/')[0]
     const resourceType = path.split(`/${resourceName}/`)[1].split('/')[0]
+    const indexPath = `./src/resources/${resourceName}/${resourceType}/index.ts`
 
     let esbuildConfig = {}
 
@@ -319,7 +320,7 @@ const buildResource = (path, done) => {
         throw `Can not determine resource ${resourceName} type. Expected server/client, got ${resourceType}`
     }
 
-    gulp.src(path)
+    gulp.src(indexPath)
         .pipe(
             gulpEsbuild(esbuildConfig)
         )
