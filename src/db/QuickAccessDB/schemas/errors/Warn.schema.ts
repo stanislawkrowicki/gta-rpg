@@ -1,14 +1,14 @@
 import { Entity, Schema } from 'redis-om'
 
-export interface Error {
+export interface Warn {
     resource: string,
     id: number,
     message: string
 }
 
-export class Error extends Entity {}
+export class Warn extends Entity {}
 
-export const ErrorSchema = new Schema(Error, {
+export const WarnSchema = new Schema(Warn, {
     resource: { type: 'string' },
     id: { type: 'number' },
     message: { type: 'string' }

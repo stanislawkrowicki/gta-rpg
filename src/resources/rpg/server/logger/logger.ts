@@ -1,16 +1,11 @@
 import type alt from "alt-server"
 import { Queues, QueueChannels } from '../queue/queue'
-import {
-    Error,
-    CaughtError,
-    Warn,
-    ErrorSchema,
-    CaughtErrorSchema,
-    WarnSchema
-} from "../../../../db/QuickAccessDB/schemas/errors/Error.schema"
 import QuickDB from "../db/QuickDB"
 import type { Channel } from "amqplib"
 import type { Repository } from "redis-om"
+import {Warn, WarnSchema} from "../../../../db/QuickAccessDB/schemas/errors/Warn.schema"
+import {Error, ErrorSchema} from "../../../../db/QuickAccessDB/schemas/errors/Error.schema"
+import {CaughtError, CaughtErrorSchema} from "../../../../db/QuickAccessDB/schemas/errors/CaughtError.schema"
 
 const logQueue = 'logs'
 
