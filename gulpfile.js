@@ -449,7 +449,7 @@ const buildServerCfg = async (done) => {
     done()
 }
 
-const buildResourceConfigs = async (done) => {
+const buildResourceConfigs = (done) => {
     const directories = fs
         .readdirSync('./src/resources/', {withFileTypes: true})
         .filter((dirent) => dirent.isDirectory())
@@ -464,6 +464,8 @@ const buildResourceConfigs = async (done) => {
 
         fs.writeFileSync(`./${DIST_FOLDER}/resources/${resource}/resource.cfg`, resCfg.getAsCfg().toString())
     })
+
+    done()
 }
 
 const buildLogsConsumer = (done) => {
@@ -597,7 +599,7 @@ const watchWebViewsSvelte = () => {
 }
 
 const watchResourceConfig = () => {
-    const watcher = gulp.watch('./src/resources/**/resource.cfg')
+    const watcher = gulp.watch('./src/resources/**/resource.json')
 
     watcher.on('error', (err) => {
         log.error('Resource config watcher threw an error.')
@@ -608,24 +610,13 @@ const watchResourceConfig = () => {
         path = path.replace(/\\/g, '/')
         const resourceName = path.split('/resources/')[1].split('/')[0]
 
-        log.info(`Resource ${resourceName} config changed, distributing...`)
+        log.info(`Resource ${resourceName} config changed, building...`)
 
-        gulp.src(`./src/resources/${resourceName}/resource.cfg`)
-            .pipe(gulp.dest(`./${DIST_FOLDER}/resources/${resourceName}/`))
-            .on('end', () => {
-                log.info(`Successfully distributed ${resourceName} config`)
-            })
+        let resCfg = new ResourceConfig(path)
+        fs.writeFileSync(`./${DIST_FOLDER}/resources/${resourceName}/resource.cfg`, resCfg.getAsCfg().toString())
+
+        log.info(`Successfully built resource ${resourceName} config`)
     })
-}
-
-const watch = () => {
-    gulp.series('build', gulp.parallel(
-        'watch:client',
-        'watch:server',
-        'watch:webview',
-        'watch:assets',
-        'watch:config'
-    ))()
 }
 
 gulp.task('download:binary:windows', downloadBinaryWindows)
@@ -668,10 +659,21 @@ gulp.task('build:logs_consumer', buildLogsConsumer)
 gulp.task('watch:client', watchClientScripts)
 gulp.task('watch:server', watchServerScripts)
 gulp.task('watch:assets', watchClientAssets)
-gulp.task('watch:config', watchResourceConfig)
+gulp.task('watch:resource:config', watchResourceConfig)
 gulp.task('watch:webview:entry', watchWebViewsEntry)
 gulp.task('watch:webview:svelte', watchWebViewsSvelte)
 gulp.task('watch:webview', gulp.parallel('watch:webview:entry', 'watch:webview:svelte'))
+
+const watch = () => {
+    gulp.series('build', gulp.parallel(
+        'watch:client',
+        'watch:server',
+        'watch:webview',
+        'watch:assets',
+        'watch:resource:config',
+    ))()
+}
+
 gulp.task('watch', watch)
 
 export default watch
