@@ -59,12 +59,12 @@ const downloadToDist = async (url, destination) => {
     return downloadFile(url, DIST_FOLDER + '/' + destination)
 }
 
-const downloadBinaryLinux = async (cb) => {
+const downloadBinaryLinux = async (done) => {
     const url = 'https://cdn.altv.mp/server/release/x64_linux/altv-server'
     const path = 'altv-server'
 
     if (fs.existsSync(DIST_FOLDER + '/' + path)) {
-        cb()
+        done()
         return
     }
 
@@ -72,7 +72,7 @@ const downloadBinaryLinux = async (cb) => {
     downloadToDist(url, path)
         .then(() => {
             log.info('Executable download finished')
-            cb()
+            done()
         })
         .catch((err) => {
             log.error('Failed to download server executable.')
@@ -80,12 +80,12 @@ const downloadBinaryLinux = async (cb) => {
         })
 }
 
-const downloadBinaryWindows = (cb) => {
+const downloadBinaryWindows = (done) => {
     const url = 'https://cdn.altv.mp/server/release/x64_win32/altv-server.exe'
     const path = 'altv-server.exe'
 
     if (fs.existsSync(DIST_FOLDER + '/' + path)) {
-        cb()
+        done()
         return
     }
 
@@ -93,7 +93,7 @@ const downloadBinaryWindows = (cb) => {
     downloadToDist(url, path)
         .then(() => {
             log.info('Executable download finished')
-            cb()
+            done()
         })
         .catch((err) => {
             log.error('Failed to download server executable.')
@@ -101,13 +101,13 @@ const downloadBinaryWindows = (cb) => {
         })
 }
 
-const downloadBinary = async (cb) => {
+const downloadBinary = async (done) => {
     switch (process.platform) {
     case 'win32':
-        await downloadBinaryWindows(cb)
+        await downloadBinaryWindows(done)
         break
     case 'linux':
-        await downloadBinaryLinux(cb)
+        await downloadBinaryLinux(done)
         break
     default:
         log.error('There are no alt:V binaries for your OS.')
@@ -218,7 +218,6 @@ const downloadBytecodeModule = (platform) => {
     const fileName = urlSplit[urlSplit.length - 1]
 
     if (fs.existsSync(DIST_FOLDER + '/modules/' + fileName)) {
-        // cb()
         return
     }
 
@@ -234,39 +233,39 @@ const downloadBytecodeModule = (platform) => {
         })
 }
 
-const downloadAllWindows = async (cb) => {
+const downloadAllWindows = async (done) => {
     await new Promise((finish) => {
         gulp.parallel(
             'download:binary:windows',
             'download:models',
             'download:modules:windows'
         )(() => {
-            cb()
+            done()
             finish()
         })
     })
 }
 
-const downloadAllLinux = async (cb) => {
+const downloadAllLinux = async (done) => {
     await new Promise((finish) => {
         gulp.parallel(
             'download:binary:linux',
             'download:models',
             'download:modules:linux'
         )(() => {
-            cb()
+            done()
             finish()
         })
     })
 }
 
-const downloadAll = async (cb) => {
+const downloadAll = async (done) => {
     switch (process.platform) {
     case 'win32':
-        await downloadAllWindows(cb)
+        await downloadAllWindows(done)
         break
     case 'linux':
-        await downloadAllLinux(cb)
+        await downloadAllLinux(done)
         break
     default:
         throw 'There are no required alt:V files for your OS.'
@@ -648,13 +647,13 @@ gulp.task(
 gulp.task(
     'download:modules:linux',
     gulp.series(
-        async (cb) => {
+        async (done) => {
             await downloadJSModule('linux')
-            cb()
+            done()
         },
-        async (cb) => {
+        async (done) => {
             await downloadBytecodeModule('linux')
-            cb()
+            done()
         }
     )
 )
