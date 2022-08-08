@@ -10,6 +10,7 @@ import esbuildPluginGLSL from 'esbuild-plugin-glsl'
 
 import ServerConfig from './server.config.js'
 import ServerConfigUtils from './utils/ServerConfigUtils.js'
+import ResourceConfig from "./utils/ResourceConfig.js"
 
 const gulpEsbuild = createGulpEsbuild({})
 
@@ -277,6 +278,13 @@ const buildResource = (path, done) => {
     const resourceName = path.split('/resources/')[1].split('/')[0]
     const resourceType = path.split(`/${resourceName}/`)[1].split('/')[0]
     const indexPath = `./src/resources/${resourceName}/${resourceType}/index.ts`
+    const resourceCfgPath = `./src/resources/${resourceName}/resource.json`
+
+    if (!fs.existsSync(resourceCfgPath))
+        throw `Resource ${resourceName} has no resource.json!`
+
+    const resourceCfg = new ResourceConfig(resourceCfgPath)
+    const resourceEsbuildCfg = resourceCfg.getEsbuildCfg()
 
     let esbuildConfig = {}
 
@@ -286,12 +294,8 @@ const buildResource = (path, done) => {
             outfile: 'index.js',
             format: 'esm',
             platform: 'node',
-            bundle: true,
-            external: [
-                'alt-client',
-                'alt-shared',
-                'natives'
-            ]
+            bundle: resourceEsbuildCfg.bundle,
+            external: resourceEsbuildCfg.external
         }
         break
     case 'server':
@@ -299,21 +303,11 @@ const buildResource = (path, done) => {
             outfile: 'index.js',
             format: 'esm',
             platform: 'node',
-            bundle: true,
+            bundle: resourceEsbuildCfg.bundle,
             plugins: [
                 esbuildDecorators()
             ],
-            external: [
-                'alt-server',
-                '@typegoose/typegoose',
-                'alt-shared',
-                'dotenv',
-                'mongoose',
-                'node-watch',
-                '@elastic/elasticsearch',
-                'amqplib',
-                'redis-om'
-            ]
+            external: resourceEsbuildCfg.external
         }
         break
     default:
@@ -392,11 +386,6 @@ gulp.task('build:resources', (done) => {
                 .pipe(gulp.dest(`./${DIST_FOLDER}/resources/`))
                 .on('end', done)
         },
-        async function buildConfigs(done) {
-            gulp.src('./src/resources/**/*.cfg')
-                .pipe(gulp.dest(`./${DIST_FOLDER}/resources/`))
-                .on('end', done)
-        }
     )(done)
 })
 
@@ -453,14 +442,29 @@ const buildWebViewAsync = async (path) => {
     })
 }
 
-const build = (done) => {
-    return gulp.series('build:resources', async function buildServerCfg(done) {
-        let cfg = ServerConfigUtils.getAsCfg(await ServerConfig())
+const buildServerCfg = async (done) => {
+    let cfg = ServerConfigUtils.getAsCfg(await ServerConfig())
 
-        fs.writeFileSync('dist/server.cfg', cfg.toString())
+    fs.writeFileSync('dist/server.cfg', cfg.toString())
 
-        done()
-    }, buildLogsConsumer)(done)
+    done()
+}
+
+const buildResourceConfigs = async (done) => {
+    const directories = fs
+        .readdirSync('./src/resources/', {withFileTypes: true})
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name)
+
+    directories.forEach((resource) => {
+        const path = `./src/resources/${resource}/resource.json`
+        if (!fs.existsSync(path))
+            throw `Resource ${resource} has no resource.json!`
+
+        let resCfg = new ResourceConfig(path)
+
+        fs.writeFileSync(`./${DIST_FOLDER}/resources/${resource}/resource.cfg`, resCfg.getAsCfg().toString())
+    })
 }
 
 const buildLogsConsumer = (done) => {
@@ -488,6 +492,10 @@ const buildLogsConsumer = (done) => {
             )
         )
         .on('end', done)
+}
+
+const build = (done) => {
+    return gulp.series('build:resources', buildServerCfg, buildLogsConsumer, buildResourceConfigs)(done)
 }
 
 const watchClientScripts = () => {

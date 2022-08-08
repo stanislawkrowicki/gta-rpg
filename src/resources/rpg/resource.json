@@ -1,0 +1,17 @@
+{
+  "required-permissions": ["Screen Capture"],
+  "client-files": ["client/webviews/*"],
+  "bundle": true,
+  "external": [
+    "natives",
+    "alt-client",
+    "alt-server",
+    "alt-shared",
+    "dotenv",
+    "mongoose",
+    "node-watch",
+    "amqplib",
+    "redis-om",
+    "@typegoose/typegoose"
+  ]
+}
