@@ -444,7 +444,7 @@ const buildWebViewAsync = async (path) => {
 const buildServerCfg = async (done) => {
     let cfg = ServerConfigUtils.getAsCfg(await ServerConfig())
 
-    fs.writeFileSync('dist/server.cfg', cfg.toString())
+    fs.writeFileSync(`${DIST_FOLDER}/server.cfg`, cfg.toString())
 
     done()
 }
