@@ -441,7 +441,7 @@ const buildWebViewAsync = async (path) => {
     })
 }
 
-const buildServerCfg = async (done) => {
+const buildServerConfig = async (done) => {
     let cfg = ServerConfigUtils.getAsCfg(await ServerConfig())
 
     fs.writeFileSync(`${DIST_FOLDER}/server.cfg`, cfg.toString())
@@ -496,7 +496,7 @@ const buildLogsConsumer = (done) => {
 }
 
 const build = (done) => {
-    return gulp.series('build:resources', buildServerCfg, buildLogsConsumer, buildResourceConfigs)(done)
+    return gulp.series('build:resources', buildServerConfig, buildLogsConsumer, buildResourceConfigs)(done)
 }
 
 const watchClientScripts = () => {
