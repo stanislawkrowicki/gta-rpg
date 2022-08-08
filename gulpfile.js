@@ -473,11 +473,7 @@ const buildLogsConsumer = (done) => {
         .pipe(gulpEsbuild({
             outfile: 'index.js',
             format: 'esm',
-            platform: 'node',
-            bundle: true,
-            external: [
-                'amqplib'
-            ]
+            platform: 'node'
         }))
         .on('error', (err) => {
             if (err) {
