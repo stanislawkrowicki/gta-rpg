@@ -41,6 +41,8 @@ services:
   kibana:
     build: docker/kibana
     restart: always
+    volumes:
+      - data_kibana:/data/kibana
     environment:
       ELASTICSEARCH_HOST: elasticsearch
       ELASTICSEARCH_PORT: 9200
@@ -60,3 +62,4 @@ volumes:
   data_mongo:
   data_redis:
   data_elastic:
+  data_kibana:
