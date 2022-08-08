@@ -9,6 +9,7 @@ import Logger from "./logger/logger"
 import QuickDB from "./db/QuickDB"
 
 import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
+import type { ClientEvent } from '../shared/events/Events'
 
 {
     console.log = alt.log
@@ -52,7 +53,7 @@ class ClientHandles {
     list: any[]
 }
 
-class Client {
+export class Client {
     wrapped: alt.Player
 
     handles = new ClientHandles()
@@ -70,49 +71,50 @@ function typeCheck<T>(value: T): T {
     return value
 }
 
-alt.on(
-    'connectionQueueAdd',
-    (connectionQueueInfo: alt.IConnectionQueueInfo) => {
-        if (MainDB.isConnected) {
-            MainDB.collections.gameDevices
-                .findOne({
-                    $or: [
-                        { hwidHash: connectionQueueInfo.hwidHash },
-                        { hwidExHash: connectionQueueInfo.hwidExHash },
-                    ],
-                })
-                .then((device) => {
-                    if (device) {
-                        if (device.isBanned) {
-                            connectionQueueInfo.decline('')
-                        } else {
-                            connectionQueueInfo.accept()
-                        }
+alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => {
+    if (MainDB.isConnected) {
+        MainDB.collections.gameDevices
+            .findOne({
+                $or: [
+                    { hwidHash: connectionQueueInfo.hwidHash },
+                    { hwidExHash: connectionQueueInfo.hwidExHash },
+                ],
+            })
+            .then((device) => {
+                if (device) {
+                    if (device.isBanned) {
+                        connectionQueueInfo.decline('')
                     } else {
-                        MainDB.collections.gameDevices
-                            .create(
-                                typeCheck<GameDeviceSchema>({
-                                    hwidHash: connectionQueueInfo.hwidHash,
-                                    hwidExHash: connectionQueueInfo.hwidExHash,
-                                })
-                            )
-                            .catch(() => {
-                                alt.logError(
-                                    'There was an error with saving a new game device'
-                                )
-                            })
-                            .then(() => {
-                                connectionQueueInfo.accept()
-                            })
+                        connectionQueueInfo.accept()
                     }
-                })
-        } else {
-            connectionQueueInfo.decline(
-                "The server hasn't started yet... Try to connect later..."
-            )
-        }
+                } else {
+                    MainDB.collections.gameDevices
+                        .create(
+                            typeCheck<GameDeviceSchema>({
+                                hwidHash: connectionQueueInfo.hwidHash,
+                                hwidExHash: connectionQueueInfo.hwidExHash,
+                            })
+                        )
+                        .catch(() => {
+                            alt.logError(
+                                'There was an error with saving a new game device'
+                            )
+                        })
+                        .then(() => {
+                            connectionQueueInfo.accept()
+                        })
+                }
+            })
+    } else {
+        connectionQueueInfo.decline(
+            "The server hasn't started yet... Try to connect later..."
+        )
     }
-)
+})
+
+export function emitEvent(event: ClientEvent) {
+    // alt.emit(((event.constructor as typeof Event).ID) as unknown as string, event.onHandle)
+}
 
 alt.on('playerConnect', (player) => {
     const wrapper = new Client(player)

@@ -1,24 +1,31 @@
+/// #if SERVER
+import type altServer from 'alt-server'
+/// #endif
+
 const Events: any = {}
 
-function add(packetModule: any): any {
-    return packetModule.default.new()
+function add(eventModule: any): any {
+    return eventModule.default.new()
 }
 
 Events.readyToUse = false
 
-Events.initialize = (async () => {
-    Events.Server = {
-        chat: {
-            Message: add(await import('./server/chat/Message')),
-        }
-    }
-    Events.Client = {
-        chat: {
-            Message: add(await import('./client/chat/Message'))
-        }
-    }
+export abstract class Event {
+    static ID = 0
+}
 
-    Events.readyToUse = true
-})
+export abstract class ClientEvent {
+    /// #if SERVER
+    abstract onHandle(client: altServer.Player, object: this): void
+    /// #endif
+}
+
+export abstract class ServerEvent {
+    /// #if CLIENT
+    abstract onHandle(object: this): void
+    /// #endif
+}
+
+Events.initialize = (async () => {})
 
 export default Events
