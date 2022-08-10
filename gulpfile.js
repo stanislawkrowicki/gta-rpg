@@ -385,6 +385,11 @@ gulp.task('build:resources', (done) => {
                 .pipe(gulp.dest(`./${DIST_FOLDER}/resources/`))
                 .on('end', done)
         },
+        async function moveStaticWebViews(done) {
+            gulp.src('./src/resources/**/client/webviews/*.html')
+                .pipe(gulp.dest(`./${DIST_FOLDER}/resources/`))
+                .on('end', done)
+        }
     )(done)
 })
 
@@ -594,6 +599,28 @@ const watchWebViewsSvelte = () => {
     watchWebViews(gulp.watch('./src/resources/**/client/webviews/**/*.svelte'))
 }
 
+const watchStaticWebViews = () => {
+    const watcher = gulp.watch('./src/resources/**/client/webviews/*.html')
+
+    watcher.on('error', (err) => {
+        log.error('Static WebViews watcher threw an error.')
+        throw err
+    })
+
+    watcher.on('all', (_, path) => {
+        path = path.replace(/\\/g, '/')
+
+        const resourceName = path.split('/resources/')[1].split('/')[0]
+        const file = path.split('/webviews/')[1]
+
+        gulp.src(`./src/resources/${resourceName}/client/webviews/${file}`)
+            .pipe(gulp.dest(`./${DIST_FOLDER}/resources/`))
+            .on('end', () => {
+                log.info(`Successfully built resource ${resourceName} static webview ${file}`)
+            })
+    })
+}
+
 const watchResourceConfig = () => {
     const watcher = gulp.watch('./src/resources/**/resource.json')
 
@@ -658,7 +685,8 @@ gulp.task('watch:assets', watchClientAssets)
 gulp.task('watch:resource:config', watchResourceConfig)
 gulp.task('watch:webview:entry', watchWebViewsEntry)
 gulp.task('watch:webview:svelte', watchWebViewsSvelte)
-gulp.task('watch:webview', gulp.parallel('watch:webview:entry', 'watch:webview:svelte'))
+gulp.task('watch:webview:static', watchStaticWebViews)
+gulp.task('watch:webview', gulp.parallel('watch:webview:entry', 'watch:webview:svelte', 'watch:webview:static'))
 
 const watch = () => {
     gulp.series('build', gulp.parallel(
