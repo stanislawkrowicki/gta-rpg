@@ -1,5 +1,9 @@
 /// #if SERVER
-import type altServer from 'alt-server'
+import altServer from 'alt-server'
+/// #endif
+
+/// #if CLIENT
+import altClient from 'alt-client'
 /// #endif
 
 const Events: any = {}
@@ -12,17 +16,31 @@ Events.readyToUse = false
 
 export abstract class Event {
     static ID = 0
+
+    static new() {
+        this.ID++
+
+        /// #ifdef SERVER
+        if (this instanceof ClientEvent)
+            altServer.onClient(this.ID as unknown as string, (this.constructor as typeof ClientEvent).onHandle)
+        /// #endif
+
+        /// #ifdef CLIENT
+        if (this instanceof ServerEvent)
+            altClient.onServer(this.ID as unknown as string, (this.constructor as typeof ServerEvent).onHandle)
+        /// #endif
+    }
 }
 
-export abstract class ClientEvent {
+export abstract class ClientEvent extends Event {
     /// #if SERVER
-    abstract onHandle(client: altServer.Player, object: this): void
+    static onHandle(client: altServer.Player, object: ClientEvent): void {}
     /// #endif
 }
 
-export abstract class ServerEvent {
+export abstract class ServerEvent extends Event {
     /// #if CLIENT
-    abstract onHandle(object: this): void
+    static onHandle(object: ServerEvent): void {}
     /// #endif
 }
 
