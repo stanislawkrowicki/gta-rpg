@@ -516,7 +516,7 @@ const build = (done) => {
 }
 
 const watchClientScripts = () => {
-    const watcher = gulp.watch('./src/resources/**/client/**/*.ts')
+    const watcher = gulp.watch('./src/resources/*/client/**/*.ts')
 
     watcher.on('error', (err) => {
         log.error('Client file watcher threw an error.')
@@ -536,7 +536,7 @@ const watchClientScripts = () => {
 }
 
 const watchServerScripts = () => {
-    const watcher = gulp.watch('./src/resources/**/server/**/*.ts')
+    const watcher = gulp.watch('./src/resources/*/server/**/*.ts')
 
     watcher.on('error', (err) => {
         log.error('Server file watcher threw an error.')
@@ -551,6 +551,29 @@ const watchServerScripts = () => {
         log.info(`Resource ${resourceName} server changed, rebuilding...`)
         buildResource(path, () => {
             log.info(`Successfully rebuilt ${resourceName} server`)
+        })
+    })
+}
+
+const watchSharedScripts = () => {
+    const watcher = gulp.watch('./src/resources/*/shared/**/*')
+
+    watcher.on('error', (err) => {
+        log.error('Shared file watcher threw an error.')
+        throw err
+    })
+
+    watcher.on('all', (_, path) => {
+        path = path.replace(/\\/g, '/')
+
+        const resourceName = path.split('/resources/')[1].split('/')[0]
+
+        log.info(`Resource ${resourceName} shared changed, rebuilding server and client...`)
+        buildResource(`./src/resources/${resourceName}/server/index.ts`, () => {
+            log.info(`Successfully rebuilt ${resourceName} server`)
+        })
+        buildResource(`./src/resources/${resourceName}/client/index.ts`, () => {
+            log.info(`Successfully rebuilt ${resourceName} client`)
         })
     })
 }
@@ -696,6 +719,7 @@ gulp.task('build:logs_consumer', buildLogsConsumer)
 
 gulp.task('watch:client', watchClientScripts)
 gulp.task('watch:server', watchServerScripts)
+gulp.task('watch:shared', watchSharedScripts)
 gulp.task('watch:assets', watchClientAssets)
 gulp.task('watch:resource:config', watchResourceConfig)
 gulp.task('watch:webview:entry', watchWebViewsEntry)
@@ -707,6 +731,7 @@ const watch = () => {
     gulp.series('build', gulp.parallel(
         'watch:client',
         'watch:server',
+        'watch:shared',
         'watch:webview',
         'watch:assets',
         'watch:resource:config',
