@@ -6,6 +6,9 @@ import altServer from 'alt-server'
 import altClient from 'alt-client'
 /// #endif
 
+// import {ClientEvent} from "./ClientEvent";
+// import {ServerEvent} from "./ServerEvent";
+
 const Events: any = {}
 
 function add(eventModule: any): any {
@@ -20,30 +23,35 @@ export abstract class Event {
     static new() {
         this.ID++
 
-        /// #ifdef SERVER
-        if (this instanceof ClientEvent)
-            altServer.onClient(this.ID as unknown as string, (this.constructor as typeof ClientEvent).onHandle)
-        /// #endif
-
-        /// #ifdef CLIENT
-        if (this instanceof ServerEvent)
-            altClient.onServer(this.ID as unknown as string, (this.constructor as typeof ServerEvent).onHandle)
-        /// #endif
+        // /// #if SERVER
+        // if (this instanceof ClientEvent)
+        //     altServer.onClient(this.ID as unknown as string, (this.constructor as typeof ClientEvent).onHandle)
+        // /// #endif
+        //
+        // /// #if CLIENT
+        // if (this instanceof ServerEvent)
+        //     altClient.onServer(this.ID as unknown as string, (this.constructor as typeof ServerEvent).onHandle)
+        // /// #endif
     }
 }
 
-export abstract class ClientEvent extends Event {
-    /// #if SERVER
-    static onHandle(client: altServer.Player, object: ClientEvent): void {}
-    /// #endif
-}
+Events.initialize = (async () => {
+    Events.Server = {
+        chat: {
+            Message: add(await import('../chat/events/server/Message')),
+            ClientMessage: add(await import('../chat/events/server/ClientMessage'))
+        }
+    }
 
-export abstract class ServerEvent extends Event {
-    /// #if CLIENT
-    static onHandle(object: ServerEvent): void {}
-    /// #endif
-}
+    Events.Client = {
+        chat: {
+            Message: add(await import('../chat/events/client/Message'))
+        }
+    }
 
-Events.initialize = (async () => {})
+    Events.readyToUse = true
+})
+
+// await Events.initialize()
 
 export default Events

@@ -9,7 +9,8 @@ import Logger from "./logger/logger"
 import QuickDB from "./db/QuickDB"
 
 import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
-import type { ClientEvent } from '../shared/events/Events'
+import Chat from './chat/Chat'
+import Events from "../shared/events/Events"
 
 {
     console.log = alt.log
@@ -112,10 +113,6 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
     }
 })
 
-export function emitEvent(event: ClientEvent) {
-    // alt.emit(((event.constructor as typeof Event).ID) as unknown as string, event.onHandle)
-}
-
 alt.on('playerConnect', (player) => {
     const wrapper = new Client(player)
     player.setMeta('wrapper', wrapper)
@@ -124,7 +121,7 @@ alt.on('playerConnect', (player) => {
 
     player.spawn(spawn.x, spawn.y, spawn.z, 0)
     //
-    // alt.emitClient(player,'GAME:SPAWN')
+    alt.emitClient(player,'GAME:SPAWN')
     //
     // try {
     //     const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
@@ -132,19 +129,19 @@ alt.on('playerConnect', (player) => {
     //     alt.log(e)
     // }
     Logger.auth.login.success(player)
-    try {
-        const veh = new alt.Vehicle(
-            'PARIAH',
-            spawn.x,
-            spawn.y,
-            spawn.z,
-            0,
-            0,
-            0
-        )
-    } catch (e) {
-        alt.log(e)
-    }
+    // try {
+    //     const veh = new alt.Vehicle(
+    //         'PARIAH',
+    //         spawn.x,
+    //         spawn.y,
+    //         spawn.z,
+    //         0,
+    //         0,
+    //         0
+    //     )
+    // } catch (e) {
+    //     alt.log(e)
+    // }
 })
 
 alt.on('playerDisconnect', (player) => {

@@ -4,17 +4,20 @@
 </script>
 
 <style>
+    .message {
+        color: white;
+    }
     .author {
-
+        display: inline-block;
     }
     .author:after {
         content: ": ";
     }
-    .message {
-
+    .message-content {
+        display: inline-block;
     }
 </style>
 
-<div>
-    <div class="author">{author}</div><div class="message">{message}</div>
+<div class="message">
+    <div class="author">{author}</div><div class="message-content">{message}</div>
 </div>

@@ -11,6 +11,7 @@ import esbuildPluginGLSL from 'esbuild-plugin-glsl'
 import ServerConfig from './server.config.js'
 import ServerConfigUtils from './utils/ServerConfigUtils.js'
 import ResourceConfig from "./utils/ResourceConfig.js"
+import ifdefPlugin from "esbuild-ifdef"
 
 const gulpEsbuild = createGulpEsbuild({})
 
@@ -294,6 +295,14 @@ const buildResource = (path, done) => {
             format: 'esm',
             platform: 'node',
             bundle: resourceEsbuildCfg.bundle,
+            plugins: [
+                ifdefPlugin.default({
+                    variables: {
+                        SERVER: false,
+                        CLIENT: true
+                    }
+                })
+            ],
             external: resourceEsbuildCfg.external
         }
         break
@@ -304,7 +313,13 @@ const buildResource = (path, done) => {
             platform: 'node',
             bundle: resourceEsbuildCfg.bundle,
             plugins: [
-                esbuildDecorators()
+                esbuildDecorators(),
+                ifdefPlugin.default({
+                    variables: {
+                        SERVER: true,
+                        CLIENT: false
+                    }
+                })
             ],
             external: resourceEsbuildCfg.external
         }

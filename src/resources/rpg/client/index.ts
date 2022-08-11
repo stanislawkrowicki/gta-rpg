@@ -6,6 +6,7 @@ import alt from 'alt-client'
 import type { Player } from 'alt-client'
 import Camera from './Camera'
 import View from './View'
+import Chat from './chat/Chat'
 
 const LocalPlayer: Player = null
 
@@ -97,6 +98,8 @@ alt.on('GAME:USER_SHOULD_LOGIN', () => {})
 
 alt.onServer('GAME:SPAWN', () => {
     game.setPedDefaultComponentVariation(alt.Player.local.scriptID)
+
+    const chat = new Chat()
 })
 
 alt.onServer('GAME:LOGIN_PANEL:SHOW', async () => {
