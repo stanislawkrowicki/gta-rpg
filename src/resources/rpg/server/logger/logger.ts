@@ -131,6 +131,9 @@ export default class Logger {
                 hwidHash: player.hwidHash,
                 hwidExHash: player.hwidExHash,
                 message: message,
+                posX: player.pos.x,
+                posY: player.pos.y,
+                posZ: player.pos.z,
                 timestamp: new Date().toISOString()
             })))
         }
