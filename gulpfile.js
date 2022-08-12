@@ -491,7 +491,7 @@ const buildResourceConfigs = (done) => {
 const buildLogsConsumer = (done) => {
     gulp.src('./src/logs-consumer/consumer.ts')
         .pipe(gulpEsbuild({
-            outfile: 'index.js',
+            outfile: 'consumer.js',
             format: 'esm',
             platform: 'node'
         }))
