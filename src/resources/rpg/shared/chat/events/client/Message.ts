@@ -1,5 +1,6 @@
 /// #if SERVER
 import altServer from 'alt-server'
+import Logger from "../../../../server/logger/logger"
 /// #endif
 
 import {ClientEvent} from "../../../events/ClientEvent"
@@ -18,6 +19,7 @@ export default class Message extends ClientEvent {
     static onHandle(client: altServer.Player, object: Message): void {
         if (typeof object.message !== 'string') return // TODO: Suspicious event
 
+        Logger.chat.message(client, object.message)
         const MESSAGE_DISTANCE = 100 // maximum distance where players should see the message
 
         const sx = client.pos.x

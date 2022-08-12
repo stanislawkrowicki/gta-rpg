@@ -122,4 +122,17 @@ export default class Logger {
             }
         }
     }
+
+    static chat = {
+        message: (player: alt.Player, message: string) => {
+            Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
+                type: 'chat.message',
+                username: player.name,
+                hwidHash: player.hwidHash,
+                hwidExHash: player.hwidExHash,
+                message: message,
+                timestamp: new Date().toISOString()
+            })))
+        }
+    }
 }
