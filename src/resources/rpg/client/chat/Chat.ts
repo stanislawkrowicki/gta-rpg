@@ -15,6 +15,7 @@ export default class Chat {
 
             if (!this.webview.focused) {
                 this.webview.focus()
+                this.webview.emit('FOCUS')
                 this.controlAction = alt.everyTick(() => {
                     native.disableAllControlActions(0)
                 })

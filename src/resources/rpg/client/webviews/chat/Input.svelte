@@ -5,6 +5,16 @@
 
     export let message = ""
 
+    let inputField
+
+    export function focus() {
+        inputField.focus()
+    }
+
+    export function unfocus() {
+        inputField.blur()
+    }
+
     const onKeyPress = (e) => {
         if (e.key === 'Enter') send()
     }
@@ -27,4 +37,4 @@
     }
 </style>
 
-<input bind:value={message} on:keypress={onKeyPress} autofocus/>
+<input bind:value={message} bind:this={inputField} on:keypress={onKeyPress}/>

@@ -8,6 +8,7 @@
     }
 
     let messages: Message[] = []
+    let inputComponent
 
     const handleMessage = (messageEvent) => {
         if (messageEvent.detail === '') {
@@ -19,9 +20,18 @@
         unfocus()
     }
 
+    const focus = () => {
+        inputComponent.focus()
+    }
+
     const unfocus = () => {
+        inputComponent.unfocus()
         alt.emit('UNFOCUS')
     }
+
+    alt.on('FOCUS', () => {
+        focus()
+    })
 
     alt.on('CLIENT_MESSAGE', (obj) => {
         messages = [...messages, { author: obj.author, message: obj.message }]
@@ -40,6 +50,6 @@
     </div>
 
     <div class="message-input">
-        <Input on:input={handleMessage}></Input>
+        <Input bind:this={inputComponent} on:input={handleMessage}></Input>
     </div>
 </div>
