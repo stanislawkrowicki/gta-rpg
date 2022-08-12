@@ -10,7 +10,17 @@
     let messages: Message[] = []
 
     const handleMessage = (messageEvent) => {
+        if (messageEvent.detail === '') {
+            unfocus()
+            return
+        }
+
         alt.emit('MESSAGE', messageEvent.detail)
+        unfocus()
+    }
+
+    const unfocus = () => {
+        alt.emit('UNFOCUS')
     }
 
     alt.on('CLIENT_MESSAGE', (obj) => {
