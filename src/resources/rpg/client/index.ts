@@ -7,6 +7,7 @@ import type { Player } from 'alt-client'
 import Camera from './Camera'
 import View from './View'
 import Chat from './chat/Chat'
+import Events from "../shared/events/Events"
 
 const LocalPlayer: Player = null
 
@@ -99,7 +100,7 @@ alt.on('GAME:USER_SHOULD_LOGIN', () => {})
 alt.onServer('GAME:SPAWN', () => {
     game.setPedDefaultComponentVariation(alt.Player.local.scriptID)
 
-    const chat = new Chat()
+    Chat.initialize()
 })
 
 alt.onServer('GAME:LOGIN_PANEL:SHOW', async () => {
@@ -155,3 +156,7 @@ alt.setTimeout(() => {
     // MapEditor.initialize()
 }, 100)
 // WebView2DPool.initialize()
+
+Events.initialize().then(() => {
+    alt.log('Initialized events')
+})

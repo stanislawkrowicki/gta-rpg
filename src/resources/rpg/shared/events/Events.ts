@@ -6,8 +6,8 @@ import altServer from 'alt-server'
 import altClient from 'alt-client'
 /// #endif
 
-// import {ClientEvent} from "./ClientEvent";
-// import {ServerEvent} from "./ServerEvent";
+import type {ClientEvent} from "./ClientEvent"
+import type {ServerEvent} from "./ServerEvent"
 
 const Events: any = {}
 
@@ -17,21 +17,28 @@ function add(eventModule: any): any {
 
 Events.readyToUse = false
 
+export enum EventType {
+    CLIENT = 'ClientEvent',
+    SERVER = 'ServerEvent'
+}
+
 export abstract class Event {
     static ID = 0
+
+    protected static eventType: EventType
 
     static new() {
         this.ID++
 
-        // /// #if SERVER
-        // if (this instanceof ClientEvent)
-        //     altServer.onClient(this.ID as unknown as string, (this.constructor as typeof ClientEvent).onHandle)
-        // /// #endif
-        //
-        // /// #if CLIENT
-        // if (this instanceof ServerEvent)
-        //     altClient.onServer(this.ID as unknown as string, (this.constructor as typeof ServerEvent).onHandle)
-        // /// #endif
+        /// #if SERVER
+        if (this.eventType === EventType.CLIENT)
+            altServer.onClient(this.ID as unknown as string, (this as typeof ClientEvent).onHandle)
+        /// #endif
+
+        /// #if CLIENT
+        if (this.eventType === EventType.SERVER)
+            altClient.onServer(this.ID as unknown as string, (this as typeof ServerEvent).onHandle)
+        /// #endif
     }
 }
 
@@ -51,7 +58,5 @@ Events.initialize = (async () => {
 
     Events.readyToUse = true
 })
-
-// await Events.initialize()
 
 export default Events

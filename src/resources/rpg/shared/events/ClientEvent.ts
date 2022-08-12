@@ -6,9 +6,12 @@ import type altServer from "alt-server"
 import altClient from "alt-client"
 /// #endif
 
-import {Event} from "./Events"
+import {Event, EventType} from "./Events"
 
 export abstract class ClientEvent extends Event {
+    protected static eventType = EventType.CLIENT
+
+    // TODO: Every event should be checked, suspicious ones logged to Mongo
     /// #if SERVER
     static onHandle(client: altServer.Player, object: ClientEvent): void {}
     /// #endif
@@ -16,6 +19,6 @@ export abstract class ClientEvent extends Event {
 
 /// #if CLIENT
 export function emitEvent(event: ClientEvent) {
-    altClient.emit((event.constructor as typeof Event).ID as unknown as string)
+    altClient.emitServerRaw((event.constructor as typeof Event).ID as unknown as string, event)
 }
 /// #endif

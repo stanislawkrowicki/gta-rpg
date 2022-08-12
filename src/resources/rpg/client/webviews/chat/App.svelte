@@ -10,9 +10,12 @@
     let messages: Message[] = []
 
     const handleMessage = (messageEvent) => {
-        // messages = [...messages, {author: 'test', message: messageEvent.detail}]
-        // alt.emit('MESSAGE', messageEvent.detail)
+        alt.emit('MESSAGE', messageEvent.detail)
     }
+
+    alt.on('CLIENT_MESSAGE', (obj) => {
+        messages = [...messages, { author: obj.author, message: obj.message }]
+    })
 
     document.onmousedown = (e) => {
         e.preventDefault()

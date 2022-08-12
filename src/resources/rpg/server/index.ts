@@ -9,7 +9,6 @@ import Logger from "./logger/logger"
 import QuickDB from "./db/QuickDB"
 
 import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
-import Chat from './chat/Chat'
 import Events from "../shared/events/Events"
 
 {
@@ -162,3 +161,7 @@ MainDB.connect()
 await QuickDB.connect()
 
 await Logger.initialize()
+
+Events.initialize().then(() => {
+    alt.log('~lb~' + 'Initialized events')
+})

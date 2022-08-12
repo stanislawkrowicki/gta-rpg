@@ -1,12 +1,11 @@
 import alt from 'alt-client'
-// import Message from "../../shared/chat/events/client/Message";
-// import {emitEvent} from "../../shared/events/ClientEvent";
+import Message from "../../shared/chat/events/client/Message"
+import {emitEvent} from "../../shared/events/ClientEvent"
 
 export default class Chat {
-    webview: alt.WebView
+    static webview: alt.WebView
 
-    constructor() {
-        alt.log('running')
+    static initialize() {
         this.webview = new alt.WebView('/resource/client/webviews/chat/index.html')
 
         alt.on('keydown', (key) => {
@@ -19,7 +18,7 @@ export default class Chat {
         })
 
         this.webview.on('MESSAGE', (message: string) => {
-            // emitEvent(new Message(message))
+            emitEvent(new Message(message))
         })
     }
 }
