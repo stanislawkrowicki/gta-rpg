@@ -86,7 +86,7 @@ export default class Logger {
                         eventID: event.ID,
                         eventContent: eventContent,
                         gameDevice: gameDevice, // TODO: Add Account when its ready
-                        timestamp: new Date().toISOString() // TODO: check if timestamps could be Unix for elasticsearch
+                        timestamp: Date.now() // TODO: check if timestamps could be Unix for elasticsearch
                     })
                 ).catch((err) => {
                     Logger.caughtError('logger', 1, err)
@@ -108,7 +108,7 @@ export default class Logger {
                     hwidHash: player.hwidHash,
                     hwidExHash: player.hwidExHash,
                     ip: player.ip,
-                    timestamp: new Date().toISOString()
+                    timestamp: Date.now()
                 }))
                 )
             },
@@ -120,7 +120,7 @@ export default class Logger {
                     hwidHash: player.hwidHash,
                     hwidExHash: player.hwidExHash,
                     ip: player.ip,
-                    timestamp: new Date().toISOString()
+                    timestamp: Date.now()
                 }))
                 )
             },
@@ -133,7 +133,7 @@ export default class Logger {
                     hwidExHash: player.hwidExHash,
                     ip: player.ip,
                     tryCount: tryCount,
-                    timestamp: new Date().toISOString()
+                    timestamp: Date.now()
                 }))
                 )
             }
@@ -147,7 +147,7 @@ export default class Logger {
                     hwidHash: player.hwidHash,
                     hwidExHash: player.hwidExHash,
                     ip: player.ip,
-                    timestamp: new Date().toISOString()
+                    timestamp: Date.now()
                 }))
                 )
             },
@@ -159,7 +159,7 @@ export default class Logger {
                     hwidHash: player.hwidHash,
                     hwidExHash: player.hwidExHash,
                     ip: player.ip,
-                    timestamp: new Date().toISOString()
+                    timestamp: Date.now()
                 }))
                 )
             }
@@ -177,7 +177,7 @@ export default class Logger {
                 posX: player.pos.x,
                 posY: player.pos.y,
                 posZ: player.pos.z,
-                timestamp: new Date().toISOString()
+                timestamp: Date.now()
             })))
         }
     }

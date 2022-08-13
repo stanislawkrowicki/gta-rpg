@@ -1,6 +1,7 @@
 import * as amqplib from 'amqplib'
 import {Client} from "@elastic/elasticsearch"
 import 'dotenv/config'
+import {MappingTypeMapping} from "@elastic/elasticsearch/lib/api/types"
 
 const getDB = () => {
     try {
@@ -23,11 +24,38 @@ const getDB = () => {
     }
 }
 
-(async () => {
-    const dbClient = getDB()
+const dbClient = getDB()
 
+const createIndexIfNotExists = async (index: string, mappings?: MappingTypeMapping) => {
+    if (await dbClient.indices.exists({ index: index })) return
+
+    console.info(`Index ${index} does not exist, creating...`)
+
+    if (mappings)
+        await dbClient.indices.create({
+            index: index,
+            body: {
+                mappings: mappings
+            }
+        })
+    else
+        await dbClient.indices.create({
+            index: index
+        })
+}
+
+(async () => {
     const queue = 'logs'
     const elasticIndex = 'logs'
+
+    await createIndexIfNotExists(elasticIndex, {
+        properties: {
+            "timestamp": {
+                type: "date",
+                format: "epoch_millis"
+            }
+        }
+    })
 
     const conn = await amqplib.connect('amqp://localhost')
     const channel = await conn.createChannel()

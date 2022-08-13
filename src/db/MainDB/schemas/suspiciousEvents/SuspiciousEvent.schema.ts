@@ -13,5 +13,5 @@ export default class SuspiciousEventSchema {
     @prop({ ref: () => AccountSchema }) account?: Ref<AccountSchema>
     @prop({ ref: () => GameDeviceSchema }) gameDevice: Ref<GameDeviceSchema>
 
-    @prop() timestamp: string
+    @prop() timestamp: number
 }
