@@ -57,9 +57,9 @@ export default class Logger {
         await Logger.errorRepository.save(error)
     }
 
-    static caughtError = async (resource: string, id: number, stacktrace: string) => {
+    static caughtError = async (resource: string, id: number, stacktrace: string, message?: string) => {
         /// #if process.env['ENVIRONMENT'] !== 'prod'
-        alt.logError(`[${resource}][${id}]: CAUGHT: ${stacktrace}`)
+        alt.logError(`[${resource}][${id}]: CAUGHT: ${message || ''} ${stacktrace}`)
         /// #endif
 
         const caughtError = Logger.caughtErrorRepository.createEntity()
@@ -67,6 +67,7 @@ export default class Logger {
         caughtError.resource = resource
         caughtError.id = id
         caughtError.stacktrace = stacktrace
+        caughtError.message = message || ''
 
         await Logger.caughtErrorRepository.save(caughtError)
     }
