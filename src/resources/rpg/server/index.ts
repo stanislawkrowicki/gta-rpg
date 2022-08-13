@@ -10,6 +10,7 @@ import QuickDB from "./db/QuickDB"
 
 import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
 import Events from "../shared/events/Events"
+import Utils from "../shared/utils/Utils"
 
 {
     console.log = alt.log
@@ -67,10 +68,6 @@ export class Client {
 //     static map: Record<string, Client>
 // }
 
-function typeCheck<T>(value: T): T {
-    return value
-}
-
 alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => {
     if (MainDB.isConnected) {
         MainDB.collections.gameDevices
@@ -90,7 +87,7 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
                 } else {
                     MainDB.collections.gameDevices
                         .create(
-                            typeCheck<GameDeviceSchema>({
+                            Utils.typeCheck<GameDeviceSchema>({
                                 hwidHash: connectionQueueInfo.hwidHash,
                                 hwidExHash: connectionQueueInfo.hwidExHash,
                             })

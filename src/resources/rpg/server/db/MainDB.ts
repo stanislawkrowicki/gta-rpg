@@ -9,6 +9,7 @@ import VehicleEquipmentSchema from '../../../../db/MainDB/schemas/equipments/Veh
 import NPCSchema from '../../../../db/MainDB/schemas/npcs/NPC.schema'
 import GameDeviceSchema from '../../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
 import { getModelForClass } from '@typegoose/typegoose'
+import SuspiciousEventSchema from "../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema"
 
 
 export default class MainDB {
@@ -23,6 +24,7 @@ export default class MainDB {
 
         gameDevices?: mongoose.Model<GameDeviceSchema>,
 
+        suspiciousEvents?: mongoose.Model<SuspiciousEventSchema>
         // groups?: mongoose.Model<any>,
         // accounts?: mongoose.Model<any>,
 
@@ -68,6 +70,7 @@ export default class MainDB {
     static initializeCollections() {
         MainDB.addCollection(GameDeviceSchema, 'gameDevices')
 
+        MainDB.addCollection(SuspiciousEventSchema, 'suspiciousEvents')
         // MainDB.addCollection('Group', GroupSchema, 'groups')
         // MainDB.addCollection('Account', AccountSchema, 'accounts')
 

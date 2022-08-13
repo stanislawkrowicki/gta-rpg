@@ -17,9 +17,11 @@ export default class Message extends ClientEvent {
 
     /// #if SERVER
     static onHandle(client: altServer.Player, object: Message): void {
-        if (typeof object.message !== 'string') return // TODO: Suspicious event
+        if (typeof object.message !== 'string')
+            Logger.suspiciousEvent(client, Message, object)
 
         Logger.chat.message(client, object.message)
+
         const MESSAGE_DISTANCE = 100 // maximum distance where players should see the message
 
         const sx = client.pos.x

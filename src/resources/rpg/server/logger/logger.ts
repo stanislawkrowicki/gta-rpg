@@ -1,11 +1,15 @@
-import type alt from "alt-server"
+import alt from "alt-server"
 import { Queues, QueueChannels } from '../queue/queue'
+import MainDB from "../db/MainDB"
 import QuickDB from "../db/QuickDB"
 import type { Channel } from "amqplib"
 import type { Repository } from "redis-om"
 import {Warn, WarnSchema} from "../../../../db/QuickAccessDB/schemas/errors/Warn.schema"
 import {Error, ErrorSchema} from "../../../../db/QuickAccessDB/schemas/errors/Error.schema"
 import {CaughtError, CaughtErrorSchema} from "../../../../db/QuickAccessDB/schemas/errors/CaughtError.schema"
+import type {Event} from "../../shared/events/Events"
+import type SuspiciousEventSchema from "../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema"
+import Utils from "../../shared/utils/Utils"
 
 const logQueue = 'logs'
 
@@ -26,6 +30,10 @@ export default class Logger {
 
     // WARNS, ERRORS -> REDIS
     static warn = async(resource: string, id: number, message: string) => {
+        /// #if process.env['ENVIRONMENT'] !== 'prod'
+        alt.logWarning(`[${resource}][${id}]: ${message}`)
+        /// #endif
+
         const warn = Logger.warnRepository.createEntity()
 
         warn.resource = resource
@@ -36,6 +44,10 @@ export default class Logger {
     }
 
     static error = async (resource: string, id: number, message: string) => {
+        /// #if process.env['ENVIRONMENT'] !== 'prod'
+        alt.logError(`[${resource}][${id}]: ${message}`)
+        /// #endif
+
         const error = Logger.errorRepository.createEntity()
 
         error.resource = resource
@@ -46,6 +58,10 @@ export default class Logger {
     }
 
     static caughtError = async (resource: string, id: number, stacktrace: string) => {
+        /// #if process.env['ENVIRONMENT'] !== 'prod'
+        alt.logError(`[${resource}][${id}]: CAUGHT: ${stacktrace}`)
+        /// #endif
+
         const caughtError = Logger.caughtErrorRepository.createEntity()
 
         caughtError.resource = resource
@@ -53,6 +69,32 @@ export default class Logger {
         caughtError.stacktrace = stacktrace
 
         await Logger.caughtErrorRepository.save(caughtError)
+    }
+
+    // SUSPICIOUS EVENTS -> MONGO
+    static suspiciousEvent = (player: alt.Player, event: typeof Event | any, eventContent: Event) => {
+        MainDB.collections.gameDevices
+            .findOne({
+                $or: [
+                    { hwidHash: player.hwidHash },
+                    { hwidExHash: player.hwidExHash },
+                ],
+            }).then((gameDevice) => {
+                MainDB.collections.suspiciousEvents.create(
+                    Utils.typeCheck<SuspiciousEventSchema>({
+                        eventID: event.ID,
+                        eventContent: eventContent,
+                        gameDevice: gameDevice, // TODO: Add Account when its ready
+                        timestamp: new Date().toISOString() // TODO: check if timestamps could be Unix for elasticsearch
+                    })
+                ).catch((err) => {
+                    Logger.caughtError('logger', 1, err)
+                        .then()
+                })
+            }).catch((err) => {
+                Logger.caughtError('logger', 0, err)
+                    .then()
+            })
     }
 
     // NORMAL LOGS -> RABBIT -> ELASTIC
