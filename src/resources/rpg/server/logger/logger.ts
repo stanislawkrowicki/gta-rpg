@@ -86,7 +86,7 @@ export default class Logger {
                         eventID: event.ID,
                         eventContent: eventContent,
                         gameDevice: gameDevice, // TODO: Add Account when its ready
-                        timestamp: Date.now() // TODO: check if timestamps could be Unix for elasticsearch
+                        timestamp: Date.now()
                     })
                 ).catch((err) => {
                     Logger.caughtError('logger', 1, err)
