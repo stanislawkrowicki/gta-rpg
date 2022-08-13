@@ -92,10 +92,8 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
                                 hwidExHash: connectionQueueInfo.hwidExHash,
                             })
                         )
-                        .catch(() => {
-                            alt.logError(
-                                'There was an error with saving a new game device'
-                            )
+                        .catch((err) => {
+                            Logger.caughtError('server-index', 0, err).then()
                         })
                         .then(() => {
                             connectionQueueInfo.accept()
