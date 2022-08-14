@@ -7,6 +7,7 @@ import type {Client} from "../index"
 
 export default class Sessions {
     private static SESSION_SAVE_INTERVAL = 5 * 1000 // TODO: *60 after testing
+    private static SESSION_TTL = 24 * 60 * 60 * 7
 
     private static sessionRepository: Repository<Session>
 
@@ -49,7 +50,9 @@ export default class Sessions {
                 session.pedCamViewMode = player.pedCamViewMode
                 session.vehicleCamViewMode = player.vehicleCamViewMode
 
-                Sessions.sessionRepository.save(session).then()
+                Sessions.sessionRepository.save(session).then((id) => {
+                    Sessions.sessionRepository.expire(id, Sessions.SESSION_TTL)
+                })
             })
     }
 
