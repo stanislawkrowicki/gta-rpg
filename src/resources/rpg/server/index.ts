@@ -145,7 +145,10 @@ alt.on('playerConnect', async (player) => {
 })
 
 alt.on('playerDisconnect', async (player) => {
-    await Sessions.saveSessionForPlayer(player.getMeta('wrapper') as Client)
+    const wrapper = player.getMeta('wrapper')
+
+    Logger.connection.disconnect(wrapper as Client)
+    await Sessions.saveSessionForPlayer(wrapper as Client)
     player.deleteMeta('wrapper')
 })
 

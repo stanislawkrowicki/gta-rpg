@@ -10,6 +10,7 @@ import {CaughtError, CaughtErrorSchema} from "../../../../db/QuickAccessDB/schem
 import type {Event} from "../../shared/events/Events"
 import type SuspiciousEventSchema from "../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema"
 import Utils from "../../shared/utils/Utils"
+import type {Client} from "../index"
 
 const logQueue = 'logs'
 
@@ -99,6 +100,33 @@ export default class Logger {
     }
 
     // NORMAL LOGS -> RABBIT -> ELASTIC
+    static connection = {
+        disconnect: (wrapper: Client) => {
+            const altPlayer = wrapper.wrapped
+            const hwidHash = altPlayer.hwidHash
+            const hwidExHash = altPlayer.hwidExHash
+            const ip = altPlayer.ip
+
+            const username = altPlayer.name
+
+            const posX = altPlayer.pos.x
+            const posY = altPlayer.pos.y
+            const posZ = altPlayer.pos.z
+
+            Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
+                type: 'connection.disconnect',
+                username: username,
+                hwidHash: hwidHash,
+                hwidExHash: hwidExHash,
+                ip: ip,
+                x: posX,
+                y: posY,
+                z: posZ,
+                timestamp: Date.now()
+            })))
+        }
+    }
+
     static auth = {
         login: {
             success: (player: alt.Player) => {
