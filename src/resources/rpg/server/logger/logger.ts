@@ -181,4 +181,16 @@ export default class Logger {
             })))
         }
     }
+
+    static sessions = {
+        restore: (player: alt.Player) => {
+            Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
+                type: 'session.restore',
+                username: player.name,
+                hwidHash: player.hwidHash,
+                hwidExHash: player.hwidExHash,
+                timestamp: Date.now()
+            })))
+        }
+    }
 }

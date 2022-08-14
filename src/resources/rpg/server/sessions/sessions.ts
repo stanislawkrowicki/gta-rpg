@@ -4,6 +4,7 @@ import type {Session} from "../../../../db/QuickAccessDB/schemas/sessions/Sessio
 import QuickDB from "../db/QuickDB"
 import {SessionSchema} from "../../../../db/QuickAccessDB/schemas/sessions/Session.schema"
 import type {Client} from "../index"
+import Logger from "../logger/logger"
 
 export default class Sessions {
     private static SESSION_SAVE_INTERVAL = 5 * 1000 // TODO: *60 after testing
@@ -78,5 +79,7 @@ export default class Sessions {
 
         wrapper.pedCamViewMode = session.pedCamViewMode
         wrapper.vehicleCamViewMode = session.vehicleCamViewMode
+
+        Logger.sessions.restore(player)
     }
 }
