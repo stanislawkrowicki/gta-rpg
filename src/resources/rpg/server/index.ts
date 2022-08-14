@@ -111,7 +111,7 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
     }
 })
 
-alt.on('playerConnect', (player) => {
+alt.on('playerConnect', async (player) => {
     const wrapper = new Client(player)
     player.setMeta('wrapper', wrapper)
 
@@ -127,6 +127,8 @@ alt.on('playerConnect', (player) => {
     //     alt.log(e)
     // }
     Logger.auth.login.success(player)
+
+    await Sessions.restoreSession(wrapper)
     // try {
     //     const veh = new alt.Vehicle(
     //         'PARIAH',

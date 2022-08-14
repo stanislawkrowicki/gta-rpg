@@ -62,4 +62,21 @@ export default class Sessions {
         for (let i = 0; i < players.length; i++)
             Sessions.saveSessionForPlayer(players[i].getMeta('wrapper') as Client).then()
     }
+
+    static async restoreSession(wrapper: Client) {
+        const player = wrapper.wrapped
+
+        const session = await Sessions.sessionRepository.search()
+            .where('playerHwidHash')
+            .equals(player.hwidHash)
+            .return.first()
+
+        if (session === null) return
+
+        player.pos = new alt.Vector3(session.x, session.y, session.z)
+        player.rot = new alt.Vector3(0, session.ry, session.rz)
+
+        wrapper.pedCamViewMode = session.pedCamViewMode
+        wrapper.vehicleCamViewMode = session.vehicleCamViewMode
+    }
 }
