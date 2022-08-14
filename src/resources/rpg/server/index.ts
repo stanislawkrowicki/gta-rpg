@@ -11,6 +11,7 @@ import QuickDB from "./db/QuickDB"
 import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
 import Events from "../shared/events/Events"
 import Utils from "../shared/utils/Utils"
+import Sessions from "./sessions/sessions"
 
 {
     console.log = alt.log
@@ -58,6 +59,9 @@ export class Client {
     wrapped: alt.Player
 
     handles = new ClientHandles()
+
+    pedCamViewMode = 1
+    vehicleCamViewMode = 1
 
     constructor(wrapped: alt.Player) {
         this.wrapped = wrapped
@@ -138,7 +142,8 @@ alt.on('playerConnect', (player) => {
     // }
 })
 
-alt.on('playerDisconnect', (player) => {
+alt.on('playerDisconnect', async (player) => {
+    await Sessions.saveSessionForPlayer(player.getMeta('wrapper') as Client)
     player.deleteMeta('wrapper')
 })
 
@@ -160,3 +165,5 @@ await Logger.initialize()
 Events.initialize().then(() => {
     alt.log('~lb~' + 'Initialized events')
 })
+
+Sessions.initialize()
