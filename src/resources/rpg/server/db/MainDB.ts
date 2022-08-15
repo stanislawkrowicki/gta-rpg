@@ -31,7 +31,7 @@ export default class MainDB {
         // sessions?: mongoose.Model<any>,
 
         // properties?: mongoose.Model<any>,
-        // vehicles?: mongoose.Model<any>,
+        vehicles?: mongoose.Model<VehicleSchema>,
         //
         // vehicleEquipments?: mongoose.Model<any>
     } = {}
@@ -71,13 +71,14 @@ export default class MainDB {
         MainDB.addCollection(GameDeviceSchema, 'gameDevices')
 
         MainDB.addCollection(SuspiciousEventSchema, 'suspiciousEvents')
+
+        MainDB.addCollection(VehicleSchema, 'vehicles')
         // MainDB.addCollection('Group', GroupSchema, 'groups')
         // MainDB.addCollection('Account', AccountSchema, 'accounts')
 
         // MainDB.addCollection('Session', SessionSchema, 'sessions')
 
         // MainDB.addCollection('Property', PropertySchema, 'properties')
-        // MainDB.addCollection('Vehicle', VehicleSchema, 'vehicles')
 
         // MainDB.addCollection('VehicleEquipment', VehicleEquipmentSchema, 'vehicleEquipments')
 

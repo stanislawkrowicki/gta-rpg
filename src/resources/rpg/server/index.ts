@@ -12,6 +12,7 @@ import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDe
 import Events from "../shared/events/Events"
 import Utils from "../shared/utils/Utils"
 import Sessions from "./sessions/sessions"
+import Vehicles from "./vehicles/vehicles"
 
 {
     console.log = alt.log
@@ -172,3 +173,6 @@ Events.initialize().then(() => {
 })
 
 Sessions.initialize()
+
+await Vehicles.initialize()
+// await Vehicles.addVehicle()
