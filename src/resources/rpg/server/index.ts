@@ -13,6 +13,7 @@ import Events from "../shared/events/Events"
 import Utils from "../shared/utils/Utils"
 import Sessions from "./sessions/Sessions"
 import Vehicles from "./vehicles/Vehicles"
+import MarkerManager from "./markers/MarkerManager"
 
 {
     console.log = alt.log
@@ -179,3 +180,5 @@ Sessions.initialize()
 
 await Vehicles.initialize()
 // await Vehicles.addVehicle()
+
+MarkerManager.initialize()

@@ -8,6 +8,7 @@ import Camera from './Camera'
 import View from './View'
 import Chat from './chat/Chat'
 import Events from "../shared/events/Events"
+import Markers from "./markers/Markers"
 
 const LocalPlayer: Player = null
 
@@ -160,3 +161,5 @@ alt.setTimeout(() => {
 Events.initialize().then(() => {
     alt.log('Initialized events')
 })
+
+Markers.initialize()
