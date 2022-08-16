@@ -6,40 +6,16 @@ import altServer from 'alt-server'
 import altClient from 'alt-client'
 /// #endif
 
-import type {ClientEvent} from "./ClientEvent"
-import type {ServerEvent} from "./ServerEvent"
+import Event from './Event'
 
-const Events: any = {}
+const Events: any = {
+    map: {} as Record<number, Event>,
+
+    readyToUse: false
+}
 
 function add(eventModule: any): any {
     return eventModule.default.new()
-}
-
-Events.readyToUse = false
-
-export enum EventType {
-    CLIENT = 'ClientEvent',
-    SERVER = 'ServerEvent'
-}
-
-export abstract class Event {
-    static ID = 0
-
-    protected static eventType: EventType
-
-    static new() {
-        this.ID++
-
-        /// #if SERVER
-        if (this.eventType === EventType.CLIENT)
-            altServer.onClient(this.ID as unknown as string, (this as typeof ClientEvent).onHandle)
-        /// #endif
-
-        /// #if CLIENT
-        if (this.eventType === EventType.SERVER)
-            altClient.onServer(this.ID as unknown as string, (this as typeof ServerEvent).onHandle)
-        /// #endif
-    }
 }
 
 Events.initialize = (async () => {
@@ -55,6 +31,22 @@ Events.initialize = (async () => {
             Message: add(await import('../chat/events/client/Message'))
         }
     }
+
+    /// #if SERVER
+    altServer.onClient((eventId, player, object) => {
+        if((eventId as unknown as number) > Event.ID || (eventId as unknown as number) < 0) {
+            return
+        }
+
+        Events.map[eventId](player.getMeta('wrapper'), object)
+    })
+    /// #endif
+
+    /// #if CLIENT
+    altClient.onServer((eventId, object) => {
+        Events.map[eventId](object)
+    })
+    /// #endif
 
     Events.readyToUse = true
 })

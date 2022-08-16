@@ -7,7 +7,7 @@ import type { Repository } from "redis-om"
 import {Warn, WarnSchema} from "../../../../db/QuickAccessDB/schemas/errors/Warn.schema"
 import {Error, ErrorSchema} from "../../../../db/QuickAccessDB/schemas/errors/Error.schema"
 import {CaughtError, CaughtErrorSchema} from "../../../../db/QuickAccessDB/schemas/errors/CaughtError.schema"
-import type {Event} from "../../shared/events/Events"
+import type Event from "../../shared/events/Event"
 import type SuspiciousEventSchema from "../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema"
 import Utils from "../../shared/utils/Utils"
 import type {Client} from "../index"
@@ -74,12 +74,12 @@ export default class Logger {
     }
 
     // SUSPICIOUS EVENTS -> MONGO
-    static suspiciousEvent = (player: alt.Player, event: typeof Event | any, eventContent: Event) => {
+    static suspiciousEvent = (client: Client, event: typeof Event | any, eventContent: Event): void => {
         MainDB.collections.gameDevices
             .findOne({
                 $or: [
-                    { hwidHash: player.hwidHash },
-                    { hwidExHash: player.hwidExHash },
+                    { hwidHash: client.wrapped.hwidHash },
+                    { hwidExHash: client.wrapped.hwidExHash },
                 ],
             }).then((gameDevice) => {
                 MainDB.collections.suspiciousEvents.create(
@@ -101,8 +101,8 @@ export default class Logger {
 
     // NORMAL LOGS -> RABBIT -> ELASTIC
     static connection = {
-        disconnect: (wrapper: Client) => {
-            const altPlayer = wrapper.wrapped
+        disconnection: (client: Client) => {
+            const altPlayer = client.wrapped
             const hwidHash = altPlayer.hwidHash
             const hwidExHash = altPlayer.hwidExHash
             const ip = altPlayer.ip
@@ -129,37 +129,37 @@ export default class Logger {
 
     static auth = {
         login: {
-            success: (player: alt.Player) => {
+            success: (client: Client) => {
                 Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.login.success',
-                    username: player.name,
-                    hwidHash: player.hwidHash,
-                    hwidExHash: player.hwidExHash,
-                    ip: player.ip,
+                    username: client.wrapped.name,
+                    hwidHash: client.wrapped.hwidHash,
+                    hwidExHash: client.wrapped.hwidExHash,
+                    ip: client.wrapped.ip,
                     timestamp: Date.now()
                 }))
                 )
             },
 
-            restore: (player: alt.Player) => {
+            restoration: (client: Client) => {
                 Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.login.restore',
-                    username: player.name,
-                    hwidHash: player.hwidHash,
-                    hwidExHash: player.hwidExHash,
-                    ip: player.ip,
+                    username: client.wrapped.name,
+                    hwidHash: client.wrapped.hwidHash,
+                    hwidExHash: client.wrapped.hwidExHash,
+                    ip: client.wrapped.ip,
                     timestamp: Date.now()
                 }))
                 )
             },
 
-            error: (player: alt.Player, tryCount: number) => {
+            error: (client: Client, tryCount: number) => {
                 Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.login.error',
-                    username: player.name,
-                    hwidHash: player.hwidHash,
-                    hwidExHash: player.hwidExHash,
-                    ip: player.ip,
+                    username: client.wrapped.name,
+                    hwidHash: client.wrapped.hwidHash,
+                    hwidExHash: client.wrapped.hwidExHash,
+                    ip: client.wrapped.ip,
                     tryCount: tryCount,
                     timestamp: Date.now()
                 }))
@@ -168,25 +168,25 @@ export default class Logger {
         },
 
         register: {
-            success: (player: alt.Player) => {
+            success: (client: Client) => {
                 Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.register.success',
-                    username: player.name,
-                    hwidHash: player.hwidHash,
-                    hwidExHash: player.hwidExHash,
-                    ip: player.ip,
+                    username: client.wrapped.name,
+                    hwidHash: client.wrapped.hwidHash,
+                    hwidExHash: client.wrapped.hwidExHash,
+                    ip: client.wrapped.ip,
                     timestamp: Date.now()
                 }))
                 )
             },
 
-            error: (player: alt.Player) => {
+            error: (client: Client) => {
                 Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.register.error',
-                    username: player.name,
-                    hwidHash: player.hwidHash,
-                    hwidExHash: player.hwidExHash,
-                    ip: player.ip,
+                    username: client.wrapped.name,
+                    hwidHash: client.wrapped.hwidHash,
+                    hwidExHash: client.wrapped.hwidExHash,
+                    ip: client.wrapped.ip,
                     timestamp: Date.now()
                 }))
                 )
@@ -195,28 +195,28 @@ export default class Logger {
     }
 
     static chat = {
-        message: (player: alt.Player, message: string) => {
+        message: (client: Client, message: string) => {
             Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                 type: 'chat.message',
-                username: player.name,
-                hwidHash: player.hwidHash,
-                hwidExHash: player.hwidExHash,
+                username: client.wrapped.name,
+                hwidHash: client.wrapped.hwidHash,
+                hwidExHash: client.wrapped.hwidExHash,
                 message: message,
-                posX: player.pos.x,
-                posY: player.pos.y,
-                posZ: player.pos.z,
+                posX: client.wrapped.pos.x,
+                posY: client.wrapped.pos.y,
+                posZ: client.wrapped.pos.z,
                 timestamp: Date.now()
             })))
         }
     }
 
     static sessions = {
-        restore: (player: alt.Player) => {
+        restoration: (client: Client) => {
             Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                 type: 'session.restore',
-                username: player.name,
-                hwidHash: player.hwidHash,
-                hwidExHash: player.hwidExHash,
+                username: client.wrapped.name,
+                hwidHash: client.wrapped.hwidHash,
+                hwidExHash: client.wrapped.hwidExHash,
                 timestamp: Date.now()
             })))
         }

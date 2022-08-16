@@ -64,22 +64,20 @@ export default class Sessions {
             Sessions.saveSessionForPlayer(players[i].getMeta('wrapper') as Client).then()
     }
 
-    static async restoreSession(wrapper: Client) {
-        const player = wrapper.wrapped
-
+    static async restoreSession(client: Client) {
         const session = await Sessions.sessionRepository.search()
             .where('playerHwidHash')
-            .equals(player.hwidHash)
+            .equals(client.wrapped.hwidHash)
             .return.first()
 
         if (session === null) return
 
-        player.pos = new alt.Vector3(session.x, session.y, session.z)
-        player.rot = new alt.Vector3(0, session.ry, session.rz)
+        client.wrapped.pos = new alt.Vector3(session.x, session.y, session.z)
+        client.wrapped.rot = new alt.Vector3(0, session.ry, session.rz)
 
-        wrapper.pedCamViewMode = session.pedCamViewMode
-        wrapper.vehicleCamViewMode = session.vehicleCamViewMode
+        client.pedCamViewMode = session.pedCamViewMode
+        client.vehicleCamViewMode = session.vehicleCamViewMode
 
-        Logger.sessions.restore(player)
+        Logger.sessions.restoration(client)
     }
 }

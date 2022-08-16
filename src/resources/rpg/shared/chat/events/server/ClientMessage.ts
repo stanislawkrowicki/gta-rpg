@@ -2,7 +2,7 @@
 import Chat from "../../../../client/chat/Chat"
 /// #endif
 
-import {ServerEvent} from "../../../events/ServerEvent"
+import ServerEvent from "../../../events/ServerEvent"
 
 export default class ClientMessage extends ServerEvent {
     author: string

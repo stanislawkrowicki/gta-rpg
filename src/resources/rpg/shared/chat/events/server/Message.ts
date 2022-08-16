@@ -1,4 +1,4 @@
-import {ServerEvent} from "../../../events/ServerEvent"
+import ServerEvent from "../../../events/ServerEvent"
 
 export default class Message extends ServerEvent {
     message: string

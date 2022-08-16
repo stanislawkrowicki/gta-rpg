@@ -1,13 +1,17 @@
 /// #if SERVER
-import altServer from 'alt-server'
 import Logger from "../../../../server/logger/logger"
 /// #endif
 
-import {ClientEvent} from "../../../events/ClientEvent"
+import ClientEvent from "../../../events/ClientEvent"
 import {emitEvent} from "../../../events/ServerEvent"
 import ClientMessage from "../server/ClientMessage"
+import type { Client } from '../../../../server'
+import { Clients } from '../../../../server'
 
 export default class Message extends ClientEvent {
+    /** Maximum distance where players should see the message */
+    static MAX_MESSAGE_DISTANCE = 100
+
     message: string
 
     constructor(message: string) {
@@ -16,36 +20,36 @@ export default class Message extends ClientEvent {
     }
 
     /// #if SERVER
-    static onHandle(client: altServer.Player, object: Message): void {
+    static onHandle(client: Client, object: Message): void {
         if (typeof object.message !== 'string')
-            Logger.suspiciousEvent(client, Message, object)
+            return Logger.suspiciousEvent(client, Message, object)
 
         Logger.chat.message(client, object.message)
 
-        const MESSAGE_DISTANCE = 100 // maximum distance where players should see the message
+        const sx = client.wrapped.pos.x
+        const sy = client.wrapped.pos.y
+        const sz = client.wrapped.pos.z
 
-        const sx = client.pos.x
-        const sy = client.pos.y
-        const sz = client.pos.z
-
-        for (let i = 0; i < altServer.Player.all.length; i++) {
-            const player = altServer.Player.all[i]
+        for (let i = 0; i < Clients.length; i++) {
+            const player = Clients[i]
 
             if (player === client) {
-                emitEvent(player, new ClientMessage(client.name, object.message))
+                emitEvent(player, new ClientMessage(client.wrapped.name, object.message))
                 continue
             }
 
-            const tx = player.pos.x
-            const ty = player.pos.y
-            const tz = player.pos.z
+            const tx = player.wrapped.pos.x
+            const ty = player.wrapped.pos.y
+            const tz = player.wrapped.pos.z
 
             const dx = tx - sx
             const dy = ty - sy
             const dz = tz - sz
 
-            if (Math.sqrt((dx * dx) + (dy * dy) + (dz * dz)) <= MESSAGE_DISTANCE)
-                emitEvent(player, new ClientMessage(client.name, object.message))
+            const distance = Math.sqrt((dx * dx) + (dy * dy) + (dz * dz))
+
+            if (distance <= Message.MAX_MESSAGE_DISTANCE)
+                emitEvent(player, new ClientMessage(client.wrapped.name, object.message))
         }
     }
     /// #endif

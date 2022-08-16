@@ -2,7 +2,7 @@ import alt from 'alt-server'
 import QuickDB from "../db/QuickDB"
 import MainDB from "../db/MainDB"
 import Logger from "../logger/logger"
-import VehicleStorehouse from "./storehouse"
+import VehicleStorehouse from "./VehicleStorehouse"
 import VehicleSchema, {VehicleOwnerType} from "../../../../db/MainDB/schemas/vehicles/Vehicle.schema"
 import Utils from "../../shared/utils/Utils"
 

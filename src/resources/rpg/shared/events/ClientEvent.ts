@@ -1,18 +1,18 @@
 /// #if SERVER
-import type altServer from "alt-server"
+import type { Client } from '../../server'
 /// #endif
 
 /// #if CLIENT
 import altClient from "alt-client"
 /// #endif
 
-import {Event, EventType} from "./Events"
+import Event, {EventType} from './Event'
 
-export abstract class ClientEvent extends Event {
+export default abstract class ClientEvent extends Event {
     protected static eventType = EventType.CLIENT
 
     /// #if SERVER
-    static onHandle(client: altServer.Player, object: ClientEvent): void {}
+    static onHandle(client: Client, object: ClientEvent): void {}
     /// #endif
 }
 

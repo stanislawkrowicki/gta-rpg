@@ -11,8 +11,8 @@ import QuickDB from "./db/QuickDB"
 import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
 import Events from "../shared/events/Events"
 import Utils from "../shared/utils/Utils"
-import Sessions from "./sessions/sessions"
-import Vehicles from "./vehicles/vehicles"
+import Sessions from "./sessions/Sessions"
+import Vehicles from "./vehicles/Vehicles"
 
 {
     console.log = alt.log
@@ -51,27 +51,19 @@ class HubCamera {
     }
 }
 
-class ClientHandles {
-    map: any
-    list: any[]
-}
-
 export class Client {
     wrapped: alt.Player
 
-    handles = new ClientHandles()
 
     pedCamViewMode = 1
     vehicleCamViewMode = 1
 
-    constructor(wrapped: alt.Player) {
-        this.wrapped = wrapped
+    constructor(player: alt.Player) {
+        this.wrapped = player
     }
 }
 
-// class Clients {
-//     static map: Record<string, Client>
-// }
+export const Clients: Client[] = []
 
 alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => {
     if (MainDB.isConnected) {
@@ -113,8 +105,10 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
 })
 
 alt.on('playerConnect', async (player) => {
-    const wrapper = new Client(player)
-    player.setMeta('wrapper', wrapper)
+    const wrappedPlayer = new Client(player)
+    player.setMeta('wrapper', wrappedPlayer)
+
+    Clients.push(wrappedPlayer)
 
     // alt.emitClient(player, "GAME:LOGIN_PANEL:SHOW")
 
@@ -127,9 +121,9 @@ alt.on('playerConnect', async (player) => {
     // } catch (e) {
     //     alt.log(e)
     // }
-    Logger.auth.login.success(player)
+    Logger.auth.login.success(wrappedPlayer)
 
-    await Sessions.restoreSession(wrapper)
+    await Sessions.restoreSession(wrappedPlayer)
     // try {
     //     const veh = new alt.Vehicle(
     //         'PARIAH',
@@ -146,19 +140,28 @@ alt.on('playerConnect', async (player) => {
 })
 
 alt.on('playerDisconnect', async (player) => {
-    const wrapper = player.getMeta('wrapper')
+    const wrapper = player.getMeta('wrapper') as Client
 
-    Logger.connection.disconnect(wrapper as Client)
-    await Sessions.saveSessionForPlayer(wrapper as Client)
+    for(let i = 0; i < Clients.length; i++) {
+        const client = Clients[i]
+
+        if(client === wrapper) {
+            Clients.splice(i, 1)
+        }
+    }
+
+    Logger.connection.disconnection(wrapper)
+    await Sessions.saveSessionForPlayer(wrapper)
+
     player.deleteMeta('wrapper')
 })
 
-alt.onClient(
-    'GAME:LOGIN_PANEL:LOGIN_ACTION',
-    (player: alt.Player, login: string, password: string) => {
-        alt.log(login, password)
-    }
-)
+// alt.onClient(
+//     'GAME:LOGIN_PANEL:LOGIN_ACTION',
+//     (player: alt.Player, login: string, password: string) => {
+//         alt.log(login, password)
+//     }
+// )
 
 HotReload.startWatching()
 
