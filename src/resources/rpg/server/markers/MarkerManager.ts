@@ -1,9 +1,12 @@
 import alt from 'alt-server'
-import type {Marker} from "../../shared/markers/Markers"
-import {emitEvent} from "../../shared/events/ServerEvent"
-import ClientEnterAcknowledgeColshape from "../../shared/events/server/markers/ClientEnterAcknowledgeColshape"
-import {Clients} from "../index"
-import ClientLeaveAcknowledgeColshape from "../../shared/events/server/markers/ClientLeaveAcknowledgeColshape"
+
+import ClientEnterAcknowledgeColshape from '../../shared/events/server/markers/ClientEnterAcknowledgeColshape'
+import ClientLeaveAcknowledgeColshape from '../../shared/events/server/markers/ClientLeaveAcknowledgeColshape'
+
+import type { Marker } from '../../shared/markers/Markers'
+
+import { Clients } from '../index'
+import { emitEvent } from '../../shared/events/ServerEvent'
 
 export default class MarkerManager {
     static markers: Marker[] = []

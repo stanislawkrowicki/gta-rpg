@@ -1,12 +1,12 @@
 /// #if SERVER
-import Logger from "../../../../server/logger/logger"
-/// #endif
-
-import ClientEvent from "../../../events/ClientEvent"
-import {emitEvent} from "../../../events/ServerEvent"
-import ClientMessage from "../server/ClientMessage"
+import Logger from '../../../../server/logger/logger'
+import { emitEvent } from '../../../events/ServerEvent'
 import type { Client } from '../../../../server'
 import { Clients } from '../../../../server'
+/// #endif
+
+import ClientEvent from '../../../events/ClientEvent'
+import ClientMessage from '../server/ClientMessage'
 
 export default class Message extends ClientEvent {
     /** Maximum distance where players should see the message */
