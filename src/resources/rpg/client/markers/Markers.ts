@@ -1,37 +1,37 @@
 import alt from 'alt-client'
 import type {Marker} from "../../shared/markers/Markers"
-import {CylinderMarker, MarkerType} from "../../shared/markers/Markers"
+import {CylinderMarker, CylinderMarkerData, MarkerData, MarkerType} from "../../shared/markers/Markers"
 import native from "natives"
 
 export default class Markers {
-    static markersToRender: Marker[] = []
+    static markersToRender: MarkerData[] = []
 
     static initialize() {
         alt.everyTick(() => {
             for (let i = 0; i < Markers.markersToRender.length; i++) {
-                const marker = Markers.markersToRender[i]
+                const markerData = Markers.markersToRender[i]
 
-                switch (marker.markerType) {
+                switch (markerData.markerType) {
                 case MarkerType.Cylinder:
-                    const typedMarker = marker as CylinderMarker
+                    const data = markerData as CylinderMarkerData
 
-                    native.drawMarker(typedMarker.nativeMarkerType,
-                        typedMarker.pos.x,
-                        typedMarker.pos.y,
-                        typedMarker.pos.z,
+                    native.drawMarker(data.nativeMarkerType,
+                        data.pos.x,
+                        data.pos.y,
+                        data.pos.z,
                         0,
                         0,
                         0,
-                        typedMarker.rot.x,
-                        typedMarker.rot.y,
-                        typedMarker.rot.z,
-                        typedMarker.radius,
-                        typedMarker.radius,
-                        typedMarker.radius,
-                        typedMarker.color.r,
-                        typedMarker.color.g,
-                        typedMarker.color.b,
-                        typedMarker.color.a,
+                        data.rot.x,
+                        data.rot.y,
+                        data.rot.z,
+                        data.radius * 2,
+                        data.radius * 2,
+                        data.height * 2,
+                        data.color.r,
+                        data.color.g,
+                        data.color.b,
+                        data.color.a,
                         false,
                         false,
                         2,
@@ -45,12 +45,12 @@ export default class Markers {
         })
     }
 
-    static startRenderingMarker(marker: Marker) {
-        Markers.markersToRender.push(marker)
+    static startRenderingMarker(markerData: MarkerData) {
+        Markers.markersToRender.push(markerData)
     }
 
-    static stopRenderingMarker(marker: Marker) {
-        const index = Markers.markersToRender.indexOf(marker)
+    static stopRenderingMarker(markerData: MarkerData) {
+        const index = Markers.markersToRender.findIndex(m => m.ID === markerData.ID)
         if (index > -1)
             Markers.markersToRender.splice(index, 1)
     }

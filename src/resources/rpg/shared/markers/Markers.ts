@@ -1,5 +1,9 @@
 /// #if SERVER
 import altServer from 'alt-server'
+import {emitEvent} from "../events/ServerEvent"
+import ClientEnterAcknowledgeZone from "../events/server/markers/ClientEnterAcknowledgeZone"
+import ClientLeaveAcknowledgeZone from "../events/server/markers/ClientLeaveAcknowledgeZone"
+import type {Client} from "../../server"
 /// #endif
 
 import type altShared from 'alt-shared'
@@ -43,40 +47,83 @@ export enum MarkerType {
     Cylinder
 }
 
-/// #if SERVER
 export type OnEnterFunction = (entity: altServer.Entity) => void
 export type OnLeaveFunction = (entity: altServer.Entity) => void
-/// #endif
 
-export abstract class Marker {
+export abstract class MarkerData {
+    ID: number
+
     markerType: MarkerType
     nativeMarkerType: NativeMarkerType
 
     pos: altShared.Vector3
-    rot: altShared.Vector3
+}
 
+export abstract class Marker {
+    markerData: MarkerData
+
+    playersOnly: boolean
     /// #if SERVER
-    interactionColshape: altServer.Colshape
-    clientAcknowledgeColshape?: altServer.Colshape
-    /// #endif
+    clientInteractionZone: altServer.Colshape
+
+    clientEnterAcknowledgeZone?: altServer.ColshapeSphere
+    clientLeaveAcknowledgeZone?: altServer.ColshapeSphere
 
     onEnter: OnEnterFunction
     onLeave: OnLeaveFunction
 
-    static onAcknowledgeEnter() {}
-    static onAcknowledgeLeave() {}
+    onAcknowledgeZoneEnter(entity: altServer.Entity) {
+        if (entity.type !== 0) return // is not a player
+
+        const client = (entity.getMeta('wrapper') as Client)
+        if (client && client.wrapped)
+            emitEvent(client, new ClientEnterAcknowledgeZone(this.markerData))
+    }
+
+    onAcknowledgeZoneLeave(entity: altServer.Entity) {
+        if (entity.type !== 0) return // is not a player
+
+        const client = (entity.getMeta('wrapper') as Client)
+        if (client && client.wrapped)
+            emitEvent(client, new ClientLeaveAcknowledgeZone(this.markerData))
+    }
+
+    handleEnter(entity: altServer.Entity) {
+        if (this.playersOnly) {
+            if (entity.type === 0) // is player
+                this.onEnter(entity)
+            return
+        }
+
+        this.onEnter(entity)
+    }
+
+    handleLeave(entity: altServer.Entity) {
+        if (this.playersOnly) {
+            if (entity.type === 0) // is player
+                this.onLeave(entity)
+            return
+        }
+
+        this.onLeave(entity)
+    }
+    /// #endif
 }
 
-export class CylinderMarker extends Marker {
+export class CylinderMarkerData extends MarkerData {
+    rot: altShared.Vector3
     radius: number
     height: number
     color: altShared.RGBA
+}
+
+export class CylinderMarker extends Marker {
+    declare markerData: CylinderMarkerData
+
     shouldRender: boolean
     renderDistance?: number
 
-    /// #if SERVER
     blip?: altServer.Blip
-    /// #endif
 
     /// #if SERVER
     constructor(pos: altServer.Vector3,
@@ -92,24 +139,31 @@ export class CylinderMarker extends Marker {
         blip?: altServer.Blip) {
         super()
 
-        this.markerType = MarkerType.Cylinder
-        this.nativeMarkerType = NativeMarkerType.VerticalCylinder
-        this.pos = pos
-        this.rot = rot
-        this.radius = radius
-        this.height = height
-        this.color = color
+        this.markerData = new CylinderMarkerData()
+
+        this.markerData.markerType = MarkerType.Cylinder
+        this.markerData.nativeMarkerType = NativeMarkerType.VerticalCylinder
+        this.markerData.pos = pos
+        this.markerData.rot = rot
+        this.markerData.radius = radius
+        this.markerData.height = height
+        this.markerData.color = color
         this.onEnter = onEnter
         this.onLeave = onLeave
         this.shouldRender = !!shouldRender
         if (renderDistance) this.renderDistance = renderDistance
         if (blip) this.blip = blip
 
-        this.interactionColshape = new altServer.ColshapeCylinder(this.pos.x, this.pos.y, this.pos.z, this.radius, this.height)
-        this.interactionColshape.playersOnly = playersOnly
+        this.clientInteractionZone = new altServer.ColshapeCylinder(pos.x, pos.y, pos.z, radius, height)
+        this.clientInteractionZone.playersOnly = playersOnly
 
-        this.clientAcknowledgeColshape = new altServer.ColshapeSphere(this.pos.x, this.pos.y, this.pos.z, this.renderDistance)
-        this.clientAcknowledgeColshape.playersOnly = playersOnly
+        if (this.shouldRender) {
+            this.clientEnterAcknowledgeZone = new altServer.ColshapeSphere(pos.x, pos.y, pos.z, this.renderDistance)
+            this.clientEnterAcknowledgeZone.playersOnly = true
+
+            this.clientLeaveAcknowledgeZone = new altServer.ColshapeSphere(pos.x, pos.y, pos.z, this.renderDistance * 1.3)
+            this.clientLeaveAcknowledgeZone.playersOnly = true
+        }
     }
     /// #endif
 }

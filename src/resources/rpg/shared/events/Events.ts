@@ -23,6 +23,11 @@ Events.initialize = (async () => {
         chat: {
             Message: add(await import('../chat/events/server/Message')),
             ClientMessage: add(await import('../chat/events/server/ClientMessage'))
+        },
+
+        markers: {
+            ClientEnterAcknowledgeZone: add(await import('./server/markers/ClientEnterAcknowledgeZone')),
+            ClientLeaveAcknowledgeZone: add(await import('./server/markers/ClientLeaveAcknowledgeZone'))
         }
     }
 
@@ -44,6 +49,8 @@ Events.initialize = (async () => {
 
     /// #if CLIENT
     altClient.onServer((eventId, object) => {
+        if (!(eventId in Events.map)) return
+
         Events.map[eventId](object)
     })
     /// #endif

@@ -15,6 +15,12 @@ const LocalPlayer: Player = null
 class GameDefaultsInitiator {
     static initiate() {
         alt.everyTick(() => {
+            // https://altv.stuyk.com/docs/articles/snippets/flickering-webview.html
+            // When using things such as markers, you will notice your webview flicker when the marker is being rendered.
+            // This is a well known GTA V bug and can be easily fixed.
+            // @ts-ignore
+            game.drawRect(0, 0, 0, 0, 0, 0, 0, 0, 0)
+
             game.setPauseMenuActive(false)
             game.hudWeaponWheelIgnoreControlInput(true)
         })

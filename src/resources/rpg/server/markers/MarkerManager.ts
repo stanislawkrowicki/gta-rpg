@@ -1,15 +1,11 @@
 import alt from 'alt-server'
 
-import ClientEnterAcknowledgeColshape from '../../shared/events/server/markers/ClientEnterAcknowledgeColshape'
-import ClientLeaveAcknowledgeColshape from '../../shared/events/server/markers/ClientLeaveAcknowledgeColshape'
-
 import type { Marker } from '../../shared/markers/Markers'
-
-import { Clients } from '../index'
-import { emitEvent } from '../../shared/events/ServerEvent'
 
 export default class MarkerManager {
     static markers: Marker[] = []
+
+    static lastInsertedID = 0
 
     static initialize() {
         alt.on('entityEnterColshape', MarkerManager.colshapeEnterListener)
@@ -17,27 +13,26 @@ export default class MarkerManager {
     }
 
     static add(marker: Marker) {
+        marker.markerData.ID = MarkerManager.lastInsertedID++
         MarkerManager.markers.push(marker)
     }
 
     private static colshapeEnterListener(colshape: alt.Colshape, entity: alt.Entity) {
         for (let i = 0; i < MarkerManager.markers.length; i++) {
-            if (colshape === MarkerManager.markers[i].interactionColshape)
-                MarkerManager.markers[i].onEnter(entity)
-            else if (colshape === MarkerManager.markers[i].clientAcknowledgeColshape) {
-                const client = Clients.find((client) => client.wrapped.id === entity.id)
-                emitEvent(client, new ClientEnterAcknowledgeColshape(MarkerManager.markers[i]))
+            if (colshape === MarkerManager.markers[i].clientInteractionZone)
+                MarkerManager.markers[i].handleEnter(entity)
+            else if (colshape === MarkerManager.markers[i].clientEnterAcknowledgeZone) {
+                MarkerManager.markers[i].onAcknowledgeZoneEnter(entity)
             }
         }
     }
 
     private static colshapeLeaveListener(colshape: alt.Colshape, entity: alt.Entity) {
         for (let i = 0; i < MarkerManager.markers.length; i++) {
-            if (colshape === MarkerManager.markers[i].interactionColshape)
-                MarkerManager.markers[i].onLeave(entity)
-            else if (colshape === MarkerManager.markers[i].clientAcknowledgeColshape) {
-                const client = Clients.find((client) => client.wrapped.id === entity.id)
-                emitEvent(client, new ClientLeaveAcknowledgeColshape(MarkerManager.markers[i]))
+            if (colshape === MarkerManager.markers[i].clientInteractionZone)
+                MarkerManager.markers[i].handleLeave(entity)
+            else if (colshape === MarkerManager.markers[i].clientLeaveAcknowledgeZone) {
+                MarkerManager.markers[i].onAcknowledgeZoneLeave(entity)
             }
         }
     }
