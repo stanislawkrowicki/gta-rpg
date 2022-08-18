@@ -1,11 +1,10 @@
 /// #if SERVER
 import type altServer from 'alt-server'
 import Logger from '../../../../server/logger/logger'
+import type { Client } from '../../../../server'
 /// #endif
 
 import ClientEvent from '../../../events/ClientEvent'
-import { emitEvent } from '../../../events/ServerEvent'
-import type { Client } from '../../../../server'
 
 export default class RequestRegistration extends ClientEvent {
     static MAX_NAME_LENGTH = 20

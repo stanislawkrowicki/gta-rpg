@@ -13,6 +13,8 @@ import Events from "../shared/events/Events"
 import Utils from "../shared/utils/Utils"
 import Sessions from "./sessions/Sessions"
 import Vehicles from "./vehicles/Vehicles"
+import MarkerManager from "./markers/MarkerManager"
+import {CylinderMarker, Marker} from "../shared/markers/Markers"
 
 {
     console.log = alt.log
@@ -63,7 +65,7 @@ export class Client {
     }
 }
 
-export const Clients: Client[] = []
+export const Clients: Client[] = [] // TODO: push all on resource restart
 
 alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => {
     if (MainDB.isConnected) {
@@ -179,3 +181,18 @@ Sessions.initialize()
 
 await Vehicles.initialize()
 // await Vehicles.addVehicle()
+
+MarkerManager.initialize()
+
+MarkerManager.add(new CylinderMarker(
+    new alt.Vector3(-695, 283, 80),
+    new alt.Vector3(0, 0, 0),
+    10,
+    5,
+    new alt.RGBA(255, 0, 255, 255),
+    () => { alt.log('entered') },
+    () => { alt.log('left') },
+    true,
+    true,
+    30
+))
