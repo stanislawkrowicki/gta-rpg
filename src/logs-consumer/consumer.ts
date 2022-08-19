@@ -57,7 +57,7 @@ const createIndexIfNotExists = async (index: string, mappings?: MappingTypeMappi
         }
     })
 
-    const conn = await amqplib.connect('amqp://localhost')
+    const conn = await amqplib.connect(`amqp://${process.env['RABBITMQ_HOST']}`)
     const channel = await conn.createChannel()
 
     await channel.assertQueue(queue)
