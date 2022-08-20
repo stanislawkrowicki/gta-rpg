@@ -1,6 +1,6 @@
 import alt from 'alt-server'
 
-import type { Marker } from '../../shared/markers/Markers'
+import type { Marker } from '../../../shared/world/markers/Markers'
 
 export default class MarkerManager {
     static markers: Marker[] = []
@@ -13,7 +13,7 @@ export default class MarkerManager {
     }
 
     static add(marker: Marker) {
-        marker.markerData.ID = MarkerManager.lastInsertedID++
+        marker.markerData.id = MarkerManager.lastInsertedID++
         MarkerManager.markers.push(marker)
     }
 

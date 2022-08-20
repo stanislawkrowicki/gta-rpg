@@ -14,10 +14,10 @@ export default abstract class ClientEvent extends Event {
     /// #if SERVER
     static onHandle(client: Client, object: ClientEvent): void {}
     /// #endif
-}
 
-/// #if CLIENT
-export function emitEvent(event: ClientEvent) {
-    altClient.emitServerRaw((event.constructor as typeof Event).ID as unknown as string, event)
+    /// #if CLIENT
+    static emitEvent(event: ClientEvent) {
+        altClient.emitServerRaw((event.constructor as typeof Event).ID as unknown as string, event)
+    }
+    /// #endif
 }
-/// #endif

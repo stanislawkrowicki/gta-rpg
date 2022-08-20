@@ -1,9 +1,9 @@
 /// #if SERVER
 import altServer from 'alt-server'
-import {emitEvent} from "../events/ServerEvent"
-import ClientEnterAcknowledgeZone from "../events/server/markers/ClientEnterAcknowledgeZone"
-import ClientLeaveAcknowledgeZone from "../events/server/markers/ClientLeaveAcknowledgeZone"
-import type {Client} from "../../server"
+import ServerEvent from "../../events/ServerEvent"
+import ClientEnterAcknowledgeZone from "../../events/server/world/markers/ClientEnterAcknowledgeZone"
+import ClientLeaveAcknowledgeZone from "../../events/server/world/markers/ClientLeaveAcknowledgeZone"
+import type {Client} from "../../../server"
 /// #endif
 
 import type altShared from 'alt-shared'
@@ -51,7 +51,7 @@ export type OnEnterFunction = (entity: altServer.Entity) => void
 export type OnLeaveFunction = (entity: altServer.Entity) => void
 
 export abstract class MarkerData {
-    ID: number
+    id: number
 
     markerType: MarkerType
     nativeMarkerType: NativeMarkerType
@@ -77,7 +77,7 @@ export abstract class Marker {
 
         const client = (entity.getMeta('wrapper') as Client)
         if (client && client.wrapped)
-            emitEvent(client, new ClientEnterAcknowledgeZone(this.markerData))
+            ServerEvent.emit(client, new ClientEnterAcknowledgeZone(this.markerData))
     }
 
     onAcknowledgeZoneLeave(entity: altServer.Entity) {
@@ -85,7 +85,7 @@ export abstract class Marker {
 
         const client = (entity.getMeta('wrapper') as Client)
         if (client && client.wrapped)
-            emitEvent(client, new ClientLeaveAcknowledgeZone(this.markerData))
+            ServerEvent.emit(client, new ClientLeaveAcknowledgeZone(this.markerData))
     }
 
     handleEnter(entity: altServer.Entity) {

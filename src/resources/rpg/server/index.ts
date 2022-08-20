@@ -12,9 +12,10 @@ import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDe
 import Events from "../shared/events/Events"
 import Utils from "../shared/utils/Utils"
 import Sessions from "./sessions/Sessions"
-import Vehicles from "./vehicles/Vehicles"
-import MarkerManager from "./markers/MarkerManager"
-import {CylinderMarker, Marker} from "../shared/markers/Markers"
+import Vehicles from "./world/vehicles/Vehicles"
+import MarkerManager from "./world/markers/MarkerManager"
+import {CylinderMarker, Marker} from "../shared/world/markers/Markers"
+import VehicleStorehouse from './world/vehicles/VehicleStorehouse'
 
 {
     console.log = alt.log
@@ -55,7 +56,6 @@ class HubCamera {
 
 export class Client {
     wrapped: alt.Player
-
 
     pedCamViewMode = 1
     vehicleCamViewMode = 1
@@ -180,6 +180,7 @@ Events.initialize().then(() => {
 Sessions.initialize()
 
 await Vehicles.initialize()
+await VehicleStorehouse.initialize()
 // await Vehicles.addVehicle()
 
 MarkerManager.initialize()
