@@ -35,6 +35,13 @@ docker-compose up
 ```
 #### If you don't have Docker installed, click [here](https://docs.docker.com/engine/install/).
 
+### You will need to create new user for MongoDB. Get into `mongosh` with Docker Desktop or docker exec and run:
+```shell
+use admin
+db.auth('root', 'root')
+db.createUser({user: "dev", pwd: "dev", roles: [{ role: "readWrite", db: "rpg" }]})
+```
+
 ### Run the watchers
 ```shell
 npx gulp

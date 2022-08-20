@@ -19,7 +19,7 @@ export class Queues {
     }
 
     private static async openChannel(): Promise<amqplib.Channel> {
-        const conn =  await amqplib.connect('amqp://localhost')
+        const conn =  await amqplib.connect(`amqp://${process.env['RABBITMQ_USER']}:${process.env['RABBITMQ_PASSWORD']}@localhost`)
 
         const channel = await conn.createChannel()
 

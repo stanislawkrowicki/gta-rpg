@@ -37,7 +37,7 @@ export default class MainDB {
     } = {}
 
     static connect() {
-        return MainDB.connection = mongoose.createConnection(`mongodb://${process.env['MONGODB_HOST']}:${process.env['MONGODB_PORT']}/${MainDB.NAME}`)
+        return MainDB.connection = mongoose.createConnection(`mongodb://${process.env['MONGODB_USER']}:${process.env['MONGODB_PASSWORD']}@${process.env['MONGODB_HOST']}:${process.env['MONGODB_PORT']}/${MainDB.NAME}`)
             .on('error', (error: unknown) => {
                 alt.logError('~r~' + `Failed to connect to the database ${MainDB.NAME}`)
             }).on('connected', (event: unknown) => {

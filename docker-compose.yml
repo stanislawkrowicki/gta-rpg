@@ -4,6 +4,9 @@ services:
     restart: always
     volumes:
       - data_mongo:/data/mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
     ports:
       - ${MONGODB_PORT}:27017
 
@@ -13,7 +16,9 @@ services:
       ports:
         - ${MONGO_EXPRESS_PORT}:8081
       environment:
-        ME_CONFIG_MONGODB_SERVER: mongo
+        - ME_CONFIG_MONGODB_URL=mongodb://${MONGODB_ROOT_USER}:${MONGODB_ROOT_PASSWORD}@mongo:27017/admin
+        - ME_CONFIG_BASICAUTH_USERNAME=${MONGO_EXPRESS_USER}
+        - ME_CONFIG_BASICAUTH_PASSWORD=${MONGO_EXPRESS_PASSWORD}
       depends_on:
         - mongo
 
@@ -24,36 +29,43 @@ services:
       - data_redis:/data/redis
     ports:
       - ${REDIS_PORT}:6379
+    command: /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD}
 
-  elasticsearch:
-    build: docker/elasticsearch
-    restart: always
-    volumes:
-      - data_elastic:/data/elastic
-    environment:
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - KIBANA_PASSWORD=${KIBANA_PASSWORD}
-    mem_limit: 1024M
-    mem_reservation: 1024M
-    ports:
-      - ${ELASTICSEARCH_PORT}:9200
-
-  kibana:
-    build: docker/kibana
-    restart: always
-    volumes:
-      - data_kibana:/data/kibana
-    environment:
-      ELASTICSEARCH_HOST: elasticsearch
-      ELASTICSEARCH_PORT: 9200
-    depends_on:
-      - elasticsearch
-    ports:
-      - ${KIBANA_PORT}:5601
+#  elasticsearch:
+#    build: docker/elasticsearch
+#    restart: always
+#    volumes:
+#      - data_elastic:/data/elastic
+#    environment:
+#      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+#      - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+#    mem_limit: 1024M
+#    mem_reservation: 1024M
+#    ports:
+#      - ${ELASTICSEARCH_PORT}:9200
+#
+#  kibana:
+#    build: docker/kibana
+#    restart: always
+#    volumes:
+#      - data_kibana:/data/kibana
+#    environment:
+#      - ELASTICSEARCH_HOST=elasticsearch
+#      - ELASTICSEARCH_PORT=9200
+#      - ELASTICSEARCH_USERNAME="kibana_system"
+#      - ELASTICSEARCH_PASSWORD="${KIBANA_PASSWORD}"
+#      - XPACK_REPORTING_ENCRYPTIONKEY="${KIBANA_ENCRYPTION_KEY}"
+#    depends_on:
+#      - elasticsearch
+#    ports:
+#      - ${KIBANA_PORT}:5601
 
   rabbitmq:
     build: docker/rabbitmq
     restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
     ports:
       - ${RABBITMQ_PORT}:5672
       - ${RABBITMQ_PANEL_PORT}:15672
