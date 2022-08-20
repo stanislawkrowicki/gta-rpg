@@ -39,6 +39,7 @@ docker-compose up
 ```shell
 use admin
 db.auth('root', 'root')
+use rpg
 db.createUser({user: "dev", pwd: "dev", roles: [{ role: "readWrite", db: "rpg" }]})
 ```
 
