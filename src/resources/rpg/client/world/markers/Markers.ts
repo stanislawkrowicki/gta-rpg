@@ -1,6 +1,6 @@
 import alt from 'alt-client'
-import type {Marker} from "../../shared/markers/Markers"
-import {CylinderMarker, CylinderMarkerData, MarkerData, MarkerType} from "../../shared/markers/Markers"
+import type {Marker} from "../../../shared/world/markers/Markers"
+import {CylinderMarker, CylinderMarkerData, MarkerData, MarkerType} from "../../../shared/world/markers/Markers"
 import native from "natives"
 
 export default class Markers {
@@ -49,8 +49,8 @@ export default class Markers {
         Markers.markersToRender.push(markerData)
     }
 
-    static stopRenderingMarker(markerData: MarkerData) {
-        const index = Markers.markersToRender.findIndex(m => m.ID === markerData.ID)
+    static stopRenderingMarker(markerId: number) {
+        const index = Markers.markersToRender.findIndex((m) => m.id === markerId)
         if (index > -1)
             Markers.markersToRender.splice(index, 1)
     }

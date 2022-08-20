@@ -25,9 +25,14 @@ Events.initialize = (async () => {
             ClientMessage: add(await import('../chat/events/server/ClientMessage'))
         },
 
-        markers: {
-            ClientEnterAcknowledgeZone: add(await import('./server/markers/ClientEnterAcknowledgeZone')),
-            ClientLeaveAcknowledgeZone: add(await import('./server/markers/ClientLeaveAcknowledgeZone'))
+        world: {
+            markers: {
+                ClientEnterAcknowledgeZone: add(await import('./server/world/markers/ClientEnterAcknowledgeZone')),
+                ClientLeaveAcknowledgeZone: add(await import('./server/world/markers/ClientLeaveAcknowledgeZone'))
+            },
+            vehicles: {
+                VehicleEntranceStates: add(await import('./server/world/vehicles/VehicleEntranceStates'))
+            }
         }
     }
 

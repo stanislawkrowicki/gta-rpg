@@ -1,7 +1,7 @@
 import alt from 'alt-client'
 import native from 'natives'
 import Message from "../../shared/chat/events/client/Message"
-import {emitEvent} from "../../shared/events/ClientEvent"
+import ClientEvent from "../../shared/events/ClientEvent"
 
 export default class Chat {
     static webview: alt.WebView
@@ -30,7 +30,7 @@ export default class Chat {
         })
 
         this.webview.on('MESSAGE', (message: string) => {
-            emitEvent(new Message(message))
+            ClientEvent.emitEvent(new Message(message))
         })
     }
 }

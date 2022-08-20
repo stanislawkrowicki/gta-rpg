@@ -1,6 +1,6 @@
 import game from 'natives'
 import Mouse, { MouseMode } from './input/Mouse'
-import MapEditor from './MapEditor'
+import MapEditor from './world/MapEditor'
 
 import alt from 'alt-client'
 import type { Player } from 'alt-client'
@@ -8,7 +8,7 @@ import Camera from './Camera'
 import View from './View'
 import Chat from './chat/Chat'
 import Events from "../shared/events/Events"
-import Markers from "./markers/Markers"
+import Markers from "./world/markers/Markers"
 
 const LocalPlayer: Player = null
 

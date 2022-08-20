@@ -1,10 +1,18 @@
 import alt from 'alt-server'
-import QuickDB from "../db/QuickDB"
-import MainDB from "../db/MainDB"
-import Logger from "../logger/logger"
-import VehicleStorehouse from "./VehicleStorehouse"
-import VehicleSchema, {VehicleOwnerType} from "../../../../db/MainDB/schemas/vehicles/Vehicle.schema"
-import Utils from "../../shared/utils/Utils"
+
+import Utils from "../../../shared/utils/Utils"
+
+import Logger from "../../logger/logger"
+
+import QuickDB from "../../db/QuickDB"
+import MainDB from "../../db/MainDB"
+
+import VehicleSchema, {VehicleOwnerType} from "../../../../../db/MainDB/schemas/vehicles/Vehicle.schema"
+
+import World from '../World'
+import Vector3 from '../../../shared/utils/Vector3'
+import ServerEvent from '../../../shared/events/ServerEvent'
+import VehicleEntranceStates from '../../../shared/events/server/world/vehicles/VehicleEntranceStates'
 
 export default class Vehicles {
     private static REDIS_VEHICLE_KEY = 'WorldVehicle'
@@ -12,7 +20,27 @@ export default class Vehicles {
     static async initialize() {
         await Vehicles.spawnVehiclesInWorld()
 
-        VehicleStorehouse.initialize()
+        const entranceAcknowledgeStateNotifier = alt.setInterval(() => {
+            for(let i = 0; i < World.players.length; ++i) {
+                const player = World.players[i]
+
+                const vehiclesInAcknowledgeRange: VehicleEntranceStates['states'] = []
+
+                for(let j = 0; j < World.vehicles.length; ++j) {
+                    const vehicle = World.vehicles[j]
+
+                    if(Vector3.getDistanceBetweenTwoVectors(player.wrapped.pos, vehicle.wrapped.pos) < 10) {
+                        vehiclesInAcknowledgeRange.push({
+                            vehicleId: vehicle.wrapped.id,
+                            canEnterAsDriver: true,
+                            canEnterAsPassenger: true
+                        })
+                    }
+                }
+
+                ServerEvent.emit(player, new VehicleEntranceStates(vehiclesInAcknowledgeRange))
+            }
+        }, 1500)
     }
 
     static async spawnVehiclesInWorld() {

@@ -1,5 +1,5 @@
 import alt from 'alt-client'
-import Mouse from './input/Mouse'
+import Mouse from '../input/Mouse'
 
 enum EditableObject {
     NPC,

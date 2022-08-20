@@ -1,12 +1,13 @@
 /// #if SERVER
 import Logger from '../../../../server/logger/logger'
-import { emitEvent } from '../../../events/ServerEvent'
+import ServerEvent from '../../../events/ServerEvent'
 import type { Client } from '../../../../server'
 import { Clients } from '../../../../server'
 /// #endif
 
 import ClientEvent from '../../../events/ClientEvent'
 import ClientMessage from '../server/ClientMessage'
+import Vector3 from '../../../utils/Vector3'
 
 export default class Message extends ClientEvent {
     /** Maximum distance where players should see the message */
@@ -26,30 +27,18 @@ export default class Message extends ClientEvent {
 
         Logger.chat.message(client, object.message)
 
-        const sx = client.wrapped.pos.x
-        const sy = client.wrapped.pos.y
-        const sz = client.wrapped.pos.z
-
         for (let i = 0; i < Clients.length; i++) {
             const player = Clients[i]
 
             if (player === client) {
-                emitEvent(player, new ClientMessage(client.wrapped.name, object.message))
+                ServerEvent.emit(player, new ClientMessage(client.wrapped.name, object.message))
                 continue
             }
 
-            const tx = player.wrapped.pos.x
-            const ty = player.wrapped.pos.y
-            const tz = player.wrapped.pos.z
-
-            const dx = tx - sx
-            const dy = ty - sy
-            const dz = tz - sz
-
-            const distance = Math.sqrt((dx * dx) + (dy * dy) + (dz * dz))
+            const distance = Vector3.getDistanceBetweenTwoVectors(client.wrapped.pos, player.wrapped.pos)
 
             if (distance <= Message.MAX_MESSAGE_DISTANCE)
-                emitEvent(player, new ClientMessage(client.wrapped.name, object.message))
+                ServerEvent.emit(player, new ClientMessage(client.wrapped.name, object.message))
         }
     }
     /// #endif

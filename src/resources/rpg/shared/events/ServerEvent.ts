@@ -11,14 +11,14 @@ export default abstract class ServerEvent extends Event {
     /// #if CLIENT
     static onHandle(object: ServerEvent): void {}
     /// #endif
-}
 
-/// #if SERVER
-export function emitEvent(player: Client, event: ServerEvent) {
-    altServer.emitClientRaw(player.wrapped, (event.constructor as typeof Event).ID as unknown as string, event)
-}
+    /// #if SERVER
+    static emit(player: Client, event: ServerEvent) {
+        altServer.emitClientRaw(player.wrapped, (event.constructor as typeof Event).ID as unknown as string, event)
+    }
 
-export function emitEventToAll(event: ServerEvent) {
-    altServer.emitAllClientsRaw((event.constructor as typeof Event).ID as unknown as string, event)
+    static emitToAll(event: ServerEvent) {
+        altServer.emitAllClientsRaw((event.constructor as typeof Event).ID as unknown as string, event)
+    }
+    /// #endif
 }
-/// #endif
