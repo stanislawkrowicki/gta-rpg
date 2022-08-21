@@ -1,4 +1,4 @@
-# Build RediSearh
+# Build Redis Modules
 FROM rust:latest AS builder
 
 RUN apt clean && apt -y update && apt -y install --no-install-recommends \
