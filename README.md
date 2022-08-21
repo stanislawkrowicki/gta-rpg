@@ -43,6 +43,12 @@ use rpg
 db.createUser({user: "dev", pwd: "dev", roles: [{ role: "readWrite", db: "rpg" }]})
 ```
 
+### If you want to use Kibana, you will need to set Kibana password. To do this, get into ElasticSearch container's shell with Docker Desktop or docker exec, and run:
+```shell
+ ./bin/elasticsearch-reset-password -u kibana_system --interactive
+```
+#### Remember that the password needs to be the same as in your .env file.
+
 ### Run the watchers
 ```shell
 npx gulp
