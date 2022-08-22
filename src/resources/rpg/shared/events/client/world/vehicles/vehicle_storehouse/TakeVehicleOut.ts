@@ -20,7 +20,7 @@ export default class TakeVehicleOut extends ClientEvent {
             return Logger.suspiciousEvent(client, this, object)
         }
 
-        VehicleStorehouse.takeVehicleOut(object.vehicleId)
+        VehicleStorehouse.takeVehicleOut(object.vehicleId, client)
     }
     /// #endif
 }

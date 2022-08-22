@@ -37,7 +37,8 @@ Events.initialize = (async () => {
 
             vehicleStorehouse: {
                 ClientEnterStorehouseMarker: add(await import('./server/world/vehicles/vehicle_storehouse/ClientEnterStorehouseMarker')),
-                ClientLeaveStorehouseMarker: add(await import('./server/world/vehicles/vehicle_storehouse/ClientLeaveStorehouseMarker'))
+                ClientLeaveStorehouseMarker: add(await import('./server/world/vehicles/vehicle_storehouse/ClientLeaveStorehouseMarker')),
+                ClosePanel: add(await import('./server/world/vehicles/vehicle_storehouse/ClosePanel'))
             }
         }
     }

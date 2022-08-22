@@ -8,6 +8,7 @@ import ClientEnterStorehouseMarker from "../../../shared/events/server/world/veh
 import ServerEvent from "../../../shared/events/ServerEvent"
 import Vehicles from "./Vehicles"
 import type Vehicle from "../Vehicle"
+import ClosePanel from "../../../shared/events/server/world/vehicles/vehicle_storehouse/ClosePanel"
 
 export default class VehicleStorehouse { // TODO: This should not be static - there will be many storehouses on map
     // TODO: this should be rewritten to use cuboid colshapes, then check if they are empty
@@ -70,8 +71,9 @@ export default class VehicleStorehouse { // TODO: This should not be static - th
         Vehicles.despawnWorldVehicle(wrapper)
     }
 
-    static takeVehicleOut(vehicleId: string) {
+    static takeVehicleOut(vehicleId: string, sourceClient: Client) {
         const spawn = VehicleStorehouse.vehicleSpawnColshapes[0]
         Vehicles.spawnWorldVehicleFromDB(vehicleId, new alt.Vector3(spawn.x, spawn.y, spawn.z), new alt.Vector3(0, 0 ,0))
+        ServerEvent.emit(sourceClient, new ClosePanel())
     }
 }

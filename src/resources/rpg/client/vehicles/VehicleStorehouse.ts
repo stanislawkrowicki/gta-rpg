@@ -37,8 +37,10 @@ export default class VehicleStorehouse {
     }
 
     static closePanel() {
-        VehicleStorehouse.webview.destroy()
-        Mouse.setMode(MouseMode.CAMERA_CONTROL)
+        if (VehicleStorehouse.webview) {
+            VehicleStorehouse.webview.destroy()
+            Mouse.setMode(MouseMode.CAMERA_CONTROL)
+        }
     }
 
     static takeVehicleOut(id: string) {
