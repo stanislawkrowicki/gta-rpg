@@ -36,8 +36,8 @@ Events.initialize = (async () => {
             },
 
             vehicleStorehouse: {
-                ClientEnterStorehouseMarker: add(await import('./server/vehicle_storehouse/ClientEnterStorehouseMarker')),
-                ClientLeaveStorehouseMarker: add(await import('./server/vehicle_storehouse/ClientLeaveStorehouseMarker'))
+                ClientEnterStorehouseMarker: add(await import('./server/world/vehicles/vehicle_storehouse/ClientEnterStorehouseMarker')),
+                ClientLeaveStorehouseMarker: add(await import('./server/world/vehicles/vehicle_storehouse/ClientLeaveStorehouseMarker'))
             }
         }
     }
@@ -45,6 +45,12 @@ Events.initialize = (async () => {
     Events.Client = {
         chat: {
             Message: add(await import('../chat/events/client/Message'))
+        },
+
+        world: {
+            vehicleStorehouse: {
+                TakeVehicleOut: add(await import('./client/world/vehicles/vehicle_storehouse/TakeVehicleOut'))
+            }
         }
     }
 

@@ -10,9 +10,13 @@ import MainDB from "../../db/MainDB"
 import VehicleSchema, {VehicleOwnerType} from "../../../../../db/MainDB/schemas/vehicles/Vehicle.schema"
 
 import World from '../World'
+import Vehicle from "../Vehicle"
+
 import Vector3 from '../../../shared/utils/Vector3'
+
 import ServerEvent from '../../../shared/events/ServerEvent'
 import VehicleEntranceStates from '../../../shared/events/server/world/vehicles/VehicleEntranceStates'
+
 
 export default class Vehicles {
     private static REDIS_VEHICLE_KEY = 'WorldVehicle'
@@ -43,6 +47,35 @@ export default class Vehicles {
         }, 1500)
     }
 
+    static spawnWorldVehicleFromDB(id: string, pos: alt.Vector3, rot: alt.Vector3) {
+        /* spawnWorldVehicleFromDB spawns a vehicle at the position you specify.
+        This position will be saved on the next vehicle saver worker iteration.
+        This will also push the vehicle to Redis, so remember of the case when it was pushed to Redis but
+        position was not updated yet. */
+
+        MainDB.collections.vehicles.findById(id)
+            .then((vehicle) => {
+                if (!vehicle) {
+                    Logger.error('vehicles', 0, 'spawnWorldVehicleFromDB find returned void').then()
+                    return
+                }
+
+                const wrapper = new Vehicle()
+                wrapper.wrapped = new alt.Vehicle(vehicle.model, pos, rot)
+                World.vehicles.push(wrapper)
+
+                QuickDB.client.execute(['SET', `${Vehicles.REDIS_VEHICLE_KEY}:${vehicle.id}`, 0])
+                    .catch((err) => Logger.caughtError('vehicles',
+                        0,
+                        err,
+                        'spawnWorldVehicleFromDB failed to push vehicle to Redis'))
+            })
+            .catch((err) => Logger.caughtError('vehicles',
+                1,
+                err,
+                'spawnWorldVehicleFromDB find caught'))
+    }
+
     static async spawnVehiclesInWorld() {
         const vehiclesInWorld = await QuickDB.client
             .execute(['KEYS', `${Vehicles.REDIS_VEHICLE_KEY}:*`]) as string[]
@@ -59,6 +92,15 @@ export default class Vehicles {
                 VEHICLES_FROM_DB_LOOP:
                 for (let i = 0; i < vehiclesFromDB.length; i++) {
                     const vehicle = vehiclesFromDB[i]
+
+                    if (vehicle.position === undefined) {
+                        QuickDB.client.execute(['DEL', `${Vehicles.REDIS_VEHICLE_KEY}:${vehicle.id}`])
+                            .catch((err) => Logger.caughtError('vehicles',
+                                2,
+                                err,
+                                'Error while deleting vehicle from Redis cause position undefined'))
+                        continue VEHICLES_FROM_DB_LOOP
+                    }
 
                     const vehiclesAlreadySpawned = alt.Vehicle.all
 

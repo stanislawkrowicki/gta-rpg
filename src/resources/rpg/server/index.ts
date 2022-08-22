@@ -57,7 +57,7 @@ class HubCamera {
 export class Client {
     wrapped: alt.Player
 
-    pedCamViewMode = 1
+    pedCamViewMode = 1 // TODO: this is not being watched
     vehicleCamViewMode = 1
 
     constructor(player: alt.Player) {
@@ -181,7 +181,6 @@ Sessions.initialize()
 
 await Vehicles.initialize()
 await VehicleStorehouse.initialize()
-// await Vehicles.addVehicle()
 
 MarkerManager.initialize()
 
