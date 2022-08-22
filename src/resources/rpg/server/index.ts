@@ -112,33 +112,18 @@ alt.on('playerConnect', async (player) => {
 
     Clients.push(wrappedPlayer)
 
-    // alt.emitClient(player, "GAME:LOGIN_PANEL:SHOW")
-
-    player.spawn(spawn.x, spawn.y, spawn.z, 0)
-    //
-    alt.emitClient(player,'GAME:SPAWN')
-    //
-    // try {
-    //     const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
-    // } catch (e) {
-    //     alt.log(e)
-    // }
+    try {
+        const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
+    } catch (e) {
+        alt.log(e)
+    }
     Logger.auth.login.success(wrappedPlayer)
 
-    await Sessions.restoreSession(wrappedPlayer)
-    // try {
-    //     const veh = new alt.Vehicle(
-    //         'PARIAH',
-    //         spawn.x,
-    //         spawn.y,
-    //         spawn.z,
-    //         0,
-    //         0,
-    //         0
-    //     )
-    // } catch (e) {
-    //     alt.log(e)
-    // }
+    Sessions.restoreSessionIfPossible(wrappedPlayer).then((wereItPossible) => {
+        if(!wereItPossible) {
+            player.spawn(spawn.x, spawn.y, spawn.z, 0)
+        }
+    })
 })
 
 alt.on('playerDisconnect', async (player) => {
@@ -157,13 +142,6 @@ alt.on('playerDisconnect', async (player) => {
 
     player.deleteMeta('wrapper')
 })
-
-// alt.onClient(
-//     'GAME:LOGIN_PANEL:LOGIN_ACTION',
-//     (player: alt.Player, login: string, password: string) => {
-//         alt.log(login, password)
-//     }
-// )
 
 HotReload.startWatching()
 

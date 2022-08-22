@@ -16,7 +16,7 @@ export default abstract class ClientEvent extends Event {
     /// #endif
 
     /// #if CLIENT
-    static emitEvent(event: ClientEvent) {
+    static emit(event: ClientEvent) {
         altClient.emitServerRaw((event.constructor as typeof Event).ID as unknown as string, event)
     }
     /// #endif

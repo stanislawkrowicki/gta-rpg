@@ -1,15 +1,12 @@
 <script lang="ts">
     import { onMount } from 'svelte'
 
-    // import FragmentShader from './shaders/FragmentShader.glsl'
-    // import VertexShader from './shaders/VertexShader.glsl'
-
     let login = ''
     let password = ''
     let message = ''
 
     function checkCredentials() {
-        alt.emit('LOGIN:ATTEMPT', login, password)
+        alt.emit('AUTH:LOGIN', login, password)
     }
 
     alt.on('LOGIN:ERROR', (error) => {
@@ -17,8 +14,6 @@
     })
 
     onMount(() => {})
-
-
 </script>
 
 <style lang="scss">
@@ -29,8 +24,8 @@
   $THEME-COLOR-B: #ffcac9;
 
   :global(html) {
-    background: url(https://i.ytimg.com/vi/Y16jJfIxcHc/maxresdefault.jpg);
-    background-size: cover;
+    //background: url(https://i.ytimg.com/vi/Y16jJfIxcHc/maxresdefault.jpg);
+    //background-size: cover;
     margin: 0;
     padding: 0;
   }
@@ -151,6 +146,14 @@
     &:active {
       --login-btn-color-a: #9aa1ff;
       --login-btn-color-b: #ffe6e6;
+    }
+  }
+
+  header {
+    .content {
+      .nested-content {
+
+      }
     }
   }
 
