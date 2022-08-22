@@ -84,7 +84,7 @@ export default class Logger {
             }).then((gameDevice) => {
                 MainDB.collections.suspiciousEvents.create(
                     Utils.typeCheck<SuspiciousEventSchema>({
-                        eventID: event.ID,
+                        eventID: event.id,
                         eventContent: eventContent,
                         gameDevice: gameDevice, // TODO: Add Account when its ready
                         timestamp: Date.now()

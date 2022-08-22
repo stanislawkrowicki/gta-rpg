@@ -30,8 +30,14 @@ Events.initialize = (async () => {
                 ClientEnterAcknowledgeZone: add(await import('./server/world/markers/ClientEnterAcknowledgeZone')),
                 ClientLeaveAcknowledgeZone: add(await import('./server/world/markers/ClientLeaveAcknowledgeZone'))
             },
+
             vehicles: {
                 VehicleEntranceStates: add(await import('./server/world/vehicles/VehicleEntranceStates'))
+            },
+
+            vehicleStorehouse: {
+                ClientEnterStorehouseMarker: add(await import('./server/vehicle_storehouse/ClientEnterStorehouseMarker')),
+                ClientLeaveStorehouseMarker: add(await import('./server/vehicle_storehouse/ClientLeaveStorehouseMarker'))
             }
         }
     }

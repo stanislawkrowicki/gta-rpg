@@ -387,7 +387,7 @@ gulp.task('build:resources', (done) => {
 
                 const webViews = fs
                     .readdirSync(path, {withFileTypes: true})
-                    .filter((dirent) => dirent.isDirectory())
+                    .filter((dirent) => dirent.isDirectory() && dirent.name !== 'components')
                     .map((dirent) => dirent.name)
 
                 for (const webView of webViews) {
@@ -630,11 +630,11 @@ const watchWebViews = (watcher) => {
 }
 
 const watchWebViewsEntry = () => {
-    watchWebViews(gulp.watch('./src/resources/**/client/webviews/**/*.ts'))
+    watchWebViews(gulp.watch(['./src/resources/**/client/webviews/**/*.ts', '!./src/resources/**/client/webviews/components']))
 }
 
 const watchWebViewsSvelte = () => {
-    watchWebViews(gulp.watch('./src/resources/**/client/webviews/**/*.svelte'))
+    watchWebViews(gulp.watch(['./src/resources/**/client/webviews/**/*.svelte', '!./src/resources/**/client/webviews/components']))
 }
 
 const watchStaticWebViews = () => {
