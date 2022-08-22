@@ -47,8 +47,10 @@ export default class VehicleStorehouse { // TODO: This should not be static - th
     }
 
     static onPlayerPanelMarkerEnter(entity: alt.Entity) {
-        const player = alt.Player.all.find(p => p.id === entity.id)
+        const player = alt.Player.all.find(p => p.id === entity.id) // TODO: this should be taken from World.Clients when its stable
         const wrapper = player.getMeta('wrapper') as Client
+
+        if (player.vehicle) return
 
         MainDB.collections.vehicles.find().then((vehicles) => {
             const playerVehicles: IStorehousePersonalVehicleData[] = vehicles.map(veh => ({id: veh.id, model: veh.model} as IStorehousePersonalVehicleData))
