@@ -62,6 +62,8 @@ export class Client {
 
     constructor(player: alt.Player) {
         this.wrapped = player
+        this.wrapped.setMeta('wrapper', this)
+        Clients.push(this)
     }
 }
 
@@ -108,9 +110,6 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
 
 alt.on('playerConnect', async (player) => {
     const wrappedPlayer = new Client(player)
-    player.setMeta('wrapper', wrappedPlayer)
-
-    Clients.push(wrappedPlayer)
 
     // alt.emitClient(player, "GAME:LOGIN_PANEL:SHOW")
 
