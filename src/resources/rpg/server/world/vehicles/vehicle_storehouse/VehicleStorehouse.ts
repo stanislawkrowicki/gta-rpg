@@ -44,7 +44,7 @@ export default class VehicleStorehouse {
 
         MainDB.collections.vehicles.find().then((vehicles) => {
             const playerVehicles: IStorehousePersonalVehicleData[] = vehicles.map(veh => ({id: veh.id, model: veh.model} as IStorehousePersonalVehicleData))
-            ServerEvent.emit(wrapper, new ClientEnterStorehouseMarker(this.ID, playerVehicles))
+            ServerEvent.emit(wrapper, new ClientEnterStorehouseMarker(this.ID, this.description, playerVehicles))
         })
     }
 

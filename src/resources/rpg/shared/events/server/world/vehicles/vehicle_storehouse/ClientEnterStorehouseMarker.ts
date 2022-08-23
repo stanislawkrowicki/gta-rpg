@@ -1,6 +1,5 @@
 /// #if CLIENT
 import VehicleStorehouseManager from "../../../../../../client/vehicles/VehicleStorehouseManager"
-import altClient from "alt-client"
 /// #endif
 
 import ServerEvent from "../../../../ServerEvent"
@@ -8,20 +7,21 @@ import type {IStorehousePersonalVehicleData} from "../../../../../world/vehicles
 
 export default class ClientEnterStorehouseMarker extends ServerEvent {
     storehouseID: number
+    storehouseDescription: string
 
     playerVehicles: IStorehousePersonalVehicleData[]
 
-    constructor(storehouseID: number, playerVehicles: IStorehousePersonalVehicleData[]) {
+    constructor(storehouseID: number, storehouseDescription: string, playerVehicles: IStorehousePersonalVehicleData[]) {
         super()
 
         this.storehouseID = storehouseID
+        this.storehouseDescription = storehouseDescription
         this.playerVehicles = playerVehicles
     }
 
     /// #if CLIENT
     static onHandle(object: ClientEnterStorehouseMarker) {
-        altClient.log(object.storehouseID)
-        VehicleStorehouseManager.openPanel(object.storehouseID, object.playerVehicles)
+        VehicleStorehouseManager.openPanel(object.storehouseID, object.storehouseDescription, object.playerVehicles)
     }
     /// #endif
 }

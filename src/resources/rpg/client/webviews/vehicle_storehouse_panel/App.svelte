@@ -6,8 +6,12 @@
     import Table from "../components/Table.svelte";
 
     let tableColumns = ['id', 'model']
+    let storehouseDescription = ''
     let playerVehicles = []
 
+    alt.on('STOREHOUSE_DESCRIPTION', (description) => {
+        storehouseDescription = description
+    })
 
     alt.on('PLAYER_VEHICLES', (vehicles) => {
         playerVehicles = vehicles
@@ -24,7 +28,7 @@
 
 <div class="container" id="main-container">
     <header>
-        <p>Przechowalnia pojazdów</p>
+        <p>{ storehouseDescription }</p>
 
         <span class="close-button material-symbols-outlined" on:click={closePanel}>
             close

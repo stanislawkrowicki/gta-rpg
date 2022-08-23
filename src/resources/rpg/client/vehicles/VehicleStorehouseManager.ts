@@ -12,7 +12,7 @@ export default class VehicleStorehouseManager {
 
     static initialize() {}
 
-    static openPanel(storehouseID: number, playerVehicles: IStorehousePersonalVehicleData[]) {
+    static openPanel(storehouseID: number, storehouseDescription: string, playerVehicles: IStorehousePersonalVehicleData[]) {
         VehicleStorehouseManager.webview = new alt.WebView('resource/client/webviews/vehicle_storehouse_panel/index.html')
 
         VehicleStorehouseManager.webview.focus()
@@ -28,6 +28,7 @@ export default class VehicleStorehouseManager {
         })
 
         VehicleStorehouseManager.webview.once('load', () => {
+            VehicleStorehouseManager.webview.emit('STOREHOUSE_DESCRIPTION', storehouseDescription)
             VehicleStorehouseManager.webview.emit('PLAYER_VEHICLES', playerVehiclesFormatted)
         })
 
