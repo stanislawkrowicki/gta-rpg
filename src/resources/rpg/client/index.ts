@@ -9,7 +9,6 @@ import View from './View'
 import Chat from './chat/Chat'
 import Events from "../shared/events/Events"
 import Markers from "./world/markers/Markers"
-import VehicleStorehouseManager from "./vehicles/VehicleStorehouseManager"
 
 const LocalPlayer: Player = null
 
@@ -170,4 +169,3 @@ Events.initialize().then(() => {
 })
 
 Markers.initialize()
-VehicleStorehouseManager.initialize()

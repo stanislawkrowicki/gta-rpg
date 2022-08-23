@@ -1,5 +1,5 @@
 /// #if CLIENT
-import VehicleStorehouseManager from "../../../../../../client/vehicles/VehicleStorehouseManager"
+import VehicleStorehouseManager from "../../../../../../client/world/vehicles/vehicle_storehouse/VehicleStorehouseManager"
 /// #endif
 
 import ServerEvent from "../../../../ServerEvent"
