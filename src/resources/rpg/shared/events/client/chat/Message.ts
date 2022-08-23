@@ -1,5 +1,5 @@
 /// #if SERVER
-import Logger from '../../../../server/logger/logger'
+import Logger from '../../../../server/core/logger/Logger'
 import ServerEvent from '../../ServerEvent'
 import type { Client } from '../../../../server'
 import { Clients } from '../../../../server'

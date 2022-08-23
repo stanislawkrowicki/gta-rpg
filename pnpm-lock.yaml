@@ -28,6 +28,7 @@ specifiers:
   gulp: ^4.0.2
   gulp-esbuild: ^0.10.4
   husky: ^8.0.1
+  jscrypto: ^1.0.3
   lint-staged: ^12.0.3
   mongoose: ^6.5.0
   node-watch: ^0.7.3
@@ -50,6 +51,7 @@ dependencies:
   esbuild-plugin-tsc: 0.3.1_typescript@4.7.4
   fancy-log: 2.0.0
   gulp-esbuild: 0.10.4
+  jscrypto: 1.0.3
   mongoose: 6.5.0
   node-watch: 0.7.3
   redis-om: 0.3.6
@@ -2522,6 +2524,11 @@ packages:
     dependencies:
       argparse: 2.0.1
     dev: true
+
+  /jscrypto/1.0.3:
+    resolution: {integrity: sha512-lryZl0flhodv4SZHOqyb1bx5sKcJxj0VBo0Kzb4QMAg3L021IC9uGpl0RCZa+9KJwlRGSK2C80ITcwbe19OKLQ==}
+    hasBin: true
+    dev: false
 
   /json-schema-traverse/0.4.1:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==}

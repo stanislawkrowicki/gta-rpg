@@ -1,16 +1,16 @@
 import alt from "alt-server"
-import { Queues, QueueChannels } from '../queue/queue'
+import { Queues, QueueChannels } from '../../queue/queue'
 import MainDB from "../db/MainDB"
 import QuickDB from "../db/QuickDB"
 import type { Channel } from "amqplib"
 import type { Repository } from "redis-om"
-import {Warn, WarnSchema} from "../../../../db/QuickAccessDB/schemas/errors/Warn.schema"
-import {Error, ErrorSchema} from "../../../../db/QuickAccessDB/schemas/errors/Error.schema"
-import {CaughtError, CaughtErrorSchema} from "../../../../db/QuickAccessDB/schemas/errors/CaughtError.schema"
-import type Event from "../../shared/events/Event"
-import type SuspiciousEventSchema from "../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema"
-import Utils from "../../shared/utils/Utils"
-import type {Client} from "../index"
+import {Warn, WarnSchema} from "../../../../../db/QuickAccessDB/schemas/errors/Warn.schema"
+import {Error, ErrorSchema} from "../../../../../db/QuickAccessDB/schemas/errors/Error.schema"
+import {CaughtError, CaughtErrorSchema} from "../../../../../db/QuickAccessDB/schemas/errors/CaughtError.schema"
+import type Event from "../../../shared/events/Event"
+import type SuspiciousEventSchema from "../../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema"
+import Utils from "../../../shared/utils/Utils"
+import type {Client} from "../../index"
 
 const logQueue = 'logs'
 

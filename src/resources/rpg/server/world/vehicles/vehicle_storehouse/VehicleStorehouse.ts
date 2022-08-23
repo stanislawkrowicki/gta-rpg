@@ -2,7 +2,7 @@ import alt from 'alt-server'
 import type {Marker} from "../../../../shared/world/markers/Markers"
 import MarkerManager from "../../markers/MarkerManager"
 import type {Client} from "../../../index"
-import MainDB from "../../../db/MainDB"
+import MainDB from "../../../core/db/MainDB"
 import type {IStorehousePersonalVehicleData} from "../../../../shared/world/vehicles/VehicleStorehouse"
 import ClientEnterStorehouseMarker from "../../../../shared/events/server/world/vehicles/vehicle_storehouse/ClientEnterStorehouseMarker"
 import ServerEvent from "../../../../shared/events/ServerEvent"

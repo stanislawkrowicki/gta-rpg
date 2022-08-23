@@ -2,6 +2,7 @@ import alt from 'alt-client'
 import ClientEvent from '../shared/events/ClientEvent'
 import RequestLogin from '../shared/events/client/auth/RequestLogin'
 import RequestRegistration from '../shared/events/client/auth/RequestRegistration'
+import Password from './auth/Password'
 
 export enum Stage {
     WAITING_FOR_AUTHORIZATION,
@@ -17,16 +18,30 @@ export default class Hub {
         this.webview = new alt.WebView('/resource/client/webviews/hub/index.html')
 
         // alt.setCamFrozen(true)
-        // alt.showCursor(true)
+        alt.showCursor(true)
 
-        // this.webview.focus()
+        this.webview.focus()
 
-        this.webview.on('AUTH:LOGIN', (username, passwordHash) => {
-            ClientEvent.emit(new RequestLogin(username, passwordHash))
+        this.webview.on('AUTH:LOGIN', (username, password) => {
+            Password.hashPassword(password, (passwordHash) => {
+                ClientEvent.emit(
+                    new RequestLogin(
+                        username,
+                        passwordHash
+                    )
+                )
+            })
         })
 
-        this.webview.on('AUTH:REGISTRATION', (username, passwordHash) => {
-            ClientEvent.emit(new RequestRegistration(username, passwordHash))
+        this.webview.on('AUTH:REGISTRATION', (username, password) => {
+            Password.hashPassword(password, (passwordHash) => {
+                ClientEvent.emit(
+                    new RequestRegistration(
+                        username,
+                        passwordHash
+                    )
+                )
+            })
         })
     }
 }

@@ -1,6 +1,6 @@
 /// #if SERVER
 import type { Client } from '../../server'
-import Logger from '../../server/logger/logger'
+import Logger from '../../server/core/logger/Logger'
 /// #endif
 
 /// #if CLIENT

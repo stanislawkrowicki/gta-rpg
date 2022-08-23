@@ -2,21 +2,23 @@ import dotenv from 'dotenv'
 
 import alt from 'alt-server'
 
-import MainDB from './db/MainDB'
+import MainDB from './core/db/MainDB'
 import HotReload from './HotReload'
 import { Vector3 } from 'alt-shared'
-import Logger from "./logger/logger"
-import QuickDB from "./db/QuickDB"
+import Logger from "./core/logger/Logger"
+import QuickDB from "./core/db/QuickDB"
 
 import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
 import Events from "../shared/events/Events"
 import Utils from "../shared/utils/Utils"
-import Sessions from "./sessions/Sessions"
+import Sessions from "./core/sessions/Sessions"
 import Vehicles from "./world/vehicles/Vehicles"
 import MarkerManager from "./world/markers/MarkerManager"
 import {CylinderMarker, Marker} from "../shared/world/markers/Markers"
 import VehicleStorehouse from './world/vehicles/vehicle_storehouse/VehicleStorehouse'
 import VehicleStorehouseManager from "./world/vehicles/vehicle_storehouse/VehicleStorehouseManager"
+import ServerEvent from '../shared/events/ServerEvent'
+import Authorize from '../shared/events/server/auth/Authorize'
 
 {
     console.log = alt.log
@@ -112,18 +114,18 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
 alt.on('playerConnect', async (player) => {
     const wrappedPlayer = new Client(player)
 
-    // player.spawn(spawn)
-
-    try {
-        const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
-    } catch (e) {
-        alt.log(e)
-    }
+    // try {
+    //     const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
+    // } catch (e) {
+    //     alt.log(e)
+    // }
     Logger.auth.login.logSuccess(wrappedPlayer)
 
     Sessions.restoreSessionIfPossible(wrappedPlayer).then((wereItPossible) => {
         if(!wereItPossible) {
-            player.spawn(spawn.x, spawn.y, spawn.z, 0)
+            // ServerEvent.emit(wrappedPlayer, new Authorize())
+            //
+            // player.spawn(spawn.x, spawn.y, spawn.z, 0)
         }
     })
 })

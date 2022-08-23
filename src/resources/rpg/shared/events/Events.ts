@@ -24,7 +24,9 @@ Events.initialize = (async () => {
             Message: add(await import('./server/chat/Message')),
             ClientMessage: add(await import('./server/chat/ClientMessage'))
         },
-
+        gui: {
+            OkDialog: add(await import('./server/gui/OkDialog'))
+        },
         world: {
             markers: {
                 ClientEnterAcknowledgeZone: add(await import('./server/world/markers/ClientEnterAcknowledgeZone')),
@@ -51,7 +53,6 @@ Events.initialize = (async () => {
         chat: {
             Message: add(await import('./client/chat/Message'))
         },
-
         world: {
             vehicleStorehouse: {
                 TakeVehicleOut: add(await import('./client/world/vehicles/vehicle_storehouse/TakeVehicleOut'))

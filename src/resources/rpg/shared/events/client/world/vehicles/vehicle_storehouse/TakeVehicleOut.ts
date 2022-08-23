@@ -1,5 +1,5 @@
 /// #if SERVER
-import Logger from '../../../../../../server/logger/logger'
+import Logger from '../../../../../../server/core/logger/Logger'
 import type { Client } from '../../../../../../server'
 import VehicleStorehouseManager
     from "../../../../../../server/world/vehicles/vehicle_storehouse/VehicleStorehouseManager"

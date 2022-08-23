@@ -1,7 +1,7 @@
 import type VehicleStorehouse from "./VehicleStorehouse"
 import VehicleStorehouses from "./VehicleStorehouses"
 import type {Client} from "../../../index"
-import Logger from "../../../logger/logger"
+import Logger from "../../../core/logger/Logger"
 import Vehicles from "../Vehicles"
 import alt from "alt-server"
 import ServerEvent from "../../../../shared/events/ServerEvent"

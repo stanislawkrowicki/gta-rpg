@@ -1,15 +1,15 @@
 import mongoose from 'mongoose'
 import alt from 'alt-server'
 
-import GroupSchema from '../../../../db/MainDB/schemas/groups/Group.schema'
-import AccountSchema from '../../../../db/MainDB/schemas/accounts/Account.schema'
-import PropertySchema from '../../../../db/MainDB/schemas/properties/Property.schema'
-import VehicleSchema from '../../../../db/MainDB/schemas/vehicles/Vehicle.schema'
-import VehicleEquipmentSchema from '../../../../db/MainDB/schemas/equipments/VehicleEquipment.schema'
-import NPCSchema from '../../../../db/MainDB/schemas/npcs/NPC.schema'
-import GameDeviceSchema from '../../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
+import GroupSchema from '../../../../../db/MainDB/schemas/groups/Group.schema'
+import AccountSchema from '../../../../../db/MainDB/schemas/accounts/Account.schema'
+import PropertySchema from '../../../../../db/MainDB/schemas/properties/Property.schema'
+import VehicleSchema from '../../../../../db/MainDB/schemas/vehicles/Vehicle.schema'
+import VehicleEquipmentSchema from '../../../../../db/MainDB/schemas/equipments/VehicleEquipment.schema'
+import NPCSchema from '../../../../../db/MainDB/schemas/npcs/NPC.schema'
+import GameDeviceSchema from '../../../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
 import { getModelForClass } from '@typegoose/typegoose'
-import SuspiciousEventSchema from "../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema"
+import SuspiciousEventSchema from "../../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema"
 
 
 export default class MainDB {
@@ -26,7 +26,7 @@ export default class MainDB {
 
         suspiciousEvents?: mongoose.Model<SuspiciousEventSchema>
         // groups?: mongoose.Model<any>,
-        // accounts?: mongoose.Model<any>,
+        accounts?: mongoose.Model<AccountSchema>,
 
         // sessions?: mongoose.Model<any>,
 
@@ -74,7 +74,7 @@ export default class MainDB {
 
         MainDB.addCollection(VehicleSchema, 'vehicles')
         // MainDB.addCollection('Group', GroupSchema, 'groups')
-        // MainDB.addCollection('Account', AccountSchema, 'accounts')
+        MainDB.addCollection(AccountSchema, 'accounts')
 
         // MainDB.addCollection('Session', SessionSchema, 'sessions')
 

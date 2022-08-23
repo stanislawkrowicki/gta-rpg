@@ -6,23 +6,31 @@ import PropertySchema from '../properties/Property.schema'
 
 const { prop } = typegoose
 
-export class DiscordAccountSchema {
+export class DiscordAccount {
     @prop() discordId: string
     @prop() token: string
 }
 
-class OwnedVehiclesWatercrafts {
+class OwnedLandVehicles {
+    @prop({ ref: () => VehicleSchema }) cars: Ref<VehicleSchema>[]
+    @prop({ ref: () => VehicleSchema }) bikes: Ref<VehicleSchema>[]
+}
+
+class OwnedAircraftVehicles {
+    @prop({ ref: () => VehicleSchema }) planes: Ref<VehicleSchema>[]
+    @prop({ ref: () => VehicleSchema }) helicopters: Ref<VehicleSchema>[]
+}
+
+class OwnedWatercraftVehicles {
     @prop({ ref: () => VehicleSchema }) personal: Ref<VehicleSchema>[]
     @prop({ ref: () => VehicleSchema }) boats: Ref<VehicleSchema>[]
     @prop({ ref: () => VehicleSchema }) submarines: Ref<VehicleSchema>[]
 }
 
 class OwnedVehicles {
-    @prop({ ref: () => VehicleSchema }) cars: Ref<VehicleSchema>[]
-    @prop({ ref: () => VehicleSchema }) bikes: Ref<VehicleSchema>[]
-    @prop({ ref: () => VehicleSchema }) planes: Ref<VehicleSchema>[]
-    @prop({ ref: () => VehicleSchema }) helicopters: Ref<VehicleSchema>[]
-    @prop() watercrafts: OwnedVehiclesWatercrafts
+    @prop() land: OwnedLandVehicles
+    @prop() aircraft: OwnedAircraftVehicles
+    @prop() watercraft: OwnedWatercraftVehicles
 }
 
 class Owned {
@@ -33,10 +41,10 @@ class Owned {
 
 export default class AccountSchema {
     @prop() name: string
-    @prop({ maxlength: 319 }) email: string
+    @prop({ maxlength: 319 }) email?: string
     @prop() passwordHash: string
 
-    @prop({ ref: () => GroupSchema }) groups: Ref<GroupSchema>[]
+    @prop({ ref: () => GroupSchema }) groups?: Ref<GroupSchema>[]
 
-    @prop() owned: Owned
+    @prop() owned?: Owned
 }

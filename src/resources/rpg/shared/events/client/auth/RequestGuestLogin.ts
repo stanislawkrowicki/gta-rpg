@@ -1,6 +1,6 @@
 /// #if SERVER
 import type altServer from 'alt-server'
-import Logger from '../../../../server/logger/logger'
+import Logger from '../../../../server/core/logger/Logger'
 import type { Client } from '../../../../server'
 /// #endif
 

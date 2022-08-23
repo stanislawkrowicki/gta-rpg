@@ -1,10 +1,10 @@
 import alt from 'alt-server'
 import type {Repository} from "redis-om"
-import type {Session} from "../../../../db/QuickAccessDB/schemas/sessions/Session.schema"
+import type {Session} from "../../../../../db/QuickAccessDB/schemas/sessions/Session.schema"
 import QuickDB from "../db/QuickDB"
-import {SessionSchema} from "../../../../db/QuickAccessDB/schemas/sessions/Session.schema"
-import type {Client} from "../index"
-import Logger from "../logger/logger"
+import {SessionSchema} from "../../../../../db/QuickAccessDB/schemas/sessions/Session.schema"
+import type {Client} from "../../index"
+import Logger from "../logger/Logger"
 
 export default class Sessions {
     private static SESSION_SAVE_INTERVAL = 5 * 1000 // TODO: *60 after testing
