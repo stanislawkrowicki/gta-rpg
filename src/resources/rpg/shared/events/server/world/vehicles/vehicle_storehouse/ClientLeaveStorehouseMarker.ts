@@ -1,4 +1,4 @@
-import ServerEvent from "../../ServerEvent"
+import ServerEvent from "../../../../ServerEvent"
 import type {MarkerData} from "../../../markers/Markers"
 
 export default class ClientLeaveStorehouseMarker extends ServerEvent {

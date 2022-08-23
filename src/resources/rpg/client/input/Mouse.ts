@@ -1,4 +1,5 @@
 import alt, { WebView } from 'alt-client'
+import native from "natives"
 
 export enum MouseMode {
     CAMERA_CONTROL,
@@ -23,6 +24,10 @@ export default class Mouse {
     static mouseMoveListeners: MouseMoveListenerCallback[] = []
 
     static mouseWheelListeners: MouseWheelListenerCallback[] = []
+
+    static isCursorShown = false
+
+    static controlActionBlocker: number
 
     static initialize() {
         Mouse.eventProvider = new WebView('resource/client/webviews/MouseProvider.html')
@@ -55,11 +60,13 @@ export default class Mouse {
     }
     static setMode(mode: MouseMode) {
         if(mode === MouseMode.CAMERA_CONTROL) {
-            alt.showCursor(false)
-            alt.setCamFrozen(false)
+            Mouse.showCursor(false)
+            if (Mouse.controlActionBlocker) alt.clearEveryTick(Mouse.controlActionBlocker)
         } else {
-            alt.showCursor(true)
-            alt.setCamFrozen(true)
+            Mouse.showCursor(true)
+            Mouse.controlActionBlocker = alt.everyTick(() => {
+                native.disableAllControlActions(0)
+            })
         }
 
         const resolution = alt.getScreenResolution()
@@ -69,6 +76,17 @@ export default class Mouse {
         })
 
         Mouse.mode = mode
+    }
+
+    static showCursor(show: boolean) {
+        if (show && !Mouse.isCursorShown) {
+            alt.showCursor(true)
+            Mouse.isCursorShown = true
+        }
+        else if (!show && Mouse.isCursorShown) {
+            alt.showCursor(false)
+            Mouse.isCursorShown = false
+        }
     }
 
     static addMouseDownListener(listener: MouseDownListenerCallback) {

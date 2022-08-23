@@ -9,7 +9,6 @@ import View from './View'
 import Chat from './chat/Chat'
 import Events from "../shared/events/Events"
 import Markers from "./world/markers/Markers"
-import VehicleStorehouse from "./vehicles/VehicleStorehouse"
 import Hub from './Hub'
 
 const LocalPlayer: Player = null
@@ -126,4 +125,3 @@ Events.initialize().then(() => {
 })
 
 Markers.initialize()
-VehicleStorehouse.initialize()

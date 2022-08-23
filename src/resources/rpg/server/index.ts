@@ -15,7 +15,8 @@ import Sessions from "./sessions/Sessions"
 import Vehicles from "./world/vehicles/Vehicles"
 import MarkerManager from "./world/markers/MarkerManager"
 import {CylinderMarker, Marker} from "../shared/world/markers/Markers"
-import VehicleStorehouse from './world/vehicles/VehicleStorehouse'
+import VehicleStorehouse from './world/vehicles/vehicle_storehouse/VehicleStorehouse'
+import VehicleStorehouseManager from "./world/vehicles/vehicle_storehouse/VehicleStorehouseManager"
 
 {
     console.log = alt.log
@@ -57,11 +58,13 @@ class HubCamera {
 export class Client {
     wrapped: alt.Player
 
-    pedCamViewMode = 1
+    pedCamViewMode = 1 // TODO: this is not being watched
     vehicleCamViewMode = 1
 
     constructor(player: alt.Player) {
         this.wrapped = player
+        this.wrapped.setMeta('wrapper', this)
+        Clients.push(this)
     }
 }
 
@@ -108,9 +111,6 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
 
 alt.on('playerConnect', async (player) => {
     const wrappedPlayer = new Client(player)
-    player.setMeta('wrapper', wrappedPlayer)
-
-    Clients.push(wrappedPlayer)
 
     try {
         const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
@@ -158,8 +158,6 @@ Events.initialize().then(() => {
 Sessions.initialize()
 
 await Vehicles.initialize()
-await VehicleStorehouse.initialize()
-// await Vehicles.addVehicle()
 
 MarkerManager.initialize()
 
@@ -175,3 +173,5 @@ MarkerManager.add(new CylinderMarker(
     true,
     30
 ))
+
+VehicleStorehouseManager.initialize()
