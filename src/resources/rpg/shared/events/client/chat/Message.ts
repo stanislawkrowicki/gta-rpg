@@ -1,12 +1,12 @@
 /// #if SERVER
 import Logger from '../../../../server/logger/logger'
-import ServerEvent from '../../../events/ServerEvent'
+import ServerEvent from '../../ServerEvent'
 import type { Client } from '../../../../server'
 import { Clients } from '../../../../server'
 /// #endif
 
-import ClientEvent from '../../../events/ClientEvent'
-import ClientMessage from '../server/ClientMessage'
+import ClientEvent from '../../ClientEvent'
+import ClientMessage from '../../server/chat/ClientMessage'
 import Vector3 from '../../../utils/Vector3'
 
 export default class Message extends ClientEvent {
@@ -23,9 +23,9 @@ export default class Message extends ClientEvent {
     /// #if SERVER
     static onHandle(client: Client, object: Message): void {
         if (typeof object.message !== 'string')
-            return Logger.suspiciousEvent(client, Message, object)
+            return Logger.logSuspiciousEvent(client, Message, object)
 
-        Logger.chat.message(client, object.message)
+        Logger.chat.logMessage(client, object.message)
 
         for (let i = 0; i < Clients.length; i++) {
             const player = Clients[i]

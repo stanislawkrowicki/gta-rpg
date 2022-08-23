@@ -30,6 +30,8 @@ class GameDefaultsInitiator {
 
         game.displayRadar(false)
         game.triggerScreenblurFadeOut(0)
+
+        View.restoreDefault()
     }
 
     static initiateAudio() {
@@ -77,11 +79,11 @@ class Interactivities {
     }
 }
 
-// alt.on('spawned', () => {
-//     game.setPedDefaultComponentVariation(alt.Player.local.scriptID)
-//
-//     Chat.initialize()
-// })
+alt.on('spawned', () => {
+    game.setPedDefaultComponentVariation(alt.Player.local.scriptID)
+
+    Chat.initialize()
+})
 
 // alt.onServer('GAME:LOGIN_PANEL:SHOW', async () => {
 //     const loginView = new alt.WebView('resource/client/webviews/login/index.html')
@@ -95,10 +97,7 @@ class Interactivities {
 //     })
 // })
 
-// GameScreenProvider.initialize()
 Mouse.initialize()
-
-Hub.initialize()
 
 alt.on('keydown', (key) => {
     // if(key === 113) {
@@ -111,13 +110,20 @@ alt.on('keydown', (key) => {
 })
 
 alt.setTimeout(() => {
-    // const camera = new Camera()
+    const camera = new Camera()
+
+    camera.setPosition(100, 1000, 1000)
+
+    View.setCamera(camera)
+    // game.destroyAllCams(true)
     //
-    // camera.setPosition(100, 1000, 1000)
-    //
-    // View.setCamera(camera)
+    // const coords = { ...alt.Player.local.pos }
+    // const cam = game.createCamWithParams('DEFAULT_SCRIPTED_CAMERA', coords.x, coords.y, coords.z, 0, 0, 358, 18, true, 2)
+    // game.setCamActive(cam, true)
+    // game.renderScriptCams(true, false, 0, true, false, 0)
+    // game.setCamAffectsAiming(cam, false)
     // MapEditor.initialize()
-}, 100)
+}, 1000)
 // WebView2DPool.initialize()
 
 Events.initialize().then(() => {
@@ -125,3 +131,5 @@ Events.initialize().then(() => {
 })
 
 Markers.initialize()
+
+Hub.initialize()

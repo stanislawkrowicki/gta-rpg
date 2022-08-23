@@ -95,7 +95,7 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
                             })
                         )
                         .catch((err) => {
-                            Logger.caughtError('server-index', 0, err).then()
+                            Logger.logCaughtError('server-index', 0, err).then()
                         })
                         .then(() => {
                             connectionQueueInfo.accept()
@@ -112,12 +112,14 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
 alt.on('playerConnect', async (player) => {
     const wrappedPlayer = new Client(player)
 
+    // player.spawn(spawn)
+
     try {
         const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
     } catch (e) {
         alt.log(e)
     }
-    Logger.auth.login.success(wrappedPlayer)
+    Logger.auth.login.logSuccess(wrappedPlayer)
 
     Sessions.restoreSessionIfPossible(wrappedPlayer).then((wereItPossible) => {
         if(!wereItPossible) {
@@ -137,13 +139,13 @@ alt.on('playerDisconnect', async (player) => {
         }
     }
 
-    Logger.connection.disconnection(wrapper)
+    Logger.connection.logDisconnection(wrapper)
     await Sessions.saveSessionForPlayer(wrapper)
 
     player.deleteMeta('wrapper')
 })
 
-HotReload.startWatching()
+// HotReload.startWatching()
 
 MainDB.connect()
 

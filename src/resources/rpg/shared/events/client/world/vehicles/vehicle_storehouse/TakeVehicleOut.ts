@@ -22,7 +22,7 @@ export default class TakeVehicleOut extends ClientEvent {
         if(typeof object.vehicleId !== 'string'
             || object.vehicleId.length !== 24
             || typeof object.storehouseID !== 'number') {
-            return Logger.suspiciousEvent(client, this, object)
+            return Logger.logSuspiciousEvent(client, this, object)
         }
 
         VehicleStorehouseManager.takeVehicleOut(object.vehicleId, object.storehouseID, client)

@@ -25,7 +25,7 @@ export default class RequestLogin extends ClientEvent {
             object.passwordHash.length !== 32 ||
             object.passwordHash
         ) {
-            return Logger.suspiciousEvent(client, this, object)
+            return this.logAsSuspicious(client, object)
         }
 
 

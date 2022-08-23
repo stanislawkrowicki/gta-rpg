@@ -2,7 +2,7 @@
 import Chat from "../../../../client/chat/Chat"
 /// #endif
 
-import ServerEvent from "../../../events/ServerEvent"
+import ServerEvent from "../../ServerEvent"
 
 export default class ClientMessage extends ServerEvent {
     author: string
@@ -18,7 +18,7 @@ export default class ClientMessage extends ServerEvent {
     static onHandle(object: ClientMessage): void {
         Chat.webview.emit('CLIENT_MESSAGE', {
             author: object.author,
-            message: object.message
+            logMessage: object.message
         })
     }
     /// #endif

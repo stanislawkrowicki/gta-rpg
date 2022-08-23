@@ -30,7 +30,7 @@ export default class Logger {
     }
 
     // WARNS, ERRORS -> REDIS
-    static warn = async(resource: string, id: number, message: string) => {
+    static logWarn = async(resource: string, id: number, message: string) => {
         /// #if process.env['ENVIRONMENT'] !== 'prod'
         alt.logWarning(`[${resource}][${id}]: ${message}`)
         /// #endif
@@ -44,7 +44,7 @@ export default class Logger {
         await Logger.warnRepository.save(warn)
     }
 
-    static error = async (resource: string, id: number, message: string) => {
+    static logError = async (resource: string, id: number, message: string) => {
         /// #if process.env['ENVIRONMENT'] !== 'prod'
         alt.logError(`[${resource}][${id}]: ${message}`)
         /// #endif
@@ -58,7 +58,7 @@ export default class Logger {
         await Logger.errorRepository.save(error)
     }
 
-    static caughtError = async (resource: string, id: number, stacktrace: string, message?: string) => {
+    static logCaughtError = async (resource: string, id: number, stacktrace: string, message?: string) => {
         /// #if process.env['ENVIRONMENT'] !== 'prod'
         alt.logError(`[${resource}][${id}]: CAUGHT: ${message || ''} ${stacktrace}`)
         /// #endif
@@ -74,7 +74,7 @@ export default class Logger {
     }
 
     // SUSPICIOUS EVENTS -> MONGO
-    static suspiciousEvent = (client: Client, event: typeof Event | any, eventContent: Event): void => {
+    static logSuspiciousEvent = (client: Client, eventClass: typeof Event | any, suspiciousEventContent: Event): void => {
         MainDB.collections.gameDevices
             .findOne({
                 $or: [
@@ -84,24 +84,24 @@ export default class Logger {
             }).then((gameDevice) => {
                 MainDB.collections.suspiciousEvents.create(
                     Utils.typeCheck<SuspiciousEventSchema>({
-                        eventID: event.id,
-                        eventContent: eventContent,
+                        eventID: eventClass.ID,
+                        eventContent: suspiciousEventContent,
                         gameDevice: gameDevice, // TODO: Add Account when its ready
                         timestamp: Date.now()
                     })
                 ).catch((err) => {
-                    Logger.caughtError('logger', 1, err)
+                    Logger.logCaughtError('logger', 1, err)
                         .then()
                 })
             }).catch((err) => {
-                Logger.caughtError('logger', 0, err)
+                Logger.logCaughtError('logger', 0, err)
                     .then()
             })
     }
 
     // NORMAL LOGS -> RABBIT -> ELASTIC
     static connection = {
-        disconnection: (client: Client) => {
+        logDisconnection: (client: Client) => {
             const altPlayer = client.wrapped
             const hwidHash = altPlayer.hwidHash
             const hwidExHash = altPlayer.hwidExHash
@@ -114,7 +114,7 @@ export default class Logger {
             const posZ = altPlayer.pos.z
 
             Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
-                type: 'connection.disconnect',
+                type: 'connection.disconnection',
                 username: username,
                 hwidHash: hwidHash,
                 hwidExHash: hwidExHash,
@@ -129,7 +129,7 @@ export default class Logger {
 
     static auth = {
         login: {
-            success: (client: Client) => {
+            logSuccess: (client: Client) => {
                 Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.login.success',
                     username: client.wrapped.name,
@@ -141,9 +141,9 @@ export default class Logger {
                 )
             },
 
-            restoration: (client: Client) => {
+            logRestoration: (client: Client) => {
                 Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
-                    type: 'auth.login.restore',
+                    type: 'auth.login.restoration',
                     username: client.wrapped.name,
                     hwidHash: client.wrapped.hwidHash,
                     hwidExHash: client.wrapped.hwidExHash,
@@ -153,7 +153,7 @@ export default class Logger {
                 )
             },
 
-            error: (client: Client, tryCount: number) => {
+            logError: (client: Client, tryCount: number) => {
                 Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.login.error',
                     username: client.wrapped.name,
@@ -168,7 +168,7 @@ export default class Logger {
         },
 
         register: {
-            success: (client: Client) => {
+            logSuccess: (client: Client) => {
                 Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.register.success',
                     username: client.wrapped.name,
@@ -180,7 +180,7 @@ export default class Logger {
                 )
             },
 
-            error: (client: Client) => {
+            logError: (client: Client) => {
                 Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                     type: 'auth.register.error',
                     username: client.wrapped.name,
@@ -195,7 +195,7 @@ export default class Logger {
     }
 
     static chat = {
-        message: (client: Client, message: string) => {
+        logMessage: (client: Client, message: string) => {
             Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
                 type: 'chat.message',
                 username: client.wrapped.name,
@@ -211,9 +211,9 @@ export default class Logger {
     }
 
     static sessions = {
-        restoration: (client: Client) => {
+        logRestoration: (client: Client) => {
             Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify({
-                type: 'session.restore',
+                type: 'session.restoration',
                 username: client.wrapped.name,
                 hwidHash: client.wrapped.hwidHash,
                 hwidExHash: client.wrapped.hwidExHash,

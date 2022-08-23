@@ -3,8 +3,7 @@ import Markers from "../../../../../client/world/markers/Markers"
 /// #endif
 
 import ServerEvent from "../../../ServerEvent"
-import type {Marker} from "../../../../world/markers/Markers"
-import type {MarkerData} from "../../../../world/markers/Markers"
+import type {MarkerData} from "../../../../../shared/world/markers/Markers"
 
 export default class ClientEnterAcknowledgeZone extends ServerEvent {
     markerData: MarkerData

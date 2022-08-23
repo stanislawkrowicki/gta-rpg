@@ -77,7 +77,7 @@ export default class Sessions {
                 client.pedCamViewMode = session.pedCamViewMode
                 client.vehicleCamViewMode = session.vehicleCamViewMode
 
-                Logger.sessions.restoration(client)
+                Logger.sessions.logRestoration(client)
 
                 return true
             })

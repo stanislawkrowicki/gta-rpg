@@ -21,8 +21,8 @@ function add(eventModule: any): any {
 Events.initialize = (async () => {
     Events.Server = {
         chat: {
-            Message: add(await import('../chat/events/server/Message')),
-            ClientMessage: add(await import('../chat/events/server/ClientMessage'))
+            Message: add(await import('./server/chat/Message')),
+            ClientMessage: add(await import('./server/chat/ClientMessage'))
         },
 
         world: {
@@ -44,8 +44,12 @@ Events.initialize = (async () => {
     }
 
     Events.Client = {
+        auth: {
+            RequestLogin: add(await import('./client/auth/RequestLogin')),
+            RequestRegister: add(await import('./client/auth/RequestRegistration')),
+        },
         chat: {
-            Message: add(await import('../chat/events/client/Message'))
+            Message: add(await import('./client/chat/Message'))
         },
 
         world: {
@@ -61,7 +65,15 @@ Events.initialize = (async () => {
             return
         }
 
-        Events.map[eventId](player.getMeta('wrapper'), object)
+        const handleEvent = Events.map[eventId]
+
+        if(handleEvent) {
+            handleEvent(player.getMeta('wrapper'), object)
+        }
+        else {
+            altServer.logError('Uninitialized event: ' + eventId)
+        }
+
     })
     /// #endif
 

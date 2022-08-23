@@ -1,4 +1,4 @@
-import type Message from "../../shared/chat/events/server/Message"
+import type Message from "../../shared/events/server/chat/Message"
 import type {Client} from "../index"
 
 

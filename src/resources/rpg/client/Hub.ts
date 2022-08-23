@@ -16,10 +16,10 @@ export default class Hub {
     static initialize() {
         this.webview = new alt.WebView('/resource/client/webviews/hub/index.html')
 
-        alt.setCamFrozen(true)
-        alt.showCursor(true)
+        // alt.setCamFrozen(true)
+        // alt.showCursor(true)
 
-        this.webview.focus()
+        // this.webview.focus()
 
         this.webview.on('AUTH:LOGIN', (username, passwordHash) => {
             ClientEvent.emit(new RequestLogin(username, passwordHash))

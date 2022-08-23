@@ -1,5 +1,6 @@
 /// #if SERVER
 import type { Client } from '../../server'
+import Logger from '../../server/logger/logger'
 /// #endif
 
 /// #if CLIENT
@@ -13,6 +14,9 @@ export default abstract class ClientEvent extends Event {
 
     /// #if SERVER
     static onHandle(client: Client, object: ClientEvent): void {}
+    static logAsSuspicious(client: Client, object: ClientEvent): void {
+        Logger.logSuspiciousEvent(client, this, object)
+    }
     /// #endif
 
     /// #if CLIENT

@@ -25,7 +25,7 @@ export default class RequestRegistration extends ClientEvent {
             object.passwordHash.length !== 32 ||
             object.passwordHash
         ) {
-            return Logger.suspiciousEvent(client, this, object)
+            return Logger.logSuspiciousEvent(client, this, object)
         }
 
 

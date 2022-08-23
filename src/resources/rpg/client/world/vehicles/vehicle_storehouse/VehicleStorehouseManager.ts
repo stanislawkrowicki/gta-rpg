@@ -45,6 +45,6 @@ export default class VehicleStorehouseManager {
     }
 
     static takeVehicleOut(vehicleId: string, storehouseID: number) {
-        ClientEvent.emitEvent(new TakeVehicleOut(vehicleId, storehouseID))
+        ClientEvent.emit(new TakeVehicleOut(vehicleId, storehouseID))
     }
 }

@@ -1,6 +1,6 @@
 import alt from 'alt-client'
 import native from 'natives'
-import Message from "../../shared/chat/events/client/Message"
+import Message from "../../shared/events/client/chat/Message"
 import ClientEvent from "../../shared/events/ClientEvent"
 
 export default class Chat {

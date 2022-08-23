@@ -24,13 +24,13 @@ export default abstract class Event {
 
         /// #if SERVER
         if (this.eventType === EventType.CLIENT) {
-            Events.map[this.ID] = (this as typeof ClientEvent).onHandle
+            Events.map[this.ID] = (this as typeof ClientEvent).onHandle.bind(this)
         }
         /// #endif
 
         /// #if CLIENT
         if (this.eventType === EventType.SERVER)
-            Events.map[this.ID] = (this as typeof ServerEvent).onHandle
+            Events.map[this.ID] = (this as typeof ServerEvent).onHandle.bind(this)
         /// #endif
     }
 }
