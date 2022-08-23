@@ -30,7 +30,7 @@ export default class Chat {
         })
 
         this.webview.on('MESSAGE', (message: string) => {
-            ClientEvent.emitEvent(new Message(message))
+            ClientEvent.emit(new Message(message))
         })
     }
 }

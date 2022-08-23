@@ -32,14 +32,14 @@ export default class Sessions {
         const rotZ = altPlayer.rot.z
 
         Sessions.sessionRepository.search()
-            .where('playerHwidHash')
+            .where('clientHwidHash')
             .equals(hwidHash)
             .return.first()
             .then((session) => {
                 if (session === null)
                     session = Sessions.sessionRepository.createEntity()
 
-                session.playerHwidHash = hwidHash
+                session.clientHwidHash = hwidHash
 
                 session.x = posX
                 session.y = posY
@@ -64,20 +64,29 @@ export default class Sessions {
             Sessions.saveSessionForPlayer(players[i].getMeta('wrapper') as Client).then()
     }
 
-    static async restoreSession(client: Client) {
-        const session = await Sessions.sessionRepository.search()
-            .where('playerHwidHash')
+    static async restoreSessionIfPossible(client: Client) {
+        return Sessions.sessionRepository.search()
+            .where('clientHwidHash')
             .equals(client.wrapped.hwidHash)
-            .return.first()
+            .return.first().then((session) => {
+                if(session === null) return false
 
-        if (session === null) return
+                client.wrapped.pos = new alt.Vector3(session.x, session.y, session.z)
+                client.wrapped.rot = new alt.Vector3(0, session.ry, session.rz)
 
-        client.wrapped.pos = new alt.Vector3(session.x, session.y, session.z)
-        client.wrapped.rot = new alt.Vector3(0, session.ry, session.rz)
+                client.pedCamViewMode = session.pedCamViewMode
+                client.vehicleCamViewMode = session.vehicleCamViewMode
 
-        client.pedCamViewMode = session.pedCamViewMode
-        client.vehicleCamViewMode = session.vehicleCamViewMode
+                Logger.sessions.restoration(client)
 
-        Logger.sessions.restoration(client)
+                return true
+            })
+    }
+
+    static async checkIfSessionExistsForHwidHash(hwidHash: string) {
+        return Sessions.sessionRepository.search()
+            .where('clientHwidHash')
+            .equals(hwidHash)
+            .return.first().then((session) => session !== null)
     }
 }

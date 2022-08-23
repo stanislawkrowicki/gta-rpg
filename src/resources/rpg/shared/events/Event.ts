@@ -4,6 +4,11 @@ import Events from './Events'
 /// #if CLIENT
 import altClient from "alt-client"
 /// #endif
+
+/// #if SERVER
+import altServer from "alt-server"
+/// #endif
+
 export enum EventType {
     CLIENT,
     SERVER
@@ -18,8 +23,9 @@ export default abstract class Event {
         this.ID = Event.ID++
 
         /// #if SERVER
-        if (this.eventType === EventType.CLIENT)
+        if (this.eventType === EventType.CLIENT) {
             Events.map[this.ID] = (this as typeof ClientEvent).onHandle
+        }
         /// #endif
 
         /// #if CLIENT

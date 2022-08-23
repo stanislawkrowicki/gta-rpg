@@ -1,7 +1,7 @@
 import { Entity, Schema } from 'redis-om'
 
 export interface Session {
-    playerHwidHash: string
+    clientHwidHash: string
 
     x: number
     y: number
@@ -17,7 +17,7 @@ export interface Session {
 export class Session extends Entity {}
 
 export const SessionSchema = new Schema(Session, {
-    playerHwidHash: { type: 'string' },
+    clientHwidHash: { type: 'string' },
 
     x: { type: 'number' },
     y: { type: 'number' },

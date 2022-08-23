@@ -10,6 +10,7 @@ import Chat from './chat/Chat'
 import Events from "../shared/events/Events"
 import Markers from "./world/markers/Markers"
 import VehicleStorehouse from "./vehicles/VehicleStorehouse"
+import Hub from './Hub'
 
 const LocalPlayer: Player = null
 
@@ -50,32 +51,6 @@ class GameDefaultsInitiator {
 
 GameDefaultsInitiator.initiate()
 
-type GameScreenProviderCallback = (buffer: string) => void
-
-class GameScreenProvider {
-    static listeners: GameScreenProviderCallback[] = []
-
-    static initialize() {
-        alt.setInterval(() => {
-            if(GameScreenProvider.listeners.length > 0) {
-                alt.takeScreenshotGameOnly().then((buffer) => {
-                    for(let i = 0; i < GameScreenProvider.listeners.length; i++) {
-                        GameScreenProvider.listeners[i](buffer)
-                    }
-                })
-            }
-        }, 10000)
-    }
-    static addBufferListener(listener: GameScreenProviderCallback) {
-        GameScreenProvider.listeners.push(listener)
-    }
-    static removeBufferListener(listener: GameScreenProviderCallback) {
-        for(let i = 0; GameScreenProvider.listeners.length; i++) {
-            GameScreenProvider.listeners.splice(i, 1)
-        }
-    }
-}
-
 class Interactivity {
 
 }
@@ -103,33 +78,28 @@ class Interactivities {
     }
 }
 
-alt.on('GAME:USER_SHOULD_LOGIN', () => {})
+// alt.on('spawned', () => {
+//     game.setPedDefaultComponentVariation(alt.Player.local.scriptID)
+//
+//     Chat.initialize()
+// })
 
-alt.onServer('GAME:SPAWN', () => {
-    game.setPedDefaultComponentVariation(alt.Player.local.scriptID)
-
-    Chat.initialize()
-})
-
-alt.onServer('GAME:LOGIN_PANEL:SHOW', async () => {
-    const loginView = new alt.WebView('resource/client/webviews/login/index.html')
-
-    alt.setCamFrozen(true)
-    alt.showCursor(true)
-    loginView.focus()
-
-    GameScreenProvider.addBufferListener((buffer) => {
-        loginView.emit('GAME:SCREEN', buffer)
-    })
-
-    loginView.on('LOGIN:ATTEMPT', (login: string, password: string) => {
-        alt.emitServer('GAME:LOGIN_PANEL:LOGIN_ACTION', login, password)
-    })
-
-})
+// alt.onServer('GAME:LOGIN_PANEL:SHOW', async () => {
+//     const loginView = new alt.WebView('resource/client/webviews/login/index.html')
+//
+//     alt.setCamFrozen(true)
+//     alt.showCursor(true)
+//     loginView.focus()
+//
+//     loginView.on('LOGIN:ATTEMPT', (login: string, password: string) => {
+//         alt.emitServer('GAME:LOGIN_PANEL:LOGIN_ACTION', login, password)
+//     })
+// })
 
 // GameScreenProvider.initialize()
 Mouse.initialize()
+
+Hub.initialize()
 
 alt.on('keydown', (key) => {
     // if(key === 113) {
@@ -139,20 +109,6 @@ alt.on('keydown', (key) => {
     //         Mouse.setMode(MouseMode.CAMERA_CONTROL)
     //     }
     // }
-})
-
-class Handlers {
-    static map = {}
-    static list: [] = []
-
-    static addHandler(handler: () => void) {
-    }
-}
-
-alt.on('newHandler', (id: number, handlerCode: string) => {
-    const handler = new Function(handlerCode)
-
-
 })
 
 alt.setTimeout(() => {
