@@ -1,5 +1,5 @@
 /// #if CLIENT
-import VehicleStorehouse from "../../../../../../client/vehicles/VehicleStorehouse"
+import VehicleStorehouseManager from "../../../../../../client/vehicles/VehicleStorehouseManager"
 /// #endif
 
 import ServerEvent from "../../../../ServerEvent"
@@ -11,7 +11,7 @@ export default class ClosePanel extends ServerEvent {
 
     /// #if CLIENT
     static onHandle(object: ClosePanel) {
-        VehicleStorehouse.closePanel()
+        VehicleStorehouseManager.closePanel()
     }
     /// #endif
 }

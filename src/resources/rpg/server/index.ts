@@ -15,7 +15,8 @@ import Sessions from "./sessions/Sessions"
 import Vehicles from "./world/vehicles/Vehicles"
 import MarkerManager from "./world/markers/MarkerManager"
 import {CylinderMarker, Marker} from "../shared/world/markers/Markers"
-import VehicleStorehouse from './world/vehicles/VehicleStorehouse'
+import VehicleStorehouse from './world/vehicles/vehicle_storehouse/VehicleStorehouse'
+import VehicleStorehouseManager from "./world/vehicles/vehicle_storehouse/VehicleStorehouseManager"
 
 {
     console.log = alt.log
@@ -179,7 +180,6 @@ Events.initialize().then(() => {
 Sessions.initialize()
 
 await Vehicles.initialize()
-await VehicleStorehouse.initialize()
 
 MarkerManager.initialize()
 
@@ -195,3 +195,5 @@ MarkerManager.add(new CylinderMarker(
     true,
     30
 ))
+
+VehicleStorehouseManager.initialize()
