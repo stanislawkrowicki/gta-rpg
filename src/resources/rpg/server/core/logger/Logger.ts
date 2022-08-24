@@ -74,7 +74,7 @@ export default class Logger {
     // SUSPICIOUS EVENTS -> MONGO
     static logSuspiciousEvent = (client: Client, eventClass: typeof Event | any, suspiciousEventContent: Event): void => {
         /// #if process.env['ENVIRONMENT'] !== 'prod'
-        alt.log('~y~Suspicious event:', eventClass, suspiciousEventContent.toString())
+        alt.log('~y~Suspicious event:', suspiciousEventContent)
         /// #endif
 
         MainDB.collections.gameDevices
