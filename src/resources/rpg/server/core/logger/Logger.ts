@@ -44,29 +44,27 @@ export default class Logger {
         await Logger.warnRepository.save(warn)
     }
 
-    static logError = async (resource: string, id: number, message: string) => {
+    static logError = async (resource: string, message: string) => {
         /// #if process.env['ENVIRONMENT'] !== 'prod'
-        alt.logError(`[${resource}][${id}]: ${message}`)
+        alt.logError(`[${resource}]: ${message}`)
         /// #endif
 
         const error = Logger.errorRepository.createEntity()
 
         error.resource = resource
-        error.id = id
         error.message = message
 
         await Logger.errorRepository.save(error)
     }
 
-    static logCaughtError = async (resource: string, id: number, stacktrace: string, message?: string) => {
+    static logCaughtError = async (resource: string, stacktrace: string, message?: string) => {
         /// #if process.env['ENVIRONMENT'] !== 'prod'
-        alt.logError(`[${resource}][${id}]: CAUGHT: ${message || ''} ${stacktrace}`)
+        alt.logError(`[${resource}]: CAUGHT: ${message || ''} ${stacktrace}`)
         /// #endif
 
         const caughtError = Logger.caughtErrorRepository.createEntity()
 
         caughtError.resource = resource
-        caughtError.id = id
         caughtError.stacktrace = stacktrace
         caughtError.message = message || ''
 
@@ -90,11 +88,11 @@ export default class Logger {
                         timestamp: Date.now()
                     })
                 ).catch((err) => {
-                    Logger.logCaughtError('logger', 1, err)
+                    Logger.logCaughtError('logger', err, 'Failed to insert suspicious event to Mongo')
                         .then()
                 })
             }).catch((err) => {
-                Logger.logCaughtError('logger', 0, err)
+                Logger.logCaughtError('logger', err, 'Failed to get player game device')
                     .then()
             })
     }

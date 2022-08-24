@@ -56,7 +56,7 @@ export default class Vehicles {
         MainDB.collections.vehicles.findById(id)
             .then((vehicle) => {
                 if (!vehicle) {
-                    Logger.logCaughtError('vehicles', 0, 'spawnWorldVehicleFromDB find returned void').then()
+                    Logger.logError('vehicles', 'spawnWorldVehicleFromDB find returned void').then()
                     return
                 }
 
@@ -64,12 +64,10 @@ export default class Vehicles {
 
                 QuickDB.client.execute(['SET', `${Vehicles.REDIS_VEHICLE_KEY}:${vehicle.id}`, 0])
                     .catch((err) => Logger.logCaughtError('vehicles',
-                        0,
                         err,
                         'spawnWorldVehicleFromDB failed to push vehicle to Redis'))
             })
             .catch((err) => Logger.logCaughtError('vehicles',
-                1,
                 err,
                 'spawnWorldVehicleFromDB find caught'))
     }
@@ -80,9 +78,9 @@ export default class Vehicles {
                 wrapper.wrapped.destroy()
 
                 QuickDB.client.execute(['DEL', `${Vehicles.REDIS_VEHICLE_KEY}:${wrapper.id}`])
-                    .catch(err => Logger.logCaughtError('vehicles', 2, err, 'Failed to delete vehicle from Redis'))
+                    .catch(err => Logger.logCaughtError('vehicles', err, 'Failed to delete vehicle from Redis'))
             })
-            .catch(err => Logger.logCaughtError('vehicles', 3, err, 'Error while despawning world vehicle'))
+            .catch(err => Logger.logCaughtError('vehicles', err, 'Error while despawning world vehicle'))
     }
 
     static async spawnVehiclesInWorld() {
@@ -105,7 +103,6 @@ export default class Vehicles {
                     if (vehicle.position === undefined) {
                         QuickDB.client.execute(['DEL', `${Vehicles.REDIS_VEHICLE_KEY}:${vehicle.id}`])
                             .catch((err) => Logger.logCaughtError('vehicles',
-                                2,
                                 err,
                                 'Error while deleting vehicle from Redis cause position undefined'))
                         continue VEHICLES_FROM_DB_LOOP
@@ -132,7 +129,7 @@ export default class Vehicles {
 
                 }
             }).catch((err) => {
-                Logger.logCaughtError('vehicles', 0, err, 'Error while finding and spawning vehicles')
+                Logger.logCaughtError('vehicles', err, 'Error while finding and spawning vehicles')
             })
         }
     }

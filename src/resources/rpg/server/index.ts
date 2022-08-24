@@ -97,7 +97,7 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
                             })
                         )
                         .catch((err) => {
-                            Logger.logCaughtError('server-index', 0, err).then()
+                            Logger.logCaughtError('server-index', err, 'Failed to create game device').then()
                         })
                         .then(() => {
                             connectionQueueInfo.accept()

@@ -23,7 +23,7 @@ export default class VehicleStorehouseManager {
         const storehouse = VehicleStorehouseManager.storehouses.find(sh => sh.ID === storehouseID)
 
         if (!storehouse) {
-            Logger.logError('vehicle_storehouse_manager', 0, 'Storehouse to take vehicle out of was not found')
+            Logger.logError('vehicle_storehouse_manager', 'Storehouse to take vehicle out of was not found')
                 .then()
             return
         }
