@@ -17,16 +17,15 @@
 </table>
 
 <style lang="scss">
-    $THEME-COLOR-A: #737dfe;
-    $THEME-COLOR-B: #ffcac9;
+    @import '../components/theme.scss';
 
     table {
         border: 1px solid;
         border-collapse: collapse;
-        background-color: $THEME-COLOR-A;
+        background-color: var(--theme-color-a);
     }
 
     th {
-        background-color: $THEME-COLOR-B;
+        background-color: var(--theme-color-b);
     }
 </style>
