@@ -1,0 +1,14 @@
+$THEME-COLOR-A: #737dfe;
+$THEME-COLOR-B: #ffcac9;
+
+@property --theme-color-a {
+  syntax: '<color>';
+  initial-value: $THEME-COLOR-A;
+  inherits: false;
+}
+
+@property --theme-color-b {
+  syntax: '<color>';
+  initial-value: $THEME-COLOR-B;
+  inherits: false;
+}

@@ -25,10 +25,10 @@ export default class RequestRegistration extends ClientEvent {
 
     /// #if SERVER
     static onHandle(client: Client, object: RequestRegistration) {
-        if(typeof object.name !== 'string' || object.passwordHash !== 'string' ||
+        if(typeof object.name !== 'string' || typeof object.passwordHash !== 'string' ||
             object.name.length === 0 || object.name.length > RequestRegistration.MAX_NAME_LENGTH ||
             object.passwordHash.length !== 64 ||
-            object.passwordHash
+            !object.passwordHash
         ) {
             return this.logAsSuspicious(client, object)
         }

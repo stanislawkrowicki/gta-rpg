@@ -1,16 +1,48 @@
 <script lang="ts">
     import { onMount } from 'svelte'
 
-    let login = ''
-    let password = ''
-    let message = ''
+    import LoginPanel from './LoginPanel.svelte'
+    import RegistrationPanel from './RegistrationPanel.svelte'
 
-    function checkCredentials() {
-        alt.emit('AUTH:LOGIN', login, password)
+    import Carousel from 'svelte-carousel'
+
+    import ChevronRight from 'svelte-material-icons/ChevronRight.svelte'
+    import ChevronLeft from 'svelte-material-icons/ChevronLeft.svelte'
+
+    let carousel
+
+    let loginMessage = ''
+    let registrationMessage = ''
+
+    const moveToLogin = () => {
+        // @ts-ignore
+        carousel.goTo(0)
+    }
+
+    const moveToRegistration = () => {
+        // @ts-ignore
+        carousel.goTo(1)
+    }
+
+    const onLoginEvent = (event) => {
+        alt.emit('AUTH:LOGIN', event.detail.login, event.detail.password)
+    }
+
+    const onRegisterEvent = (event) => {
+        if (event.detail.password !== event.detail.passwordConfirm) {
+            registrationMessage = 'Podane hasła nie są identyczne.'
+            return
+        }
+
+        alt.emit('AUTH:REGISTRATION', event.detail.login, event.detail.password)
     }
 
     alt.on('LOGIN:ERROR', (error) => {
-        message = error
+        loginMessage = error
+    })
+
+    alt.on('REGISTER:ERROR', (error) => {
+        registrationMessage = error
     })
 
     onMount(() => {})
@@ -20,29 +52,27 @@
   @import url('http://fonts.cdnfonts.com/css/roboto');
   @import url('http://fonts.cdnfonts.com/css/amiable-forsythia-free-2');
 
-  $THEME-COLOR-A: #737dfe;
-  $THEME-COLOR-B: #ffcac9;
+  @import '../components/theme.scss';
 
   :global(html) {
-    //background: url(https://i.ytimg.com/vi/Y16jJfIxcHc/maxresdefault.jpg);
-    //background-size: cover;
     margin: 0;
     padding: 0;
   }
+
   :global(body) {
     margin: 0;
     padding: 0;
+  }
 
-  }
-  * {
-    color: white;
-    font-family: Roboto;
-  }
-  button {
-    border: 0;
+  #main-container, .container {
+    width: 100%;
 
-  }
-  .container {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+
+    margin-top: 40vh;
+    transform: translateY(-40%);
+    padding: 30px 0 0 0;
+
     background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
@@ -51,143 +81,63 @@
     gap: 2vh;
   }
 
-  .header {
-    color: white;
-  }
-
-  h1 {
-    color: white;
-    margin: 0px;
-    font-size: 42px;
-    font-family: 'Amiable Forsythia Free', sans-serif;
-    background: white;
-
-    background-position: 0px 60px;
-    padding: 10px;
-
-    font-weight: 600;
-
-    letter-spacing: 5px;
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  label {
-    color: white;
-    size: 3vh;
-  }
-
-  input {
-    min-width: 20vw;
-    min-height: 30px;
-
-    max-height: 5vh;
-
-    background:rgba(255, 255, 255, 0.95);
-    color: #000;
-
-    padding: 5px;
-
-    outline: none;
-    height: 6vh;
-
-    border-radius: 0px;
-    border-width: 3px;
-    border-style: solid;
-
-    border-top: 0;
-    border-right: 0;
-    border-left: 0;
-
-    border-image: linear-gradient(40deg, $THEME-COLOR-A, $THEME-COLOR-B) 1;
-    padding-left: 15px;
-
-    &:focus, &:hover {
-      background:rgba(255, 255, 255, 1);
-    }
-
-    &::placeholder {
-      color: rgba(0, 0, 0, 0.45);
-    }
-  }
-  @property --login-btn-color-a {
-    syntax: '<color>';
-    initial-value: $THEME-COLOR-A;
-    inherits: false;
-  }
-
-  @property --login-btn-color-b {
-    syntax: '<color>';
-    initial-value: $THEME-COLOR-B;
-    inherits: false;
-  }
-
-  #login-btn {
-    padding: 10px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    margin-top: 5vh;
-    background: linear-gradient(40deg,
-            var(--login-btn-color-a),
-            var(--login-btn-color-b)
-    );
-
-    min-width: 20vw;
-    border-radius: 30px;
-
-    transition: --login-btn-color-a 0.1s, --login-btn-color-b 0.1s;
-
-    &:hover {
-      --login-btn-color-a: #868eff;
-      --login-btn-color-b: #ffd9d8;
-    }
-
-    &:active {
-      --login-btn-color-a: #9aa1ff;
-      --login-btn-color-b: #ffe6e6;
-    }
-  }
-
-  header {
-    .content {
-      .nested-content {
-
-      }
-    }
-  }
-
-
-  #main-container {
-    width: 100%;
+  .move-to-registration {
     position: absolute;
+    right: 2.5vw;
+    top: 22.5vh;
 
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    margin-top: 40vh;
-    transform: translateY(-40%);
-    padding: 30px 0 0 0;
+    cursor: pointer;
+
+    span {
+      color: white;
+      font-size: 42px;
+      height: 4rem;
+      font-family: Roboto, sans-serif;
+      margin-right: 20px;
+    }
   }
 
-  .container > :last-child {
-    margin-bottom: 5vh;
+  .move-to-login {
+    position: absolute;
+    left: 2.5vw;
+    top: 22.5vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    span {
+      color: white;
+      font-size: 42px;
+      height: 4rem;
+      font-family: Roboto, sans-serif;
+      margin-right: 20px;
+    }
   }
 </style>
 
-<div class="container" id="main-container">
-    <div class="header">
-        <h1>LOGO</h1>
+<Carousel bind:this={carousel} arrows={false} dots={false} swiping={false}>
+    <div class="container login-panel">
+        <LoginPanel message={loginMessage} on:login={onLoginEvent}></LoginPanel>
+
+        <div class="move-to-registration" on:click={moveToRegistration}>
+            <span>Rejestracja</span>
+            <ChevronRight color="white" size="4rem"></ChevronRight>
+        </div>
     </div>
 
-    <div class="login">
-        <input placeholder="Login" type="text" id="login" name="login" bind:value={login}>
+    <div class="container registration-panel">
+        <RegistrationPanel message={registrationMessage} on:register={onRegisterEvent}></RegistrationPanel>
+
+        <div class="move-to-login" on:click={moveToLogin}>
+            <ChevronLeft color="white" size="4rem"></ChevronLeft>
+            <span>Logowanie</span>
+        </div>
     </div>
-
-    <div class="password">
-        <input placeholder="Hasło" type="text" id="password" name="password" bind:value={password}>
-    </div>
-
-    <p id="message">{message}</p>
-
-    <button id="login-btn" on:click={checkCredentials}>ZALOGUJ</button>
-</div>
+</Carousel>
