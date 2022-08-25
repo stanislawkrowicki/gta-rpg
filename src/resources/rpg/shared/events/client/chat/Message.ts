@@ -23,7 +23,7 @@ export default class Message extends ClientEvent {
     /// #if SERVER
     static onHandle(client: Client, object: Message): void {
         if (typeof object.message !== 'string')
-            return Logger.logSuspiciousEvent(client, Message, object)
+            return this.logAsSuspicious(client, Message)
 
         Logger.chat.logMessage(client, object.message)
 
