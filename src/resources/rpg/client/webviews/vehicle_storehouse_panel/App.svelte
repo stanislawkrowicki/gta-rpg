@@ -3,7 +3,7 @@
 </svelte:head>
 
 <script lang="ts">
-    import Table from "../components/Table.svelte";
+    import Table from "../components/Table.svelte"
 
     let tableColumns = ['id', 'model']
     let storehouseDescription = ''
@@ -63,7 +63,7 @@
         cursor: pointer;
     }
 
-    th, td {
+    td {
       padding: 15px;
     }
 

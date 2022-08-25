@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher } from "svelte"
 
     const dispatch = createEventDispatcher()
 
@@ -26,15 +26,6 @@
 </script>
 
 <style>
-    .author {
-        
-    }
-    .author:after {
-        content: ": ";
-    }
-    .message {
-
-    }
 </style>
 
 <input bind:value={message} bind:this={inputField} on:keypress={onKeyPress}/>

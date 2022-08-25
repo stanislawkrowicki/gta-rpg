@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let distance = 0
+    // export let distance = 0
 
     export let x = 0
     export let y = 0

@@ -24,6 +24,7 @@ specifiers:
   esbuild-plugin-tsc: ^0.3.1
   esbuild-svelte: ^0.7.1
   eslint: ^8.20.0
+  eslint-plugin-svelte: ^2.7.0
   fancy-log: ^2.0.0
   gulp: ^4.0.2
   gulp-esbuild: ^0.10.4
@@ -76,6 +77,7 @@ devDependencies:
   esbuild-plugin-glsl: 1.1.0_esbuild@0.14.50
   esbuild-svelte: 0.7.1_rpgk73a5pxqhiv6i5ggbs5gm4u
   eslint: 8.20.0
+  eslint-plugin-svelte: 2.7.0_qkcni2euiv2sin5i2yudebpgbq
   gulp: 4.0.2
   husky: 8.0.1
   lint-staged: 12.5.0
@@ -1570,6 +1572,31 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /eslint-plugin-svelte/2.7.0_qkcni2euiv2sin5i2yudebpgbq:
+    resolution: {integrity: sha512-K43Eehm5Gal1GxeBjcUMuJRGLHtIwXmLiItNBApV4N1RQYknRh2gVPc6CsJsVlncCvyw6qvNsGX/db1v1PRdMw==}
+    engines: {node: ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      eslint: ^7.0.0 || ^8.0.0-0
+      svelte: ^3.37.0
+    peerDependenciesMeta:
+      svelte:
+        optional: true
+    dependencies:
+      debug: 4.3.4
+      eslint: 8.20.0
+      eslint-utils: 3.0.0_eslint@8.20.0
+      known-css-properties: 0.25.0
+      postcss: 8.4.16
+      postcss-load-config: 3.1.4_postcss@8.4.16
+      postcss-safe-parser: 6.0.0_postcss@8.4.16
+      sourcemap-codec: 1.4.8
+      svelte: 3.39.0
+      svelte-eslint-parser: 0.18.0_svelte@3.39.0
+    transitivePeerDependencies:
+      - supports-color
+      - ts-node
+    dev: true
+
   /eslint-scope/5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
     engines: {node: '>=8.0.0'}
@@ -2576,6 +2603,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /known-css-properties/0.25.0:
+    resolution: {integrity: sha512-b0/9J1O9Jcyik1GC6KC42hJ41jKwdO/Mq8Mdo5sYN+IuRTXs2YFHZC3kZSx6ueusqa95x3wLYe/ytKjbAfGixA==}
+    dev: true
+
   /last-run/1.1.1:
     resolution: {integrity: sha512-U/VxvpX4N/rFvPzr3qG5EtLKEnNI0emvIQB3/ecEwv+8GHaUKbIB8vxv1Oai5FAF0d0r7LXHhLLe5K/yChm5GQ==}
     engines: {node: '>= 0.10'}
@@ -2921,6 +2952,12 @@ packages:
     dev: true
     optional: true
 
+  /nanoid/3.3.4:
+    resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+    dev: true
+
   /nanomatch/1.2.13:
     resolution: {integrity: sha512-fpoe2T0RbHwBTBUOftAfBPaDEi06ufaUai0mE6Yn1kacc3SnTErfb/h+X94VXzI64rKFHYImXSvdwGGCmwOqCA==}
     engines: {node: '>=0.10.0'}
@@ -3240,6 +3277,41 @@ packages:
   /posix-character-classes/0.1.1:
     resolution: {integrity: sha512-xTgYBc3fuo7Yt7JbiuFxSYGToMoz8fLoE6TC9Wx1P/u+LfeThMOAqmuyECnlBaaJb+u1m9hHiXUEtwW4OzfUJg==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /postcss-load-config/3.1.4_postcss@8.4.16:
+    resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
+    engines: {node: '>= 10'}
+    peerDependencies:
+      postcss: '>=8.0.9'
+      ts-node: '>=9.0.0'
+    peerDependenciesMeta:
+      postcss:
+        optional: true
+      ts-node:
+        optional: true
+    dependencies:
+      lilconfig: 2.0.5
+      postcss: 8.4.16
+      yaml: 1.10.2
+    dev: true
+
+  /postcss-safe-parser/6.0.0_postcss@8.4.16:
+    resolution: {integrity: sha512-FARHN8pwH+WiS2OPCxJI8FuRJpTVnn6ZNFiqAM2aeW2LwTHWWmWgIyKC6cUo0L8aeKiF/14MNvnpls6R2PBeMQ==}
+    engines: {node: '>=12.0'}
+    peerDependencies:
+      postcss: ^8.3.3
+    dependencies:
+      postcss: 8.4.16
+    dev: true
+
+  /postcss/8.4.16:
+    resolution: {integrity: sha512-ipHE1XBvKzm5xI7hiHCZJCSugxvsdq2mPnsq5+UF+VHCjiBvtDrlxJfMBToWaP9D5XlgNmcFGqoHmUn0EYEaRQ==}
+    engines: {node: ^10 || ^12 || >=14}
+    dependencies:
+      nanoid: 3.3.4
+      picocolors: 1.0.0
+      source-map-js: 1.0.2
     dev: true
 
   /prelude-ls/1.2.1:
@@ -3940,6 +4012,18 @@ packages:
       - sass
       - stylus
       - sugarss
+    dev: true
+
+  /svelte-eslint-parser/0.18.0_svelte@3.39.0:
+    resolution: {integrity: sha512-XYmAW8I45Bd5RhUr4JpCbu0sSZ2jzvfG1NkOW8Hxv+eTxReXVBBCRg1d7czRY+iZOg289dTI5JHtu9ZR4R9dCA==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      svelte: ^3.37.0
+    dependencies:
+      eslint-scope: 7.1.1
+      eslint-visitor-keys: 3.3.0
+      espree: 9.3.2
+      svelte: 3.39.0
     dev: true
 
   /svelte-feather-icons/4.0.0:

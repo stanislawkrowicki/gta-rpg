@@ -1,7 +1,5 @@
 <script lang="ts">
     export let columns: string[] = []
-
-
 </script>
 
 <table>
@@ -28,7 +26,7 @@
         background-color: $THEME-COLOR-A;
     }
 
-    td, th {
+    th {
         background-color: $THEME-COLOR-B;
     }
 </style>

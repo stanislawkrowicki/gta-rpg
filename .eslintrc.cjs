@@ -6,12 +6,25 @@ module.exports = {
     },
     'extends': [
         'eslint:recommended',
-        'plugin:@typescript-eslint/recommended'
+        'plugin:@typescript-eslint/recommended',
+        'plugin:svelte/recommended'
     ],
     'parser': '@typescript-eslint/parser',
     'parserOptions': {
         'ecmaVersion': 'latest',
         'sourceType': 'module'
+    },
+    'overrides': [
+        {
+            'files': ['*.svelte'],
+            'parser': 'svelte-eslint-parser',
+            'parserOptions': {
+                'parser': '@typescript-eslint/parser'
+            }
+        }
+    ],
+    'globals': {
+        'alt': true
     },
     'rules': {
         'indent': [

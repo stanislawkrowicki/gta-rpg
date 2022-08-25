@@ -1,13 +1,13 @@
 <script lang="ts">
-    import Message from "./Message.svelte";
-    import Input from "./Input.svelte";
+    import Message from "./Message.svelte"
+    import Input from "./Input.svelte"
 
-    interface Message {
+    interface IMessage {
         author: string,
         message: string
     }
 
-    let messages: Message[] = []
+    let messages: IMessage[] = []
     let inputComponent
 
     const handleMessage = (messageEvent) => {

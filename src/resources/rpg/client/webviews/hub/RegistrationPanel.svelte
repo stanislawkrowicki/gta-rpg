@@ -1,9 +1,7 @@
 <script lang="ts">
-    import {createEventDispatcher} from "svelte";
+    import {createEventDispatcher} from "svelte"
 
     export let message = ''
-
-    $: console.log(message)
 
     const dispatch = createEventDispatcher()
 
