@@ -1,49 +1,43 @@
 <script lang="ts">
     import { onMount } from 'svelte'
 
-    import LoginPanel from './LoginPanel.svelte'
-    import RegistrationPanel from './RegistrationPanel.svelte'
+    import LocationSelector from "./LocationSelector.svelte"
 
-    import Carousel from 'svelte-carousel'
+    import type {IAvailableLocation} from "../../Hub"
+    import AuthPanel from "./AuthPanel.svelte"
 
-    import ChevronRight from 'svelte-material-icons/ChevronRight.svelte'
-    import ChevronLeft from 'svelte-material-icons/ChevronLeft.svelte'
-
-    let carousel
-
-    let loginMessage = ''
-    let registrationMessage = ''
-
-    const moveToLogin = () => {
-        // @ts-ignore
-        carousel.goTo(0)
+    enum Stage {
+        WAITING_FOR_AUTHORIZATION,
+        CHOOSING_LOCATION
     }
 
-    const moveToRegistration = () => {
-        // @ts-ignore
-        carousel.goTo(1)
-    }
+    let stage: Stage = Stage.WAITING_FOR_AUTHORIZATION
 
-    const onLoginEvent = (event) => {
+    $: isLoginStage = stage === Stage.WAITING_FOR_AUTHORIZATION
+
+    let availableLocations: IAvailableLocation[] = []
+
+    alt.on('STAGE:LOCATION_SELECT', (locations: IAvailableLocation[]) => {
+        availableLocations = locations
+
+        stage = Stage.CHOOSING_LOCATION
+    })
+
+    const login = (event) => {
         alt.emit('AUTH:LOGIN', event.detail.login, event.detail.password)
     }
 
-    const onRegisterEvent = (event) => {
-        if (event.detail.password !== event.detail.passwordConfirm) {
-            registrationMessage = 'Podane hasła nie są identyczne.'
-            return
-        }
-
+    const register = (event) => {
         alt.emit('AUTH:REGISTRATION', event.detail.login, event.detail.password)
     }
 
-    alt.on('LOGIN:ERROR', (error) => {
-        loginMessage = error
-    })
+    const onLocationSelectorChange = (event) => {
+        alt.emit('LOCATION_SELECTOR:CHANGE', event.detail)
+    }
 
-    alt.on('REGISTER:ERROR', (error) => {
-        registrationMessage = error
-    })
+    const spawn = (event) => {
+        alt.emit('LOCATION_SELECTOR:CONFIRM', event.detail)
+    }
 
     onMount(() => {})
 </script>
@@ -64,80 +58,17 @@
     padding: 0;
   }
 
-  #main-container, .container {
-    width: 100%;
-
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-
-    margin-top: 40vh;
-    transform: translateY(-40%);
-    padding: 30px 0 0 0;
-
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 2vh;
-  }
-
-  .move-to-registration {
+  .location-select {
     position: absolute;
-    right: 2.5vw;
-    top: 22.5vh;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    cursor: pointer;
-
-    span {
-      color: white;
-      font-size: 42px;
-      height: 4rem;
-      font-family: Roboto, sans-serif;
-      margin-right: 20px;
-    }
-  }
-
-  .move-to-login {
-    position: absolute;
-    left: 2.5vw;
-    top: 22.5vh;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    cursor: pointer;
-
-    span {
-      color: white;
-      font-size: 42px;
-      height: 4rem;
-      font-family: Roboto, sans-serif;
-      margin-right: 20px;
-    }
+    width: 100vw;
+    bottom: 0;
   }
 </style>
 
-<Carousel bind:this={carousel} arrows={false} dots={false} swiping={false}>
-    <div class="container login-panel">
-        <LoginPanel message={loginMessage} on:login={onLoginEvent}></LoginPanel>
-
-        <div class="move-to-registration" on:click={moveToRegistration}>
-            <span>Rejestracja</span>
-            <ChevronRight color="white" size="4rem"></ChevronRight>
-        </div>
+{ #if isLoginStage }
+    <AuthPanel on:login={login} on:registration={register}></AuthPanel>
+{ :else }
+    <div class="location-select">
+        <LocationSelector availableLocations={availableLocations} on:locationChange={onLocationSelectorChange} on:spawn={spawn}></LocationSelector>
     </div>
-
-    <div class="container registration-panel">
-        <RegistrationPanel message={registrationMessage} on:register={onRegisterEvent}></RegistrationPanel>
-
-        <div class="move-to-login" on:click={moveToLogin}>
-            <ChevronLeft color="white" size="4rem"></ChevronLeft>
-            <span>Logowanie</span>
-        </div>
-    </div>
-</Carousel>
+{ /if }

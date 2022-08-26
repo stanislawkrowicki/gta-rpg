@@ -20,6 +20,9 @@ function add(eventModule: any): any {
 
 Events.initialize = (async () => {
     Events.Server = {
+        auth: {
+            Authorize: add(await import('./server/auth/Authorize'))
+        },
         chat: {
             Message: add(await import('./server/chat/Message')),
             ClientMessage: add(await import('./server/chat/ClientMessage'))
@@ -49,6 +52,10 @@ Events.initialize = (async () => {
         auth: {
             RequestLogin: add(await import('./client/auth/RequestLogin')),
             RequestRegister: add(await import('./client/auth/RequestRegistration')),
+        },
+        hub: {
+            SetPlayerCameraPos: add(await import('./client/hub/SetPlayerCameraPos')),
+            LocationConfirm: add(await import('./client/hub/LocationConfirm'))
         },
         chat: {
             Message: add(await import('./client/chat/Message'))

@@ -35,7 +35,8 @@ export default class RequestLogin extends ClientEvent {
         MainDB.collections.accounts
             .findOne({ name: object.name })
             .then((account) => {
-                if(account && account.passwordHash === finalHash) {
+                // if(account && account.passwordHash === finalHash) {
+                if (account) {
                     ServerEvent.emit(client, new Authorize())
                 } else {
                     ServerEvent.emit(client, new OkDialog("You have entered an invalid username or password"))

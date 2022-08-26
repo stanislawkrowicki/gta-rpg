@@ -1,5 +1,5 @@
 /// #if CLIENT
-import Markers from "../../../../client/world/markers/Markers"
+import Hub from "../../../../client/Hub"
 /// #endif
 
 import ServerEvent from "../../ServerEvent"
@@ -11,6 +11,7 @@ export default class Authorize extends ServerEvent {
 
     /// #if CLIENT
     static onHandle(object: Authorize) {
+        Hub.locationSelectStage()
     }
     /// #endif
 }

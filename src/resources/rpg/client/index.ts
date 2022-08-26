@@ -109,21 +109,21 @@ alt.on('keydown', (key) => {
     // }
 })
 
-alt.setTimeout(() => {
-    const camera = new Camera()
-
-    camera.setPosition(100, 1000, 1000)
-
-    View.setCamera(camera)
-    // game.destroyAllCams(true)
-    //
-    // const coords = { ...alt.Player.local.pos }
-    // const cam = game.createCamWithParams('DEFAULT_SCRIPTED_CAMERA', coords.x, coords.y, coords.z, 0, 0, 358, 18, true, 2)
-    // game.setCamActive(cam, true)
-    // game.renderScriptCams(true, false, 0, true, false, 0)
-    // game.setCamAffectsAiming(cam, false)
-    // MapEditor.initialize()
-}, 1000)
+// alt.setTimeout(() => {
+// const camera = new Camera()
+//
+// camera.setPosition(100, 1000, 1000)
+//
+// View.setCamera(camera)
+// game.destroyAllCams(true)
+//
+// const coords = { ...alt.Player.local.pos }
+// const cam = game.createCamWithParams('DEFAULT_SCRIPTED_CAMERA', coords.x, coords.y, coords.z, 0, 0, 358, 18, true, 2)
+// game.setCamActive(cam, true)
+// game.renderScriptCams(true, false, 0, true, false, 0)
+// game.setCamAffectsAiming(cam, false)
+// MapEditor.initialize()
+// }, 1000)
 // WebView2DPool.initialize()
 
 Events.initialize().then(() => {
