@@ -32,7 +32,62 @@ export default class Hub {
 
     static camera: Camera
 
-    static locations: IAvailableLocation[]
+    static locations: IAvailableLocation[] = [
+        {
+            name: 'spawn 1',
+            sx: 200,
+            sy: -935,
+            sz: 30,
+            cx: 220,
+            cy: -850,
+            cz: 100
+        },
+        {
+            name: 'spawn 2',
+            sx: 363,
+            sy: -2123,
+            sz: 16,
+            cx: 330,
+            cy: -2070,
+            cz: 40
+        },
+        {
+            name: 'spawn 3',
+            sx: 363,
+            sy: -2123,
+            sz: 16,
+            cx: 330,
+            cy: -2200,
+            cz: 40
+        },
+        {
+            name: 'spawn 4',
+            sx: 200,
+            sy: -935,
+            sz: 30,
+            cx: 180,
+            cy: -970,
+            cz: 100
+        },
+        {
+            name: 'spawn 5',
+            sx: 897,
+            sy: -1054,
+            sz: 32,
+            cx: 910,
+            cy: -1040,
+            cz: 50
+        },
+        {
+            name: 'spawn 6',
+            sx: -527,
+            sy: -678,
+            sz: 33,
+            cx: -560,
+            cy: -690,
+            cz: 50
+        },
+    ]
 
     static initialize() {
         this.camera = new Camera()
@@ -78,63 +133,6 @@ export default class Hub {
 
     static locationSelectStage() {
         this.stage = Stage.CHOOSING_LOCATION
-
-        this.locations = [
-            {
-                name: 'spawn 1',
-                sx: 200,
-                sy: -935,
-                sz: 30,
-                cx: 220,
-                cy: -850,
-                cz: 100
-            },
-            {
-                name: 'spawn 2',
-                sx: 363,
-                sy: -2123,
-                sz: 16,
-                cx: 330,
-                cy: -2070,
-                cz: 40
-            },
-            {
-                name: 'spawn 3',
-                sx: 363,
-                sy: -2123,
-                sz: 16,
-                cx: 330,
-                cy: -2200,
-                cz: 40
-            },
-            {
-                name: 'spawn 4',
-                sx: 200,
-                sy: -935,
-                sz: 30,
-                cx: 180,
-                cy: -970,
-                cz: 100
-            },
-            {
-                name: 'spawn 5',
-                sx: 897,
-                sy: -1054,
-                sz: 32,
-                cx: 910,
-                cy: -1040,
-                cz: 50
-            },
-            {
-                name: 'spawn 6',
-                sx: -527,
-                sy: -678,
-                sz: 33,
-                cx: -560,
-                cy: -690,
-                cz: 50
-            },
-        ]
 
         this.changeCameraView(0)
 
