@@ -8,6 +8,7 @@ import View from "./View"
 import SetPlayerCameraPos from "../shared/events/client/hub/SetPlayerCameraPos"
 import LocationConfirm from "../shared/events/client/hub/LocationConfirm"
 import Mouse, {MouseMode} from "./input/Mouse"
+import Utils from "../shared/utils/Utils"
 
 export enum Stage {
     WAITING_FOR_AUTHORIZATION,
@@ -97,6 +98,42 @@ export default class Hub {
                 cy: -2070,
                 cz: 40
             },
+            {
+                name: 'spawn 3',
+                sx: 363,
+                sy: -2123,
+                sz: 16,
+                cx: 330,
+                cy: -2200,
+                cz: 40
+            },
+            {
+                name: 'spawn 4',
+                sx: 200,
+                sy: -935,
+                sz: 30,
+                cx: 180,
+                cy: -970,
+                cz: 100
+            },
+            {
+                name: 'spawn 5',
+                sx: 897,
+                sy: -1054,
+                sz: 32,
+                cx: 910,
+                cy: -1040,
+                cz: 50
+            },
+            {
+                name: 'spawn 6',
+                sx: -527,
+                sy: -678,
+                sz: 33,
+                cx: -560,
+                cy: -690,
+                cz: 50
+            },
         ]
 
         this.changeCameraView(0)
@@ -112,13 +149,15 @@ export default class Hub {
 
         const location = Hub.locations[locationId]
 
+        const cameraPosVector = new alt.Vector3(location.cx, location.cy, location.cz)
         const spawnPosVector = new alt.Vector3(location.sx, location.sy, location.sz)
+
         ClientEvent.emit(new SetPlayerCameraPos(spawnPosVector))
 
-        const pitch = -Math.abs(Math.atan2(location.cy - location.sy, location.cx - location.sx) * (180 / Math.PI))
+        const cameraRotation = Utils.calculateRotationToLookAtElement(cameraPosVector, spawnPosVector)
 
         Hub.camera.setPosition(location.cx, location.cy, location.cz)
-        Hub.camera.setRotation(pitch, 0, 0)
+        Hub.camera.setRotation(cameraRotation.x, cameraRotation.y, cameraRotation.z)
     }
 
     static spawnPlayer(locationId: number) {
