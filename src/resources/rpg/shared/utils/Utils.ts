@@ -5,7 +5,7 @@ export default class {
         return value
     }
 
-    static calculateRotationToLookAtElement(elementToRotatePos: altShared.Vector3,
+    static calculateRotationToLookAtElementByVectors(elementToRotatePos: altShared.Vector3,
         elementToLookAtPos: altShared.Vector3): altShared.Vector3 {
         /* Calculates rotation (in degrees) needed for an object (e.g. a camera) to look at another object
            (face it both by pitch and yaw). */
@@ -16,6 +16,27 @@ export default class {
         const dy = src.y - target.y
         const dz = src.z - target.z
 
+        const [rx, ry, rz] = this.calculateRotationToLookAtElementByDiffs(dx, dy, dz)
+
+        return new altShared.Vector3(rx, ry, rz)
+    }
+
+    static calculateRotationToLookAtElementByXYZ(sourceX: number, sourceY: number, sourceZ: number,
+        targetX: number, targetY: number, targetZ: number):
+                                                 [number, number, number] {
+        /* Calculates rotation (in degrees) needed for an object (e.g. a camera) to look at another object
+           (face it both by pitch and yaw). */
+        const dx = sourceX - targetX
+        const dy = sourceY - targetY
+        const dz = sourceZ - targetZ
+
+        return this.calculateRotationToLookAtElementByDiffs(dx, dy, dz)
+    }
+
+    static calculateRotationToLookAtElementByDiffs(dx: number, dy: number, dz: number): [number, number, number] {
+        /* Calculates rotation (in degrees) needed for an object (e.g. a camera) to look at another object
+           (face it both by pitch and yaw).
+           Diffs should be calculated with formula `source - target` */
         const pitch = -Math.atan2(dz, Math.sqrt(dx * dx + dy * dy))
         let yaw
 
@@ -36,6 +57,6 @@ export default class {
         const pitchDeg = pitch * (180 / Math.PI)
         const yawDeg = yaw * (180 / Math.PI)
 
-        return new altShared.Vector3(pitchDeg, 0, yawDeg)
+        return [pitchDeg, 0, yawDeg]
     }
 }

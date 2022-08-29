@@ -147,15 +147,19 @@ export default class Hub {
 
         const location = Hub.locations[locationId]
 
-        const cameraPosVector = new alt.Vector3(location.cx, location.cy, location.cz)
         const spawnPosVector = new alt.Vector3(location.sx, location.sy, location.sz)
 
         ClientEvent.emit(new SetPlayerCameraPos(spawnPosVector))
 
-        const cameraRotation = Utils.calculateRotationToLookAtElement(cameraPosVector, spawnPosVector)
+        const [rx, ry, rz] = Utils.calculateRotationToLookAtElementByXYZ(location.cx,
+            location.cy,
+            location.cz,
+            location.sx,
+            location.sy,
+            location.sz)
 
         Hub.camera.setPosition(location.cx, location.cy, location.cz)
-        Hub.camera.setRotation(cameraRotation.x, cameraRotation.y, cameraRotation.z)
+        Hub.camera.setRotation(rx, ry, rz)
     }
 
     static spawnPlayer(locationId: number) {
