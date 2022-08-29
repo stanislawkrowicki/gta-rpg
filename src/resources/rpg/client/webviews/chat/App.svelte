@@ -1,3 +1,7 @@
+<svelte:window
+    on:mousedown={(e) => {e.preventDefault()}}
+></svelte:window>
+
 <script lang="ts">
     import Message from "./Message.svelte"
     import Input from "./Input.svelte"
@@ -6,6 +10,8 @@
         author: string,
         message: string
     }
+
+    const MAX_MESSAGES = 15
 
     let messages: IMessage[] = []
     let inputComponent
@@ -34,12 +40,8 @@
     })
 
     alt.on('CLIENT_MESSAGE', (obj) => {
-        messages = [...messages, { author: obj.author, message: obj.message }]
+        messages = [...messages, { author: obj.author, message: obj.message }].slice(0, MAX_MESSAGES)
     })
-
-    document.onmousedown = (e) => {
-        e.preventDefault()
-    }
 </script>
 
 <div id="container">
@@ -50,6 +52,6 @@
     </div>
 
     <div class="message-input">
-        <Input bind:this={inputComponent} on:input={handleMessage}></Input>
+        <Input bind:this={inputComponent} on:input={handleMessage} on:unfocus={unfocus}></Input>
     </div>
 </div>

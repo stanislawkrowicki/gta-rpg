@@ -5,6 +5,8 @@
 
     export let message = ""
 
+    let shouldAllowTyping = false
+
     let inputField
 
     export function focus() {
@@ -16,6 +18,17 @@
     }
 
     const onKeyPress = (e) => {
+        if (e.key === 'Escape') {
+            dispatch('unfocus')
+            return
+        }
+
+        if (!shouldAllowTyping) {
+            shouldAllowTyping = true
+            e.preventDefault()
+            return
+        }
+
         if (e.key === 'Enter') send()
     }
 
@@ -28,4 +41,4 @@
 <style>
 </style>
 
-<input bind:value={message} bind:this={inputField} on:keypress={onKeyPress}/>
+<input bind:value={message} bind:this={inputField} on:keydown={onKeyPress}/>
