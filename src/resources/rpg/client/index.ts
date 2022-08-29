@@ -24,6 +24,7 @@ class GameDefaultsInitiator {
 
             game.setPauseMenuActive(false)
             game.hudWeaponWheelIgnoreControlInput(true)
+            game.blockWeaponWheelThisFrame()
         })
 
         GameDefaultsInitiator.initiateAudio()
