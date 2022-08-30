@@ -106,6 +106,9 @@ dist
 # WebStorm configuration folder
 .idea/
 
+# VSCode configuration folder
+.vscode/
+
 # These will be downloaded by the gulpfile
 modules/
 data/
