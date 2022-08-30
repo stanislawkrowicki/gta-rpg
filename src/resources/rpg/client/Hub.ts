@@ -35,12 +35,12 @@ export default class Hub {
     static locations: IAvailableLocation[] = [
         {
             name: 'spawn 1',
-            sx: 200,
-            sy: -935,
-            sz: 30,
-            cx: 220,
-            cy: -850,
-            cz: 100
+            sx: -695,
+            sy: 283,
+            sz: 83,
+            cx: -720,
+            cy: 290,
+            cz: 100,
         },
         {
             name: 'spawn 2',
@@ -49,7 +49,7 @@ export default class Hub {
             sz: 16,
             cx: 330,
             cy: -2070,
-            cz: 40
+            cz: 40,
         },
         {
             name: 'spawn 3',
@@ -58,7 +58,7 @@ export default class Hub {
             sz: 16,
             cx: 330,
             cy: -2200,
-            cz: 40
+            cz: 40,
         },
         {
             name: 'spawn 4',
@@ -67,7 +67,7 @@ export default class Hub {
             sz: 30,
             cx: 180,
             cy: -970,
-            cz: 100
+            cz: 100,
         },
         {
             name: 'spawn 5',
@@ -76,7 +76,7 @@ export default class Hub {
             sz: 32,
             cx: 910,
             cy: -1040,
-            cz: 50
+            cz: 50,
         },
         {
             name: 'spawn 6',
@@ -85,7 +85,7 @@ export default class Hub {
             sz: 33,
             cx: -560,
             cy: -690,
-            cz: 50
+            cz: 50,
         },
     ]
 
@@ -96,7 +96,9 @@ export default class Hub {
 
         View.setCamera(this.camera)
 
-        this.webview = new alt.WebView('/resource/client/webviews/hub/index.html')
+        this.webview = new alt.WebView(
+            '/resource/client/webviews/hub/index.html'
+        )
 
         Mouse.setMode(MouseMode.SCREEN_POINTING)
 
@@ -110,22 +112,14 @@ export default class Hub {
 
         this.webview.on('AUTH:LOGIN', (username, password) => {
             Password.hashPassword(password, (passwordHash) => {
-                ClientEvent.emit(
-                    new RequestLogin(
-                        username,
-                        passwordHash
-                    )
-                )
+                ClientEvent.emit(new RequestLogin(username, passwordHash))
             })
         })
 
         this.webview.on('AUTH:REGISTRATION', (username, password) => {
             Password.hashPassword(password, (passwordHash) => {
                 ClientEvent.emit(
-                    new RequestRegistration(
-                        username,
-                        passwordHash
-                    )
+                    new RequestRegistration(username, passwordHash)
                 )
             })
         })
@@ -147,16 +141,22 @@ export default class Hub {
 
         const location = Hub.locations[locationId]
 
-        const spawnPosVector = new alt.Vector3(location.sx, location.sy, location.sz)
+        const spawnPosVector = new alt.Vector3(
+            location.sx,
+            location.sy,
+            location.sz
+        )
 
         ClientEvent.emit(new SetPlayerCameraPos(spawnPosVector))
 
-        const [rx, ry, rz] = Utils.calculateRotationToLookAtElementByXYZ(location.cx,
+        const [rx, ry, rz] = Utils.calculateRotationToLookAtElementByXYZ(
+            location.cx,
             location.cy,
             location.cz,
             location.sx,
             location.sy,
-            location.sz)
+            location.sz
+        )
 
         Hub.camera.setPosition(location.cx, location.cy, location.cz)
         Hub.camera.setRotation(rx, ry, rz)
@@ -164,7 +164,11 @@ export default class Hub {
 
     static spawnPlayer(locationId: number) {
         const location = Hub.locations[locationId]
-        const spawnPosVector = new alt.Vector3(location.sx, location.sy, location.sz)
+        const spawnPosVector = new alt.Vector3(
+            location.sx,
+            location.sy,
+            location.sz
+        )
 
         ClientEvent.emit(new LocationConfirm(spawnPosVector))
         Hub.webview.destroy()
