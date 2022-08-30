@@ -4,6 +4,7 @@
         "login": "Login",
         "password": "Hasło",
         "repeatPassword": "Powtórz hasło",
+        "passwordsDoNotMatch": "Podane hasła nie są identyczne.",
         "loginNoun": "Logowanie",
         "registration": "Rejestracja",
         "registerAction": "Zarejestruj"

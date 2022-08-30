@@ -38,7 +38,7 @@
 
     const onRegisterEvent = (event: CustomEvent) => {
         if (event.detail.password !== event.detail.passwordConfirm) {
-            registrationMessage = 'Podane hasła nie są identyczne.'
+            registrationMessage = t.passwordsDoNotMatch
             return
         }
 
