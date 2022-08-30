@@ -40,7 +40,7 @@
     })
 
     alt.on('CLIENT_MESSAGE', (obj) => {
-        messages = [...messages, { author: obj.author, message: obj.message }].slice(0, MAX_MESSAGES)
+        messages = [...messages, { author: obj.author, message: obj.message }].slice(-MAX_MESSAGES)
     })
 </script>
 
