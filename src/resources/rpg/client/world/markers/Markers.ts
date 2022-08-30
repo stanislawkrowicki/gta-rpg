@@ -1,6 +1,9 @@
 import alt from 'alt-client'
-import type {Marker} from "../../../shared/world/markers/Markers"
-import {CylinderMarker, CylinderMarkerData, MarkerData, MarkerType} from "../../../shared/world/markers/Markers"
+import {
+    CylinderMarkerData,
+    MarkerData,
+    MarkerType,
+} from '../../../shared/world/markers/Markers'
 import native from "natives"
 
 export default class Markers {

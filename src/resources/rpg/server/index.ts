@@ -165,17 +165,19 @@ await Vehicles.initialize()
 
 MarkerManager.initialize()
 
-MarkerManager.add(new CylinderMarker(
-    new alt.Vector3(-695, 283, 80),
-    new alt.Vector3(0, 0, 0),
-    10,
-    5,
-    new alt.RGBA(255, 0, 255, 255),
-    () => { alt.log('entered') },
-    () => { alt.log('left') },
-    true,
-    true,
-    30
-))
+MarkerManager.add(
+    new CylinderMarker(
+        new alt.Vector3(-695, 283, 80),
+        new alt.Vector3(0, 0, 0),
+        10,
+        5,
+        new alt.RGBA(255, 0, 255, 255),
+        true,
+        undefined,
+        undefined,
+        true,
+        30
+    )
+)
 
 VehicleStorehouseManager.initialize()

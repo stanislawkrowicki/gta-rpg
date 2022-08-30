@@ -89,6 +89,8 @@ export abstract class Marker {
     }
 
     handleEnter(entity: altServer.Entity) {
+        if (!this.onEnter) return 
+
         if (this.playersOnly) {
             if (entity.type === 0) // is player
                 this.onEnter(entity)
@@ -99,6 +101,8 @@ export abstract class Marker {
     }
 
     handleLeave(entity: altServer.Entity) {
+        if (!this.onLeave) return
+
         if (this.playersOnly) {
             if (entity.type === 0) // is player
                 this.onLeave(entity)
@@ -126,17 +130,19 @@ export class CylinderMarker extends Marker {
     blip?: altServer.Blip
 
     /// #if SERVER
-    constructor(pos: altServer.Vector3,
+    constructor(
+        pos: altServer.Vector3,
         rot: altServer.Vector3,
         radius: number,
         height: number,
         color: altServer.RGBA,
-        onEnter: OnEnterFunction,
-        onLeave: OnLeaveFunction,
         playersOnly: boolean,
+        onEnter?: OnEnterFunction,
+        onLeave?: OnLeaveFunction,
         shouldRender?: boolean,
         renderDistance?: number,
-        blip?: altServer.Blip) {
+        blip?: altServer.Blip
+    ) {
         super()
 
         this.markerData = new CylinderMarkerData()
@@ -154,14 +160,30 @@ export class CylinderMarker extends Marker {
         if (renderDistance) this.renderDistance = renderDistance
         if (blip) this.blip = blip
 
-        this.clientInteractionZone = new altServer.ColshapeCylinder(pos.x, pos.y, pos.z, radius, height)
+        this.clientInteractionZone = new altServer.ColshapeCylinder(
+            pos.x,
+            pos.y,
+            pos.z,
+            radius,
+            height
+        )
         this.clientInteractionZone.playersOnly = playersOnly
 
         if (this.shouldRender) {
-            this.clientEnterAcknowledgeZone = new altServer.ColshapeSphere(pos.x, pos.y, pos.z, this.renderDistance)
+            this.clientEnterAcknowledgeZone = new altServer.ColshapeSphere(
+                pos.x,
+                pos.y,
+                pos.z,
+                this.renderDistance
+            )
             this.clientEnterAcknowledgeZone.playersOnly = true
 
-            this.clientLeaveAcknowledgeZone = new altServer.ColshapeSphere(pos.x, pos.y, pos.z, this.renderDistance * 1.3)
+            this.clientLeaveAcknowledgeZone = new altServer.ColshapeSphere(
+                pos.x,
+                pos.y,
+                pos.z,
+                this.renderDistance * 1.3
+            )
             this.clientLeaveAcknowledgeZone.playersOnly = true
         }
     }

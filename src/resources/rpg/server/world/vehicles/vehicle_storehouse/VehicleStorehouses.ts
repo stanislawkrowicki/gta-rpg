@@ -11,15 +11,13 @@ export default [
             2.5,
             5,
             new alt.RGBA(115, 125, 254, 255),
-            () => {},
-            () => {}, // TODO: set Marker enter/leave functions optional
             true,
+            undefined,
+            undefined,
             true,
             50
         ),
-        [
-            {x: -650, y: 250, z: 80}
-        ],
+        [{ x: -650, y: 250, z: 80 }],
         [
             new CylinderMarker(
                 new alt.Vector3(-650, 275, 77),
@@ -27,11 +25,12 @@ export default [
                 5,
                 5,
                 new alt.RGBA(255, 100, 100, 255),
-                () => {},
-                () => {},
                 false,
+                undefined,
+                undefined,
                 true,
                 50
-            )
-        ])
+            ),
+        ]
+    ),
 ]
