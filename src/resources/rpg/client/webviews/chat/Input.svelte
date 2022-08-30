@@ -35,6 +35,7 @@
     const send = () => {
         dispatch('input', message)
         message = ''
+        shouldAllowTyping = false
     }
 </script>
 

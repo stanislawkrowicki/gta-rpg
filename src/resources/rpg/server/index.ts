@@ -154,15 +154,16 @@ alt.on('playerDisconnect', async (player) => {
     for (let i = 0; i < Clients.length; i++) {
         const client = Clients[i]
 
-        if (client === wrapper) {
+        // FIXME: should be checked against whole client instead of just wrapper
+        if (client.wrapped === wrapper.wrapped) {
             Clients.splice(i, 1)
         }
     }
 
     Logger.connection.logDisconnection(wrapper)
     await Sessions.saveSessionForPlayer(wrapper)
-
     player.deleteMeta('wrapper')
+    player.destroy()
 })
 
 HotReload.startWatching()

@@ -8,7 +8,6 @@ import { Clients } from '../../../../server'
 import ClientEvent from '../../ClientEvent'
 import ClientMessage from '../../server/chat/ClientMessage'
 import Vector3 from '../../../utils/Vector3'
-
 export default class Message extends ClientEvent {
     /** Maximum distance where players should see the message */
     static MAX_MESSAGE_DISTANCE = 100
@@ -31,14 +30,22 @@ export default class Message extends ClientEvent {
             const player = Clients[i]
 
             if (player === client) {
-                ServerEvent.emit(player, new ClientMessage(client.wrapped.name, object.message))
+                ServerEvent.emit(
+                    player,
+                    new ClientMessage(client.wrapped.name, object.message)
+                )
                 continue
             }
-
-            const distance = Vector3.getDistanceBetweenTwoVectors(client.wrapped.pos, player.wrapped.pos)
+            const distance = Vector3.getDistanceBetweenTwoVectors(
+                client.wrapped.pos,
+                player.wrapped.pos
+            )
 
             if (distance <= Message.MAX_MESSAGE_DISTANCE)
-                ServerEvent.emit(player, new ClientMessage(client.wrapped.name, object.message))
+                ServerEvent.emit(
+                    player,
+                    new ClientMessage(client.wrapped.name, object.message)
+                )
         }
     }
     /// #endif
