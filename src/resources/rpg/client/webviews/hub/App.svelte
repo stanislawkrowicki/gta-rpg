@@ -23,19 +23,19 @@
         stage = Stage.CHOOSING_LOCATION
     })
 
-    const login = (event) => {
+    const login = (event: CustomEvent) => {
         alt.emit('AUTH:LOGIN', event.detail.login, event.detail.password)
     }
 
-    const register = (event) => {
+    const register = (event: CustomEvent) => {
         alt.emit('AUTH:REGISTRATION', event.detail.login, event.detail.password)
     }
 
-    const onLocationSelectorChange = (event) => {
+    const onLocationSelectorChange = (event: CustomEvent) => {
         alt.emit('LOCATION_SELECTOR:CHANGE', event.detail)
     }
 
-    const spawn = (event) => {
+    const spawn = (event: CustomEvent) => {
         alt.emit('LOCATION_SELECTOR:CONFIRM', event.detail)
     }
 

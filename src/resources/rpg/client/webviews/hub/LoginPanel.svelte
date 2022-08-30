@@ -57,13 +57,9 @@
 
     letter-spacing: 5px;
 
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-  }
-
-  label {
-    color: white;
-    size: 3vh;
   }
 
   input {

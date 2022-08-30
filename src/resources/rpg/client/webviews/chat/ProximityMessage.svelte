@@ -8,9 +8,6 @@
 </script>
 
 <style>
-    .message {
-
-    }
 </style>
 
 <div class="message" style="left: {x}; top: {y};">{message}</div>

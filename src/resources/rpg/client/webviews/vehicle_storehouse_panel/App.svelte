@@ -5,9 +5,14 @@
 <script lang="ts">
     import Table from "../components/Table.svelte"
 
+    interface IPlayerVehicle {
+        id: number,
+        model: string
+    }
+
     let tableColumns = ['id', 'model']
     let storehouseDescription = ''
-    let playerVehicles = []
+    let playerVehicles: IPlayerVehicle[] = []
 
     alt.on('STOREHOUSE_DESCRIPTION', (description) => {
         storehouseDescription = description
@@ -21,7 +26,7 @@
         alt.emit('CLOSE')
     }
 
-    const onVehicleSelect = (vehicle) => {
+    const onVehicleSelect = (vehicle: IPlayerVehicle) => {
         alt.emit('TAKE_VEHICLE_OUT', vehicle.id)
     }
 </script>
@@ -37,7 +42,7 @@
 
     <Table columns={ tableColumns }>
         { #each playerVehicles as playerVehicle }
-            <tr on:click={onVehicleSelect(playerVehicle)}>
+            <tr on:click={() => { onVehicleSelect(playerVehicle) }}>
                 <td>{ playerVehicle.id }</td>
                 <td>{ playerVehicle.model }</td>
             </tr>

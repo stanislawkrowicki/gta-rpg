@@ -11,6 +11,7 @@
 
     const dispatch = createEventDispatcher()
 
+    // @ts-ignore
     let carousel
 
     let loginMessage = ''
@@ -26,14 +27,14 @@
         carousel.goTo(1)
     }
 
-    const onLoginEvent = (event) => {
+    const onLoginEvent = (event: CustomEvent) => {
         dispatch('login', {
             login: event.detail.login,
             password: event.detail.password
         })
     }
 
-    const onRegisterEvent = (event) => {
+    const onRegisterEvent = (event: CustomEvent) => {
         if (event.detail.password !== event.detail.passwordConfirm) {
             registrationMessage = 'Podane hasła nie są identyczne.'
             return

@@ -1,3 +1,12 @@
+<svelte:window
+    on:keydown={(event) => {
+        if (event.key === 'ArrowLeft' || event.key === 'a') goPrev()
+        if (event.key === 'ArrowRight' || event.key === 'd') goNext()
+
+        if(event.key === 'Enter') spawn()
+    }}
+></svelte:window>
+
 <script lang="ts">
     import {createEventDispatcher} from "svelte"
 
@@ -8,6 +17,7 @@
 
     let dispatch = createEventDispatcher()
 
+    // @ts-ignore
     let carousel
     let currentLocation = 0
 
@@ -31,7 +41,7 @@
         carousel.goToNext()
     }
 
-    const onLocationChange = (event) => {
+    const onLocationChange = (event: CustomEvent) => {
         currentLocation = event.detail
         dispatch('locationChange', currentLocation)
     }
@@ -39,13 +49,6 @@
     const spawn = () => {
         dispatch('spawn', currentLocation)
     }
-
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft' || event.key === 'a') goPrev()
-        if (event.key === 'ArrowRight' || event.key === 'd') goNext()
-
-        if(event.key === 'Enter') spawn()
-    })
 </script>
 
 <style lang="scss">
@@ -84,7 +87,7 @@
 { #if availableLocations.length > 0 }
     <div class="selector">
         <div class="chevron-wrapper" on:click={goPrev}>
-            <ChevronLeft class="chevron chevron-left" color="white" size="4rem"></ChevronLeft>
+            <ChevronLeft color="white" size="4rem"></ChevronLeft>
         </div>
 
         <div class="carousel" on:click={spawn}>
@@ -98,7 +101,7 @@
         </div>
 
         <div class="chevron-wrapper" on:click={goNext}>
-            <ChevronRight class="chevron chevron-right" color="white" size="4rem"></ChevronRight>
+            <ChevronRight color="white" size="4rem"></ChevronRight>
         </div>
     </div>
 { /if }
