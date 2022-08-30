@@ -70,46 +70,64 @@ export class Client {
     }
 }
 
-export const Clients: Client[] = [] // TODO: push all on resource restart
+export const Clients: Client[] = []
 
-alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => {
-    if (MainDB.isConnected) {
-        MainDB.collections.gameDevices
-            .findOne({
-                $or: [
-                    { hwidHash: connectionQueueInfo.hwidHash },
-                    { hwidExHash: connectionQueueInfo.hwidExHash },
-                ],
-            })
-            .then((device) => {
-                if (device) {
-                    if (device.isBanned) {
-                        connectionQueueInfo.decline('')
-                    } else {
-                        connectionQueueInfo.accept()
-                    }
-                } else {
-                    MainDB.collections.gameDevices
-                        .create(
-                            Utils.typeCheck<GameDeviceSchema>({
-                                hwidHash: connectionQueueInfo.hwidHash,
-                                hwidExHash: connectionQueueInfo.hwidExHash,
-                            })
-                        )
-                        .catch((err) => {
-                            Logger.logCaughtError('server-index', err, 'Failed to create game device').then()
-                        })
-                        .then(() => {
-                            connectionQueueInfo.accept()
-                        })
-                }
-            })
-    } else {
-        connectionQueueInfo.decline(
-            "The server hasn't started yet... Try to connect later..."
-        )
+const populateClientsAfterRestart = () => {
+    const players = alt.Player.all
+
+    if (!(players.length > Clients.length)) return
+
+    for (let i = 0; i < players.length; i++) {
+        const wrapper = players[i].getMeta('wrapper') as Client
+        Clients.push(wrapper)
     }
-})
+}
+
+alt.on(
+    'connectionQueueAdd',
+    (connectionQueueInfo: alt.IConnectionQueueInfo) => {
+        if (MainDB.isConnected) {
+            MainDB.collections.gameDevices
+                .findOne({
+                    $or: [
+                        { hwidHash: connectionQueueInfo.hwidHash },
+                        { hwidExHash: connectionQueueInfo.hwidExHash },
+                    ],
+                })
+                .then((device) => {
+                    if (device) {
+                        if (device.isBanned) {
+                            connectionQueueInfo.decline('')
+                        } else {
+                            connectionQueueInfo.accept()
+                        }
+                    } else {
+                        MainDB.collections.gameDevices
+                            .create(
+                                Utils.typeCheck<GameDeviceSchema>({
+                                    hwidHash: connectionQueueInfo.hwidHash,
+                                    hwidExHash: connectionQueueInfo.hwidExHash,
+                                })
+                            )
+                            .catch((err) => {
+                                Logger.logCaughtError(
+                                    'server-index',
+                                    err,
+                                    'Failed to create game device'
+                                ).then()
+                            })
+                            .then(() => {
+                                connectionQueueInfo.accept()
+                            })
+                    }
+                })
+        } else {
+            connectionQueueInfo.decline(
+                "The server hasn't started yet... Try to connect later..."
+            )
+        }
+    }
+)
 
 alt.on('playerConnect', async (player) => {
     const wrappedPlayer = new Client(player)
@@ -122,7 +140,7 @@ alt.on('playerConnect', async (player) => {
     Logger.auth.login.logSuccess(wrappedPlayer)
 
     Sessions.restoreSessionIfPossible(wrappedPlayer).then((wereItPossible) => {
-        if(!wereItPossible) {
+        if (!wereItPossible) {
             // ServerEvent.emit(wrappedPlayer, new Authorize())
             //
             // player.spawn(spawn.x, spawn.y, spawn.z, 0)
@@ -133,10 +151,10 @@ alt.on('playerConnect', async (player) => {
 alt.on('playerDisconnect', async (player) => {
     const wrapper = player.getMeta('wrapper') as Client
 
-    for(let i = 0; i < Clients.length; i++) {
+    for (let i = 0; i < Clients.length; i++) {
         const client = Clients[i]
 
-        if(client === wrapper) {
+        if (client === wrapper) {
             Clients.splice(i, 1)
         }
     }
@@ -181,3 +199,5 @@ MarkerManager.add(
 )
 
 VehicleStorehouseManager.initialize()
+
+populateClientsAfterRestart()
