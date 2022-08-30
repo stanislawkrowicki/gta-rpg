@@ -9,6 +9,8 @@
     import ChevronRight from 'svelte-material-icons/ChevronRight.svelte'
     import ChevronLeft from 'svelte-material-icons/ChevronLeft.svelte'
 
+    import { hub as t } from 'lang'
+
     const dispatch = createEventDispatcher()
 
     // @ts-ignore
@@ -112,7 +114,7 @@
         <LoginPanel message={loginMessage} on:login={onLoginEvent}></LoginPanel>
 
         <div class="move-to-registration" on:click={moveToRegistration}>
-            <span>Rejestracja</span>
+            <span>{t.registration}</span>
             <ChevronRight color="white" size="4rem"></ChevronRight>
         </div>
     </div>
@@ -122,7 +124,7 @@
 
         <div class="move-to-login" on:click={moveToLogin}>
             <ChevronLeft color="white" size="4rem"></ChevronLeft>
-            <span>Logowanie</span>
+            <span>{t.loginNoun}</span>
         </div>
     </div>
 </Carousel>

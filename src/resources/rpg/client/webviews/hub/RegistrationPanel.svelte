@@ -1,6 +1,8 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte"
 
+    import { hub as t } from 'lang'
+
     export let message = ''
 
     const dispatch = createEventDispatcher()
@@ -134,18 +136,18 @@
     </header>
 
     <div class="login">
-        <input placeholder="Login" type="text" id="login" name="login" bind:value={login}>
+        <input placeholder={t.login} type="text" id="login" name="login" bind:value={login}>
     </div>
 
     <div class="password">
-        <input placeholder="Hasło" type="password" id="password" name="password" bind:value={password}>
+        <input placeholder={t.password} type="password" id="password" name="password" bind:value={password}>
     </div>
     <div class="password-confirm">
-        <input placeholder="Powtórz hasło" type="password" id="password-confirm" name="password-confirm" bind:value={passwordConfirm}>
+        <input placeholder={t.repeatPassword} type="password" id="password-confirm" name="password-confirm" bind:value={passwordConfirm}>
     </div>
 
     <p id="message">{message}</p>
 
-    <button id="register-btn" on:click={emitRegisterEvent}>ZAREJESTRUJ</button>
+    <button id="register-btn" on:click={emitRegisterEvent}>{t.registerAction}</button>
 
 </div>

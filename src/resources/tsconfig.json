@@ -1,31 +1,33 @@
 {
     "compilerOptions": {
-      "lib": [ "es5", "es6", "esnext", "dom" ],
-      "module": "esnext",
-      "moduleResolution": "node",
-      "target": "esnext",
-  
-      "resolveJsonModule": true,
-      "esModuleInterop": true,
-      "removeComments": true,
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "preserveConstEnums": true,
-  
-      "noImplicitAny": true,
-      "sourceMap": false,
+        "lib": ["es5", "es6", "esnext", "dom"],
+        "module": "esnext",
+        "moduleResolution": "node",
+        "target": "esnext",
 
-      "typeRoots": [
-        "../../node_modules/@altv"
-      ]
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "removeComments": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "preserveConstEnums": true,
 
+        "noImplicitAny": true,
+        "sourceMap": false,
+
+        "baseUrl": ".",
+        "paths": {
+            "lang": ["../../content/pl.json"]
+        },
+
+        "typeRoots": ["../../node_modules/@altv"]
     },
-  "extends": "@tsconfig/svelte/tsconfig.json",
+    "extends": "@tsconfig/svelte/tsconfig.json",
     "include": [
-      "./**/*.ts",
-      "../../node_modules/.pnpm/@altv+types-webview@1.0.3/node_modules/@altv/types-webview/index.d.ts"
+        "./**/*.ts",
+        "./**/*.svelte",
+        "../../content/pl.json",
+        "../../node_modules/.pnpm/@altv+types-webview@1.0.3/node_modules/@altv/types-webview/index.d.ts"
     ],
-  "exclude": [
-      "node_modules"
-    ]
+    "exclude": ["node_modules"]
 }

@@ -1,0 +1,11 @@
+{
+    "hub": {
+        "loginAction": "Zaloguj",
+        "login": "Login",
+        "password": "Hasło",
+        "repeatPassword": "Powtórz hasło",
+        "loginNoun": "Logowanie",
+        "registration": "Rejestracja",
+        "registerAction": "Zarejestruj"
+    }
+}

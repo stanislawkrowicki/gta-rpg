@@ -1,6 +1,8 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte"
 
+    import { hub as t} from 'lang'
+
     const dispatch = createEventDispatcher()
 
     export let message = ''
@@ -132,14 +134,14 @@
     </header>
 
     <div class="login">
-        <input placeholder="Login" type="text" id="login" name="login" bind:value={login}>
+        <input placeholder={t.login} type="text" id="login" name="login" bind:value={login}>
     </div>
 
     <div class="password">
-        <input placeholder="Hasło" type="password" id="password" name="password" bind:value={password}>
+        <input placeholder={t.password} type="password" id="password" name="password" bind:value={password}>
     </div>
 
     <p id="message">{message}</p>
 
-    <button id="login-btn" on:click={emitLoginEvent}>ZALOGUJ</button>
+    <button id="login-btn" on:click={emitLoginEvent}>{t.loginAction}</button>
 </div>
