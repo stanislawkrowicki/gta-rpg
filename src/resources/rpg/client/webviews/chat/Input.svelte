@@ -7,7 +7,7 @@
 
     let shouldAllowTyping = false
 
-    let inputField
+    let inputField: HTMLInputElement
 
     export function focus() {
         inputField.focus()
@@ -17,7 +17,7 @@
         inputField.blur()
     }
 
-    const onKeyPress = (e) => {
+    const onKeyPress = (e: KeyboardEvent): void => {
         if (e.key === 'Escape') {
             dispatch('unfocus')
             return

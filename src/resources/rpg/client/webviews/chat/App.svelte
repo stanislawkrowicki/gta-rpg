@@ -14,9 +14,9 @@
     const MAX_MESSAGES = 15
 
     let messages: IMessage[] = []
-    let inputComponent
+    let inputComponent: Input
 
-    const handleMessage = (messageEvent) => {
+    const handleMessage = (messageEvent: { detail: string; }) => {
         if (messageEvent.detail === '') {
             unfocus()
             return
