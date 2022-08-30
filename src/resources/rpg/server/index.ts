@@ -147,7 +147,7 @@ alt.on('playerDisconnect', async (player) => {
     player.deleteMeta('wrapper')
 })
 
-// HotReload.startWatching()
+HotReload.startWatching()
 
 MainDB.connect()
 
