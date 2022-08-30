@@ -15,7 +15,7 @@ export enum NativeMarkerType {
     ThinChevronUp = 3,
     CheckeredFlagRect = 4,
     CheckeredFlagCircle = 5,
-    VerticleCircle = 6,
+    VerticalCircle = 6,
     PlaneModel = 7,
     LostMCDark = 8,
     LostMCLight = 9,
@@ -38,9 +38,9 @@ export enum NativeMarkerType {
     HorizontalCircleSkinny_Arrow = 26,
     HorizontalSplitArrowCircle = 27,
     DebugSphere = 28,
-    DallorSign = 29,
+    DollarSign = 29,
     HorizontalBars = 30,
-    WolfHead = 31
+    WolfHead = 31,
 }
 
 export enum MarkerType {
