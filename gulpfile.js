@@ -2,16 +2,16 @@ import gulp from 'gulp'
 import * as log from 'fancy-log'
 import https from 'https'
 import fs from 'fs'
-import {createGulpEsbuild} from 'gulp-esbuild'
+import { createGulpEsbuild } from 'gulp-esbuild'
 import { esbuildDecorators } from '@anatine/esbuild-decorators'
 import esbuildSvelte from 'esbuild-svelte'
-import sveltePreprocess from "svelte-preprocess"
+import sveltePreprocess from 'svelte-preprocess'
 import esbuildPluginGLSL from 'esbuild-plugin-glsl'
 
 import ServerConfig from './server.config.js'
 import ServerConfigUtils from './utils/ServerConfigUtils.js'
-import ResourceConfig from "./utils/ResourceConfig.js"
-import ifdefPlugin from "esbuild-ifdef"
+import ResourceConfig from './utils/ResourceConfig.js'
+import ifdefPlugin from 'esbuild-ifdef'
 
 const gulpEsbuild = createGulpEsbuild({})
 
@@ -50,11 +50,10 @@ const downloadToDist = async (url, destination) => {
 
         if (destination.includes('/')) {
             const directories = destination.split('/')
-            for (let i = 0; i < directories.length - 1; i++)
-                directoryTree += '/' + directories[i]
+            for (let i = 0; i < directories.length - 1; i++) directoryTree += '/' + directories[i]
         }
 
-        fs.mkdirSync(directoryTree, {recursive: true})
+        fs.mkdirSync(directoryTree, { recursive: true })
     }
 
     return downloadFile(url, DIST_FOLDER + '/' + destination)
@@ -211,8 +210,7 @@ const downloadBytecodeModule = (platform) => {
         linux: 'https://cdn.altv.mp/js-bytecode-module/release/x64_linux/modules/libjs-bytecode-module.so',
     }
 
-    if (!(platform in moduleMap))
-        throw 'There is no bytecode module for your operating system'
+    if (!(platform in moduleMap)) throw 'There is no bytecode module for your operating system'
 
     const url = moduleMap[platform]
     const urlSplit = url.split('/')
@@ -280,8 +278,7 @@ const buildResource = (path, done) => {
     const indexPath = `./src/resources/${resourceName}/${resourceType}/index.ts`
     const resourceCfgPath = `./src/resources/${resourceName}/resource.json`
 
-    if (!fs.existsSync(resourceCfgPath))
-        throw `Resource ${resourceName} has no resource.json!`
+    if (!fs.existsSync(resourceCfgPath)) throw `Resource ${resourceName} has no resource.json!`
 
     const resourceCfg = new ResourceConfig(resourceCfgPath)
     const resourceEsbuildCfg = resourceCfg.getEsbuildCfg()
@@ -299,11 +296,11 @@ const buildResource = (path, done) => {
                 ifdefPlugin.default({
                     variables: {
                         SERVER: false,
-                        CLIENT: true
-                    }
-                })
+                        CLIENT: true,
+                    },
+                }),
             ],
-            external: resourceEsbuildCfg.external
+            external: resourceEsbuildCfg.external,
         }
         break
     case 'server':
@@ -317,11 +314,11 @@ const buildResource = (path, done) => {
                 ifdefPlugin.default({
                     variables: {
                         SERVER: true,
-                        CLIENT: false
-                    }
-                })
+                        CLIENT: false,
+                    },
+                }),
             ],
-            external: resourceEsbuildCfg.external
+            external: resourceEsbuildCfg.external,
         }
         break
     default:
@@ -329,22 +326,14 @@ const buildResource = (path, done) => {
     }
 
     gulp.src(indexPath)
-        .pipe(
-            gulpEsbuild(esbuildConfig)
-        )
+        .pipe(gulpEsbuild(esbuildConfig))
         .on('error', (err) => {
             if (err) {
-                log.error(
-                    `Error while building resource ${resourceName} ${resourceType}`
-                )
+                log.error(`Error while building resource ${resourceName} ${resourceType}`)
                 throw err
             }
         })
-        .pipe(
-            gulp.dest(
-                `${DIST_FOLDER}/resources/${resourceName}/${resourceType}/`
-            )
-        )
+        .pipe(gulp.dest(`${DIST_FOLDER}/resources/${resourceName}/${resourceType}/`))
         .on('end', () => {
             if (done) done()
         })
@@ -354,20 +343,17 @@ gulp.task('build:resources', (done) => {
     gulp.series(
         async function buildClientScripts(done) {
             const directories = fs
-                .readdirSync('./src/resources/', {withFileTypes: true})
+                .readdirSync('./src/resources/', { withFileTypes: true })
                 .filter((dirent) => dirent.isDirectory())
                 .map((dirent) => dirent.name)
 
             directories.forEach((resource) => {
-                buildResource(
-                    `./src/resources/${resource}/client/index.ts`,
-                    done
-                )
+                buildResource(`./src/resources/${resource}/client/index.ts`, done)
             })
         },
         async function buildServerScripts(done) {
             const directories = fs
-                .readdirSync('./src/resources/', {withFileTypes: true})
+                .readdirSync('./src/resources/', { withFileTypes: true })
                 .filter((dirent) => dirent.isDirectory())
                 .map((dirent) => dirent.name)
 
@@ -390,7 +376,7 @@ gulp.task('build:resources', (done) => {
 
 const buildWebViews = async () => {
     const directories = fs
-        .readdirSync('./src/resources/', {withFileTypes: true})
+        .readdirSync('./src/resources/', { withFileTypes: true })
         .filter((dirent) => dirent.isDirectory())
         .map((dirent) => dirent.name)
 
@@ -399,7 +385,7 @@ const buildWebViews = async () => {
         if (!fs.existsSync(path)) continue
 
         const webViews = fs
-            .readdirSync(path, {withFileTypes: true})
+            .readdirSync(path, { withFileTypes: true })
             .filter((dirent) => dirent.isDirectory() && dirent.name !== 'components')
             .map((dirent) => dirent.name)
 
@@ -417,40 +403,45 @@ const buildWebView = (path, done) => {
 
     const distWebviewPath = `${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/`
 
-    if (!fs.existsSync(distWebviewPath))
-        fs.mkdirSync(distWebviewPath, {recursive: true})
+    if (!fs.existsSync(distWebviewPath)) fs.mkdirSync(distWebviewPath, { recursive: true })
 
-    fs.writeFileSync(`${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/index.html`,
+    fs.writeFileSync(
+        `${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/index.html`,
         '<!DOCTYPE html>\n' +
-        '<html lang="en">\n' +
-        '<head>\n' +
-        '    <meta charset="UTF-8">\n' +
-        '    <script src="index.js" defer></script>\n' +
-        '    <link rel="stylesheet" href="index.css">\n' +
-        '</head>\n' +
-        '<body>\n' +
-        '</body>\n' +
-        '</html>')
+            '<html lang="en">\n' +
+            '<head>\n' +
+            '    <meta charset="UTF-8">\n' +
+            '    <script src="index.js" defer></script>\n' +
+            '    <link rel="stylesheet" href="index.css">\n' +
+            '</head>\n' +
+            '<body>\n' +
+            '</body>\n' +
+            '</html>'
+    )
 
     gulp.src(path)
-        .pipe(gulpEsbuild({
-            entryPoints: [`./index.ts`],
-            bundle: true,
-            outdir: `./`,
-            mainFields: ["svelte", "browser", "module", "main"],
-            minify: false,
-            sourcemap: false,
-            splitting: true,
-            write: true,
-            format: `esm`,
-            plugins: [
-                esbuildPluginGLSL(),
-                esbuildSvelte({
-                    preprocess: sveltePreprocess(),
-                }),
-            ],
-        }))
-        .pipe(gulp.dest(`./${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/`))
+        .pipe(
+            gulpEsbuild({
+                entryPoints: [`./index.ts`],
+                bundle: true,
+                outdir: `./`,
+                mainFields: ['svelte', 'browser', 'module', 'main'],
+                minify: false,
+                sourcemap: false,
+                splitting: true,
+                write: true,
+                format: `esm`,
+                plugins: [
+                    esbuildPluginGLSL(),
+                    esbuildSvelte({
+                        preprocess: sveltePreprocess(),
+                    }),
+                ],
+            })
+        )
+        .pipe(
+            gulp.dest(`./${DIST_FOLDER}/resources/${resourceName}/client/webviews/${webviewName}/`)
+        )
         .on('end', () => {
             if (done) done()
         })
@@ -472,18 +463,20 @@ const buildServerConfig = async (done) => {
 
 const buildResourceConfigs = (done) => {
     const directories = fs
-        .readdirSync('./src/resources/', {withFileTypes: true})
+        .readdirSync('./src/resources/', { withFileTypes: true })
         .filter((dirent) => dirent.isDirectory())
         .map((dirent) => dirent.name)
 
     directories.forEach((resource) => {
         const path = `./src/resources/${resource}/resource.json`
-        if (!fs.existsSync(path))
-            throw `Resource ${resource} has no resource.json!`
+        if (!fs.existsSync(path)) throw `Resource ${resource} has no resource.json!`
 
         let resCfg = new ResourceConfig(path)
 
-        fs.writeFileSync(`./${DIST_FOLDER}/resources/${resource}/resource.cfg`, resCfg.getAsCfg().toString())
+        fs.writeFileSync(
+            `./${DIST_FOLDER}/resources/${resource}/resource.cfg`,
+            resCfg.getAsCfg().toString()
+        )
     })
 
     done()
@@ -491,29 +484,31 @@ const buildResourceConfigs = (done) => {
 
 const buildLogsConsumer = (done) => {
     gulp.src('./src/logs-consumer/consumer.ts')
-        .pipe(gulpEsbuild({
-            outfile: 'consumer.js',
-            format: 'esm',
-            platform: 'node'
-        }))
+        .pipe(
+            gulpEsbuild({
+                outfile: 'consumer.js',
+                format: 'esm',
+                platform: 'node',
+            })
+        )
         .on('error', (err) => {
             if (err) {
-                log.error(
-                    `Error while building logs consumer`
-                )
+                log.error(`Error while building logs consumer`)
                 throw err
             }
         })
-        .pipe(
-            gulp.dest(
-                `${DIST_FOLDER}/logs-consumer/`
-            )
-        )
+        .pipe(gulp.dest(`${DIST_FOLDER}/logs-consumer/`))
         .on('end', done)
 }
 
 const build = (done) => {
-    return gulp.series('build:resources', buildWebViews, buildServerConfig, buildLogsConsumer, buildResourceConfigs)(done)
+    return gulp.series(
+        'build:resources',
+        buildWebViews,
+        buildServerConfig,
+        buildLogsConsumer,
+        buildResourceConfigs
+    )(done)
 }
 
 const watchClientScripts = () => {
@@ -597,9 +592,7 @@ const watchClientAssets = () => {
         gulp.src(`./src/resources/${resourceName}/client/assets/`)
             .pipe(gulp.dest(`./${DIST_FOLDER}/resources/${resourceName}/client/assets`))
             .on('end', () => {
-                log.info(
-                    `Successfully distributed changed ${resourceName} assets`
-                )
+                log.info(`Successfully distributed changed ${resourceName} assets`)
             })
     })
 }
@@ -616,7 +609,9 @@ const watchWebViews = (watcher) => {
         const resourceName = path.split('/resources/')[1].split('/')[0]
         const webviewName = path.split('/webviews/')[1].split('/')[0]
 
-        log.info(`Detected change in ${resourceName} webview ${webviewName}, running Svelte compiler...`)
+        log.info(
+            `Detected change in ${resourceName} webview ${webviewName}, running Svelte compiler...`
+        )
 
         if (path.endsWith('.svelte')) {
             let split = path.split('/')
@@ -631,11 +626,21 @@ const watchWebViews = (watcher) => {
 }
 
 const watchWebViewsEntry = () => {
-    watchWebViews(gulp.watch(['./src/resources/**/client/webviews/**/*.ts', '!./src/resources/**/client/webviews/components']))
+    watchWebViews(
+        gulp.watch([
+            './src/resources/**/client/webviews/**/*.ts',
+            '!./src/resources/**/client/webviews/components',
+        ])
+    )
 }
 
 const watchWebViewsSvelte = () => {
-    watchWebViews(gulp.watch(['./src/resources/**/client/webviews/**/*.svelte', '!./src/resources/**/client/webviews/components']))
+    watchWebViews(
+        gulp.watch([
+            './src/resources/**/client/webviews/**/*.svelte',
+            '!./src/resources/**/client/webviews/components',
+        ])
+    )
 }
 
 const watchStaticWebViews = () => {
@@ -688,7 +693,10 @@ const watchResourceConfig = () => {
         log.info(`Resource ${resourceName} config changed, building...`)
 
         let resCfg = new ResourceConfig(path)
-        fs.writeFileSync(`./${DIST_FOLDER}/resources/${resourceName}/resource.cfg`, resCfg.getAsCfg().toString())
+        fs.writeFileSync(
+            `./${DIST_FOLDER}/resources/${resourceName}/resource.cfg`,
+            resCfg.getAsCfg().toString()
+        )
 
         log.info(`Successfully built resource ${resourceName} config`)
     })
@@ -740,20 +748,28 @@ gulp.task('watch:webview:entry', watchWebViewsEntry)
 gulp.task('watch:webview:svelte', watchWebViewsSvelte)
 gulp.task('watch:webview:static', watchStaticWebViews)
 gulp.task('watch:svelte:components', watchSvelteComponents)
-gulp.task('watch:webview', gulp.parallel('watch:webview:entry',
-    'watch:webview:svelte',
-    'watch:webview:static',
-    'watch:svelte:components'))
+gulp.task(
+    'watch:webview',
+    gulp.parallel(
+        'watch:webview:entry',
+        'watch:webview:svelte',
+        'watch:webview:static',
+        'watch:svelte:components'
+    )
+)
 
 const watch = () => {
-    gulp.series('build', gulp.parallel(
-        'watch:client',
-        'watch:server',
-        'watch:shared',
-        'watch:webview',
-        'watch:assets',
-        'watch:resource:config',
-    ))()
+    gulp.series(
+        'build',
+        gulp.parallel(
+            'watch:client',
+            'watch:server',
+            'watch:shared',
+            'watch:webview',
+            'watch:assets',
+            'watch:resource:config'
+        )
+    )()
 }
 
 gulp.task('watch', watch)
