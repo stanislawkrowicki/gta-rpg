@@ -1,45 +1,40 @@
 module.exports = {
-    'env': {
-        'browser': true,
-        'es2021': true,
-        'node': true
+    env: {
+        browser: true,
+        es2021: true,
+        node: true,
     },
-    'extends': [
+    extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
-        'plugin:svelte/recommended'
+        'plugin:svelte/recommended',
+        'prettier',
     ],
-    'parser': '@typescript-eslint/parser',
-    'parserOptions': {
-        'ecmaVersion': 'latest',
-        'sourceType': 'module'
+    parser: '@typescript-eslint/parser',
+    parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
     },
-    'overrides': [
+    overrides: [
         {
-            'files': ['*.svelte'],
-            'parser': 'svelte-eslint-parser',
-            'parserOptions': {
-                'parser': '@typescript-eslint/parser'
-            }
-        }
+            files: ['*.svelte'],
+            parser: 'svelte-eslint-parser',
+            parserOptions: {
+                parser: '@typescript-eslint/parser',
+            },
+        },
     ],
-    'globals': {
-        'alt': true
+    globals: {
+        alt: true,
     },
-    'rules': {
-        'indent': [
-            'error',
-            4
-        ],
-        'semi': [
-            'error',
-            'never'
-        ],
+    rules: {
+        indent: ['error', 4],
+        semi: ['error', 'never'],
         '@typescript-eslint/ban-ts-comment': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
         '@typescript-eslint/no-empty-function': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         'no-case-declarations': 'off',
-        'no-unused-labels': 'off'
-    }
+        'no-unused-labels': 'off',
+    },
 }

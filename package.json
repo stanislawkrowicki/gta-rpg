@@ -1,67 +1,72 @@
 {
-  "name": "gta-rpg",
-  "version": "1.0.0",
-  "description": "",
-  "scripts": {
-    "lint": "lint-staged"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/stanislawkrowicki/gta-rpg.git"
-  },
-  "bugs": {
-    "url": "https://github.com/stanislawkrowicki/gta-rpg/issues"
-  },
-  "homepage": "https://github.com/stanislawkrowicki/gta-rpg#readme",
-  "type": "module",
-  "devDependencies": {
-    "@altv/types-client": "^2.2.7",
-    "@altv/types-natives": "^1.4.4",
-    "@altv/types-server": "^2.4.1",
-    "@altv/types-shared": "^1.2.6",
-    "@altv/types-webview": "^1.0.3",
-    "@altv/types-worker": "^1.0.7",
-    "@anatine/esbuild-decorators": "^0.2.19",
-    "@tsconfig/svelte": "^3.0.0",
-    "@types/amqplib": "^0.8.2",
-    "@typescript-eslint/eslint-plugin": "^5.31.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "esbuild-plugin-glsl": "^1.1.0",
-    "esbuild-svelte": "^0.7.1",
-    "eslint": "^8.20.0",
-    "eslint-plugin-svelte": "^2.7.0",
-    "gulp": "^4.0.2",
-    "husky": "^8.0.1",
-    "lint-staged": "^12.0.3",
-    "sass": "^1.54.0",
-    "svelte-carousel": "^1.0.19",
-    "svelte-check": "^2.8.0",
-    "svelte-feather-icons": "^4.0.0",
-    "svelte-preprocess": "^4.10.7",
-    "typescript": "^4.7.4"
-  },
-  "dependencies": {
-    "@elastic/elasticsearch": "^8.2.1",
-    "@typegoose/typegoose": "^9.11.0",
-    "amqplib": "^0.10.1",
-    "cli-spinners": "^2.6.1",
-    "crypto": "^1.0.1",
-    "dotenv": "^16.0.1",
-    "esbuild": "^0.14.50",
-    "esbuild-ifdef": "^0.1.8",
-    "esbuild-plugin-tsc": "^0.3.1",
-    "fancy-log": "^2.0.0",
-    "gulp-esbuild": "^0.10.4",
-    "jscrypto": "^1.0.3",
-    "mongoose": "^6.5.0",
-    "node-watch": "^0.7.3",
-    "redis-om": "^0.3.6",
-    "svelte": "3.39.0",
-    "svelte-material-icons": "^2.0.4"
-  },
-  "lint-staged": {
-    "*.ts": "./node_modules/.bin/eslint --fix",
-    "*.js": "./node_modules/.bin/eslint --fix",
-    "*.svelte": "./node_modules/.bin/eslint --fix"
-  }
+    "name": "gta-rpg",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "lint": "lint-staged",
+        "format": "prettier-eslint --write src/**/*.ts src/**/*.svelte content/*.json",
+        "formatDry": "prettier-eslint src/**/*.ts src/**/*.svelte content/*.json"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/stanislawkrowicki/gta-rpg.git"
+    },
+    "bugs": {
+        "url": "https://github.com/stanislawkrowicki/gta-rpg/issues"
+    },
+    "homepage": "https://github.com/stanislawkrowicki/gta-rpg#readme",
+    "type": "module",
+    "devDependencies": {
+        "@altv/types-client": "^2.2.7",
+        "@altv/types-natives": "^1.4.4",
+        "@altv/types-server": "^2.4.1",
+        "@altv/types-shared": "^1.2.6",
+        "@altv/types-webview": "^1.0.3",
+        "@altv/types-worker": "^1.0.7",
+        "@anatine/esbuild-decorators": "^0.2.19",
+        "@tsconfig/svelte": "^3.0.0",
+        "@types/amqplib": "^0.8.2",
+        "@typescript-eslint/eslint-plugin": "^5.31.0",
+        "@typescript-eslint/parser": "^5.0.0",
+        "esbuild-plugin-glsl": "^1.1.0",
+        "esbuild-svelte": "^0.7.1",
+        "eslint": "^8.20.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-svelte": "^2.7.0",
+        "gulp": "^4.0.2",
+        "husky": "^8.0.1",
+        "lint-staged": "^12.0.3",
+        "prettier": "^2.7.1",
+        "prettier-eslint": "^15.0.1",
+        "prettier-eslint-cli": "^7.1.0",
+        "prettier-plugin-svelte": "^2.7.0",
+        "sass": "^1.54.0",
+        "svelte-carousel": "^1.0.19",
+        "svelte-check": "^2.8.0",
+        "svelte-feather-icons": "^4.0.0",
+        "svelte-preprocess": "^4.10.7",
+        "typescript": "^4.7.4"
+    },
+    "dependencies": {
+        "@elastic/elasticsearch": "^8.2.1",
+        "@typegoose/typegoose": "^9.11.0",
+        "amqplib": "^0.10.1",
+        "cli-spinners": "^2.6.1",
+        "crypto": "^1.0.1",
+        "dotenv": "^16.0.1",
+        "esbuild": "^0.14.50",
+        "esbuild-ifdef": "^0.1.8",
+        "esbuild-plugin-tsc": "^0.3.1",
+        "fancy-log": "^2.0.0",
+        "gulp-esbuild": "^0.10.4",
+        "jscrypto": "^1.0.3",
+        "mongoose": "^6.5.0",
+        "node-watch": "^0.7.3",
+        "redis-om": "^0.3.6",
+        "svelte": "3.39.0",
+        "svelte-material-icons": "^2.0.4"
+    },
+    "lint-staged": {
+        "*.{ts,js,svelte,json}": "prettier-eslint --write"
+    }
 }
