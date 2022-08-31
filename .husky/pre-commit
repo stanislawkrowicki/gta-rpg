@@ -2,6 +2,8 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 # https://github.com/okonet/lint-staged/issues/1164
-export FORCE_COLOR=0
+if [ -t 2 ]; then
+  exec >/dev/tty 2>&1
+fi
 
 pnpm run lint
