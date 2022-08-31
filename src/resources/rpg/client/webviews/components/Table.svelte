@@ -5,14 +5,14 @@
 <table>
     <thead>
         <tr>
-            { #each columns as column }
-                <th>{ column }</th>
-            { /each }
+            {#each columns as column}
+                <th>{column}</th>
+            {/each}
         </tr>
     </thead>
 
     <tbody>
-        <slot></slot>
+        <slot />
     </tbody>
 </table>
 

@@ -1,9 +1,9 @@
 /// #if SERVER
 import altServer from 'alt-server'
-import ServerEvent from "../../events/ServerEvent"
-import ClientEnterAcknowledgeZone from "../../events/server/world/markers/ClientEnterAcknowledgeZone"
-import ClientLeaveAcknowledgeZone from "../../events/server/world/markers/ClientLeaveAcknowledgeZone"
-import type {Client} from "../../../server"
+import ServerEvent from '../../events/ServerEvent'
+import ClientEnterAcknowledgeZone from '../../events/server/world/markers/ClientEnterAcknowledgeZone'
+import ClientLeaveAcknowledgeZone from '../../events/server/world/markers/ClientLeaveAcknowledgeZone'
+import type { Client } from '../../../server'
 /// #endif
 
 import type altShared from 'alt-shared'
@@ -44,7 +44,7 @@ export enum NativeMarkerType {
 }
 
 export enum MarkerType {
-    Cylinder
+    Cylinder,
 }
 
 export type OnEnterFunction = (entity: altServer.Entity) => void
@@ -75,7 +75,7 @@ export abstract class Marker {
     onAcknowledgeZoneEnter(entity: altServer.Entity) {
         if (entity.type !== 0) return // is not a player
 
-        const client = (entity.getMeta('wrapper') as Client)
+        const client = entity.getMeta('wrapper') as Client
         if (client && client.wrapped)
             ServerEvent.emit(client, new ClientEnterAcknowledgeZone(this.markerData))
     }
@@ -83,16 +83,17 @@ export abstract class Marker {
     onAcknowledgeZoneLeave(entity: altServer.Entity) {
         if (entity.type !== 0) return // is not a player
 
-        const client = (entity.getMeta('wrapper') as Client)
+        const client = entity.getMeta('wrapper') as Client
         if (client && client.wrapped)
             ServerEvent.emit(client, new ClientLeaveAcknowledgeZone(this.markerData))
     }
 
     handleEnter(entity: altServer.Entity) {
-        if (!this.onEnter) return 
+        if (!this.onEnter) return
 
         if (this.playersOnly) {
-            if (entity.type === 0) // is player
+            if (entity.type === 0)
+                // is player
                 this.onEnter(entity)
             return
         }
@@ -104,7 +105,8 @@ export abstract class Marker {
         if (!this.onLeave) return
 
         if (this.playersOnly) {
-            if (entity.type === 0) // is player
+            if (entity.type === 0)
+                // is player
                 this.onLeave(entity)
             return
         }
@@ -189,4 +191,3 @@ export class CylinderMarker extends Marker {
     }
     /// #endif
 }
-

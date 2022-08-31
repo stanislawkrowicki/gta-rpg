@@ -18,13 +18,13 @@ export default class RequestGuestLogin extends ClientEvent {
 
     /// #if SERVER
     static onHandle(client: Client, object: RequestGuestLogin) {
-        if(typeof object.name !== 'string' ||
-            object.name.length === 0 || object.name.length > RequestGuestLogin.MAX_NAME_LENGTH
+        if (
+            typeof object.name !== 'string' ||
+            object.name.length === 0 ||
+            object.name.length > RequestGuestLogin.MAX_NAME_LENGTH
         ) {
             return this.logAsSuspicious(client, object)
         }
-
-
     }
     /// #endif
 }

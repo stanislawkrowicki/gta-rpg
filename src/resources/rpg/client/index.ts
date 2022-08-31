@@ -7,8 +7,8 @@ import type { Player } from 'alt-client'
 import Camera from './Camera'
 import View from './View'
 import Chat from './chat/Chat'
-import Events from "../shared/events/Events"
-import Markers from "./world/markers/Markers"
+import Events from '../shared/events/Events'
+import Markers from './world/markers/Markers'
 import Hub from './Hub'
 
 const LocalPlayer: Player = null
@@ -36,26 +36,24 @@ class GameDefaultsInitiator {
     }
 
     static initiateAudio() {
-        game.startAudioScene("FBI_HEIST_H5_MUTE_AMBIENCE_SCENE")
+        game.startAudioScene('FBI_HEIST_H5_MUTE_AMBIENCE_SCENE')
         game.cancelCurrentPoliceReport()
-        game.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_GENERAL", true)
-        game.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_WARNING", true)
-        game.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_ALARM", true)
+        game.clearAmbientZoneState('AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_GENERAL', true)
+        game.clearAmbientZoneState('AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_WARNING', true)
+        game.clearAmbientZoneState('AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_ALARM', true)
         // @ts-ignore
         game.setAmbientZoneState(0, 0, 0)
-        game.clearAmbientZoneState("AZ_DISTANT_SASQUATCH", false)
-        game.setAudioFlag("LoadMPData", true)
-        game.setAudioFlag("DisableFlightMusic", true)
+        game.clearAmbientZoneState('AZ_DISTANT_SASQUATCH', false)
+        game.setAudioFlag('LoadMPData', true)
+        game.setAudioFlag('DisableFlightMusic', true)
         game.setWind(0)
-        game.setWeatherTypeNow("CLEAR")
+        game.setWeatherTypeNow('CLEAR')
     }
 }
 
 GameDefaultsInitiator.initiate()
 
-class Interactivity {
-
-}
+class Interactivity {}
 
 class Interactivities {
     static map: Record<number, Interactivity>
@@ -65,15 +63,11 @@ class Interactivities {
         alt.on('GAME:NEW_INTERACTIVITIES', (interactivities) => {
             const interactivitiesToRemove = []
 
-            NEW_INTERACTIVITIES_LOOP:
-            for(let i = 0; i < interactivities.list.length; ++i) {
+            NEW_INTERACTIVITIES_LOOP: for (let i = 0; i < interactivities.list.length; ++i) {
                 const newInteractivity = interactivities[i]
 
-                LOCAL_INTERACTIVITIES_LOOP:
-                for(let j = 0; j < Interactivities.list.length; ++j) {
+                LOCAL_INTERACTIVITIES_LOOP: for (let j = 0; j < Interactivities.list.length; ++j) {
                     const localInteractivity = Interactivities.list[j]
-
-
                 }
             }
         })

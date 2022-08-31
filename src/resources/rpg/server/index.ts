@@ -5,18 +5,18 @@ import alt from 'alt-server'
 import MainDB from './core/db/MainDB'
 import HotReload from './HotReload'
 import { Vector3 } from 'alt-shared'
-import Logger from "./core/logger/Logger"
-import QuickDB from "./core/db/QuickDB"
+import Logger from './core/logger/Logger'
+import QuickDB from './core/db/QuickDB'
 
 import type GameDeviceSchema from '../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
-import Events from "../shared/events/Events"
-import Utils from "../shared/utils/Utils"
-import Sessions from "./core/sessions/Sessions"
-import Vehicles from "./world/vehicles/Vehicles"
-import MarkerManager from "./world/markers/MarkerManager"
-import {CylinderMarker, Marker} from "../shared/world/markers/Markers"
+import Events from '../shared/events/Events'
+import Utils from '../shared/utils/Utils'
+import Sessions from './core/sessions/Sessions'
+import Vehicles from './world/vehicles/Vehicles'
+import MarkerManager from './world/markers/MarkerManager'
+import { CylinderMarker, Marker } from '../shared/world/markers/Markers'
 import VehicleStorehouse from './world/vehicles/vehicle_storehouse/VehicleStorehouse'
-import VehicleStorehouseManager from "./world/vehicles/vehicle_storehouse/VehicleStorehouseManager"
+import VehicleStorehouseManager from './world/vehicles/vehicle_storehouse/VehicleStorehouseManager'
 import ServerEvent from '../shared/events/ServerEvent'
 import Authorize from '../shared/events/server/auth/Authorize'
 
@@ -83,51 +83,46 @@ const populateClientsAfterRestart = () => {
     }
 }
 
-alt.on(
-    'connectionQueueAdd',
-    (connectionQueueInfo: alt.IConnectionQueueInfo) => {
-        if (MainDB.isConnected) {
-            MainDB.collections.gameDevices
-                .findOne({
-                    $or: [
-                        { hwidHash: connectionQueueInfo.hwidHash },
-                        { hwidExHash: connectionQueueInfo.hwidExHash },
-                    ],
-                })
-                .then((device) => {
-                    if (device) {
-                        if (device.isBanned) {
-                            connectionQueueInfo.decline('')
-                        } else {
-                            connectionQueueInfo.accept()
-                        }
+alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => {
+    if (MainDB.isConnected) {
+        MainDB.collections.gameDevices
+            .findOne({
+                $or: [
+                    { hwidHash: connectionQueueInfo.hwidHash },
+                    { hwidExHash: connectionQueueInfo.hwidExHash },
+                ],
+            })
+            .then((device) => {
+                if (device) {
+                    if (device.isBanned) {
+                        connectionQueueInfo.decline('')
                     } else {
-                        MainDB.collections.gameDevices
-                            .create(
-                                Utils.typeCheck<GameDeviceSchema>({
-                                    hwidHash: connectionQueueInfo.hwidHash,
-                                    hwidExHash: connectionQueueInfo.hwidExHash,
-                                })
-                            )
-                            .catch((err) => {
-                                Logger.logCaughtError(
-                                    'server-index',
-                                    err,
-                                    'Failed to create game device'
-                                ).then()
-                            })
-                            .then(() => {
-                                connectionQueueInfo.accept()
-                            })
+                        connectionQueueInfo.accept()
                     }
-                })
-        } else {
-            connectionQueueInfo.decline(
-                "The server hasn't started yet... Try to connect later..."
-            )
-        }
+                } else {
+                    MainDB.collections.gameDevices
+                        .create(
+                            Utils.typeCheck<GameDeviceSchema>({
+                                hwidHash: connectionQueueInfo.hwidHash,
+                                hwidExHash: connectionQueueInfo.hwidExHash,
+                            })
+                        )
+                        .catch((err) => {
+                            Logger.logCaughtError(
+                                'server-index',
+                                err,
+                                'Failed to create game device'
+                            ).then()
+                        })
+                        .then(() => {
+                            connectionQueueInfo.accept()
+                        })
+                }
+            })
+    } else {
+        connectionQueueInfo.decline("The server hasn't started yet... Try to connect later...")
     }
-)
+})
 
 alt.on('playerConnect', async (player) => {
     const wrappedPlayer = new Client(player)

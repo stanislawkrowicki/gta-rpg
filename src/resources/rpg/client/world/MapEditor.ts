@@ -3,7 +3,6 @@ import Mouse from '../input/Mouse'
 
 enum EditableObject {
     NPC,
-
 }
 
 const CurrentlyPressedKeys = []
@@ -35,22 +34,16 @@ export default class MapEditor {
         const updateInterval = alt.setInterval(MapEditor.update, 15)
 
         const keyDownListener = (key: number) => {
-            if(key === 35) {
+            if (key === 35) {
                 // TODO: Delete selected objects
             }
         }
 
-        const mouseDownListener = (x: number, y: number, button: number) => {
+        const mouseDownListener = (x: number, y: number, button: number) => {}
 
-        }
+        const mouseUpListener = (x: number, y: number, button: number) => {}
 
-        const mouseUpListener = (x: number, y: number, button: number) => {
-
-        }
-
-        const mouseMoveListener = (x: number, y: number) => {
-
-        }
+        const mouseMoveListener = (x: number, y: number) => {}
 
         alt.on('keydown', keyDownListener)
 
@@ -73,7 +66,7 @@ export default class MapEditor {
     static deinitialize() {}
 
     static update() {
-        for(let i = 0; i < MapEditor.selectedObjects.length; ++i) {
+        for (let i = 0; i < MapEditor.selectedObjects.length; ++i) {
             // TODO: Render gizmo
         }
     }

@@ -1,10 +1,6 @@
 import alt from 'alt-client'
-import {
-    CylinderMarkerData,
-    MarkerData,
-    MarkerType,
-} from '../../../shared/world/markers/Markers'
-import native from "natives"
+import { CylinderMarkerData, MarkerData, MarkerType } from '../../../shared/world/markers/Markers'
+import native from 'natives'
 
 export default class Markers {
     static markersToRender: MarkerData[] = []
@@ -18,7 +14,8 @@ export default class Markers {
                 case MarkerType.Cylinder:
                     const data = markerData as CylinderMarkerData
 
-                    native.drawMarker(data.nativeMarkerType,
+                    native.drawMarker(
+                        data.nativeMarkerType,
                         data.pos.x,
                         data.pos.y,
                         data.pos.z,
@@ -41,7 +38,8 @@ export default class Markers {
                         false,
                         undefined,
                         undefined,
-                        false)
+                        false
+                    )
                     break
                 }
             }
@@ -54,7 +52,6 @@ export default class Markers {
 
     static stopRenderingMarker(markerId: number) {
         const index = Markers.markersToRender.findIndex((m) => m.id === markerId)
-        if (index > -1)
-            Markers.markersToRender.splice(index, 1)
+        if (index > -1) Markers.markersToRender.splice(index, 1)
     }
 }

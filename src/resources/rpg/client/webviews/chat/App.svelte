@@ -1,13 +1,9 @@
-<svelte:window
-    on:mousedown={(e) => {e.preventDefault()}}
-></svelte:window>
-
 <script lang="ts">
-    import Message from "./Message.svelte"
-    import Input from "./Input.svelte"
+    import Message from './Message.svelte'
+    import Input from './Input.svelte'
 
     interface IMessage {
-        author: string,
+        author: string
         message: string
     }
 
@@ -16,7 +12,7 @@
     let messages: IMessage[] = []
     let inputComponent: Input
 
-    const handleMessage = (messageEvent: { detail: string; }) => {
+    const handleMessage = (messageEvent: { detail: string }) => {
         if (messageEvent.detail === '') {
             unfocus()
             return
@@ -44,14 +40,20 @@
     })
 </script>
 
+<svelte:window
+    on:mousedown={(e) => {
+        e.preventDefault()
+    }}
+/>
+
 <div id="container">
     <div class="messages">
-        { #each messages as message }
-            <Message author={message.author} message={message.message}/>
-        { /each }
+        {#each messages as message}
+            <Message author={message.author} message={message.message} />
+        {/each}
     </div>
 
     <div class="message-input">
-        <Input bind:this={inputComponent} on:input={handleMessage} on:unfocus={unfocus}></Input>
+        <Input bind:this={inputComponent} on:input={handleMessage} on:unfocus={unfocus} />
     </div>
 </div>

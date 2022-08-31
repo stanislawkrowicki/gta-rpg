@@ -1,8 +1,8 @@
 /// #if CLIENT
-import VehicleStorehouseManager from "../../../../../../client/world/vehicles/vehicle_storehouse/VehicleStorehouseManager"
+import VehicleStorehouseManager from '../../../../../../client/world/vehicles/vehicle_storehouse/VehicleStorehouseManager'
 /// #endif
 
-import ServerEvent from "../../../../ServerEvent"
+import ServerEvent from '../../../../ServerEvent'
 
 export default class ClosePanel extends ServerEvent {
     constructor() {

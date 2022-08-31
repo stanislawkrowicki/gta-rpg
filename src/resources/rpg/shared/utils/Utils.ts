@@ -1,12 +1,14 @@
-import altShared from "alt-shared"
+import altShared from 'alt-shared'
 
 export default class {
     static typeCheck<T>(value: T): T {
         return value
     }
 
-    static calculateRotationToLookAtElementByVectors(elementToRotatePos: altShared.Vector3,
-        elementToLookAtPos: altShared.Vector3): altShared.Vector3 {
+    static calculateRotationToLookAtElementByVectors(
+        elementToRotatePos: altShared.Vector3,
+        elementToLookAtPos: altShared.Vector3
+    ): altShared.Vector3 {
         /* Calculates rotation (in degrees) needed for an object (e.g. a camera) to look at another object
            (face it both by pitch and yaw). */
         const src = elementToRotatePos
@@ -21,9 +23,14 @@ export default class {
         return new altShared.Vector3(rx, ry, rz)
     }
 
-    static calculateRotationToLookAtElementByXYZ(sourceX: number, sourceY: number, sourceZ: number,
-        targetX: number, targetY: number, targetZ: number):
-                                                 [number, number, number] {
+    static calculateRotationToLookAtElementByXYZ(
+        sourceX: number,
+        sourceY: number,
+        sourceZ: number,
+        targetX: number,
+        targetY: number,
+        targetZ: number
+    ): [number, number, number] {
         /* Calculates rotation (in degrees) needed for an object (e.g. a camera) to look at another object
            (face it both by pitch and yaw). */
         const dx = sourceX - targetX
@@ -33,7 +40,11 @@ export default class {
         return this.calculateRotationToLookAtElementByDiffs(dx, dy, dz)
     }
 
-    static calculateRotationToLookAtElementByDiffs(dx: number, dy: number, dz: number): [number, number, number] {
+    static calculateRotationToLookAtElementByDiffs(
+        dx: number,
+        dy: number,
+        dz: number
+    ): [number, number, number] {
         /* Calculates rotation (in degrees) needed for an object (e.g. a camera) to look at another object
            (face it both by pitch and yaw).
            Diffs should be calculated with formula `source - target` */
@@ -41,17 +52,16 @@ export default class {
         let yaw
 
         if (dy === 0) {
-            if (dx > 0) yaw = Math.PI/2
-            if (dx < 0) yaw = -Math.PI/2
-        }
-        else if (dy >= 0) {
+            if (dx > 0) yaw = Math.PI / 2
+            if (dx < 0) yaw = -Math.PI / 2
+        } else if (dy >= 0) {
             yaw = Math.atan2(dy, dx)
-            if (yaw > 0) yaw += Math.PI/2
-            else if (yaw < 0) yaw -= Math.PI/2
+            if (yaw > 0) yaw += Math.PI / 2
+            else if (yaw < 0) yaw -= Math.PI / 2
         } else if (dy < 0) {
             yaw = Math.atan2(dy, dx)
-            if (yaw > 0) yaw -= Math.PI/2
-            else if (yaw < 0) yaw += Math.PI/2
+            if (yaw > 0) yaw -= Math.PI / 2
+            else if (yaw < 0) yaw += Math.PI / 2
         }
 
         const pitchDeg = pitch * (180 / Math.PI)

@@ -8,7 +8,7 @@ export class WebView2DContainer {
     }
 
     releaseToPool() {
-        if(WebView2DPool.availableObjectCount < WebView2DPool.MAX_SIZE) {
+        if (WebView2DPool.availableObjectCount < WebView2DPool.MAX_SIZE) {
             this.webView.url = 'resource/client/webviews/blank.html'
 
             WebView2DPool.webViews[WebView2DPool.availableObjectCount++] = this
@@ -30,7 +30,7 @@ export default class WebView2DPool {
         let i = 0
 
         const webViewIntializingInterval = alt.setInterval(() => {
-            if(i >= WebView2DPool.INITIAL_SIZE) {
+            if (i >= WebView2DPool.INITIAL_SIZE) {
                 alt.clearInterval(webViewIntializingInterval)
             } else {
                 WebView2DPool.webViews[i] = new WebView2DContainer(
@@ -45,7 +45,7 @@ export default class WebView2DPool {
     }
 
     static requestObject(url: string): WebView2DContainer {
-        if(WebView2DPool.availableObjectCount > 0) {
+        if (WebView2DPool.availableObjectCount > 0) {
             const availableObject = WebView2DPool.webViews[--WebView2DPool.availableObjectCount]
 
             availableObject.webView.url = url

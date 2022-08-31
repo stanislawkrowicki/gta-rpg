@@ -1,24 +1,24 @@
 import * as amqplib from 'amqplib'
-import {Client} from "@elastic/elasticsearch"
+import { Client } from '@elastic/elasticsearch'
 import 'dotenv/config'
-import {MappingTypeMapping} from "@elastic/elasticsearch/lib/api/types"
+import { MappingTypeMapping } from '@elastic/elasticsearch/lib/api/types'
 
 const getDB = () => {
     try {
         let protocol = 'https'
         if (process.env['ELASTICSEARCH_HOST'] === 'localhost') protocol = 'http'
 
-        const client =  new Client({
+        const client = new Client({
             node: `${protocol}://${process.env['ELASTICSEARCH_HOST']}:${process.env['ELASTICSEARCH_PORT']}`,
             auth: {
                 username: process.env['ELASTIC_USER'],
-                password: process.env['ELASTIC_PASSWORD']
-            }
+                password: process.env['ELASTIC_PASSWORD'],
+            },
         })
 
         console.info('Successfully connected to ElasticSearch.')
         return client
-    } catch(err) {
+    } catch (err) {
         console.error('Failed to connect to ElasticSearch.')
         throw err
     }
@@ -35,29 +35,31 @@ const createIndexIfNotExists = async (index: string, mappings?: MappingTypeMappi
         await dbClient.indices.create({
             index: index,
             body: {
-                mappings: mappings
-            }
+                mappings: mappings,
+            },
         })
     else
         await dbClient.indices.create({
-            index: index
+            index: index,
         })
 }
 
-(async () => {
+;(async () => {
     const queue = 'logs'
     const elasticIndex = 'logs'
 
     await createIndexIfNotExists(elasticIndex, {
         properties: {
-            "timestamp": {
-                type: "date",
-                format: "epoch_millis"
-            }
-        }
+            timestamp: {
+                type: 'date',
+                format: 'epoch_millis',
+            },
+        },
     })
 
-    const conn = await amqplib.connect(`amqp://${process.env['RABBITMQ_USER']}:${process.env['RABBITMQ_PASSWORD']}@${process.env['RABBITMQ_HOST']}:${process.env['RABBITMQ_PORT']}`)
+    const conn = await amqplib.connect(
+        `amqp://${process.env['RABBITMQ_USER']}:${process.env['RABBITMQ_PASSWORD']}@${process.env['RABBITMQ_HOST']}:${process.env['RABBITMQ_PORT']}`
+    )
     const channel = await conn.createChannel()
 
     await channel.assertQueue(queue)
@@ -68,8 +70,7 @@ const createIndexIfNotExists = async (index: string, mappings?: MappingTypeMappi
         console.info('.')
         await dbClient.index({
             index: elasticIndex,
-            document: JSON.parse(msg.content.toString())
-
+            document: JSON.parse(msg.content.toString()),
         })
         channel.ack(msg)
     })

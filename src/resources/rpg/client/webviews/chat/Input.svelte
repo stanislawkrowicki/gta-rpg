@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte"
+    import { createEventDispatcher } from 'svelte'
 
     const dispatch = createEventDispatcher()
 
-    export let message = ""
+    export let message = ''
 
     let shouldAllowTyping = false
 
@@ -38,7 +38,7 @@
     }
 </script>
 
+<input bind:value={message} bind:this={inputField} on:keydown={onKeyPress} />
+
 <style>
 </style>
-
-<input bind:value={message} bind:this={inputField} on:keydown={onKeyPress}/>

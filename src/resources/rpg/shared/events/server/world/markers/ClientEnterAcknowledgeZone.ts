@@ -1,9 +1,9 @@
 /// #if CLIENT
-import Markers from "../../../../../client/world/markers/Markers"
+import Markers from '../../../../../client/world/markers/Markers'
 /// #endif
 
-import ServerEvent from "../../../ServerEvent"
-import type {MarkerData} from "../../../../../shared/world/markers/Markers"
+import ServerEvent from '../../../ServerEvent'
+import type { MarkerData } from '../../../../../shared/world/markers/Markers'
 
 export default class ClientEnterAcknowledgeZone extends ServerEvent {
     markerData: MarkerData

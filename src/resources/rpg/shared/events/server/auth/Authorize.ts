@@ -1,8 +1,8 @@
 /// #if CLIENT
-import Hub from "../../../../client/Hub"
+import Hub from '../../../../client/Hub'
 /// #endif
 
-import ServerEvent from "../../ServerEvent"
+import ServerEvent from '../../ServerEvent'
 
 export default class Authorize extends ServerEvent {
     constructor() {

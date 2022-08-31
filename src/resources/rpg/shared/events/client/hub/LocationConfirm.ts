@@ -4,7 +4,7 @@ import altServer from 'alt-server'
 /// #endif
 
 import ClientEvent from '../../../events/ClientEvent'
-import type altShared from "alt-shared"
+import type altShared from 'alt-shared'
 
 export default class LocationConfirm extends ClientEvent {
     spawnPosition: altShared.Vector3
@@ -16,10 +16,12 @@ export default class LocationConfirm extends ClientEvent {
 
     /// #if SERVER
     static onHandle(client: Client, object: LocationConfirm) {
-        if (!object.spawnPosition ||
+        if (
+            !object.spawnPosition ||
             typeof object.spawnPosition.x !== 'number' ||
             typeof object.spawnPosition.y !== 'number' ||
-            typeof object.spawnPosition.z !== 'number') {
+            typeof object.spawnPosition.z !== 'number'
+        ) {
             return this.logAsSuspicious(client, object)
         }
 

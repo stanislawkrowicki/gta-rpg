@@ -1,9 +1,9 @@
 import alt, { WebView } from 'alt-client'
-import native from "natives"
+import native from 'natives'
 
 export enum MouseMode {
     CAMERA_CONTROL,
-    SCREEN_POINTING
+    SCREEN_POINTING,
 }
 
 export type MouseDownListenerCallback = (x: number, y: number, button: number) => void
@@ -35,31 +35,31 @@ export default class Mouse {
         Mouse.eventProvider.focus()
 
         Mouse.eventProvider.on('MOUSE:DOWN', (x, y, button) => {
-            for(let i = 0; i < Mouse.mouseDownListeners.length; i++) {
+            for (let i = 0; i < Mouse.mouseDownListeners.length; i++) {
                 Mouse.mouseDownListeners[i](x, y, button)
             }
         })
 
         Mouse.eventProvider.on('MOUSE:UP', (x, y, button) => {
-            for(let i = 0; i < Mouse.mouseUpListeners.length; i++) {
+            for (let i = 0; i < Mouse.mouseUpListeners.length; i++) {
                 Mouse.mouseUpListeners[i](x, y, button)
             }
         })
 
         Mouse.eventProvider.on('MOUSE:MOVE', (x, y) => {
-            for(let i = 0; i < Mouse.mouseMoveListeners.length; i++) {
+            for (let i = 0; i < Mouse.mouseMoveListeners.length; i++) {
                 Mouse.mouseMoveListeners[i](x, y)
             }
         })
 
         Mouse.eventProvider.on('MOUSE:WHEEL', (deltaX, deltaY) => {
-            for(let i = 0; i < Mouse.mouseMoveListeners.length; i++) {
+            for (let i = 0; i < Mouse.mouseMoveListeners.length; i++) {
                 Mouse.mouseWheelListeners[i](deltaX, deltaY)
             }
         })
     }
     static setMode(mode: MouseMode) {
-        if(mode === MouseMode.CAMERA_CONTROL) {
+        if (mode === MouseMode.CAMERA_CONTROL) {
             Mouse.showCursor(false)
             if (Mouse.controlActionBlocker) alt.clearEveryTick(Mouse.controlActionBlocker)
         } else {
@@ -72,7 +72,7 @@ export default class Mouse {
         const resolution = alt.getScreenResolution()
         alt.setCursorPos({
             x: resolution.x / 2,
-            y: resolution.y / 2
+            y: resolution.y / 2,
         })
 
         Mouse.mode = mode
@@ -82,8 +82,7 @@ export default class Mouse {
         if (show && !Mouse.isCursorShown) {
             alt.showCursor(true)
             Mouse.isCursorShown = true
-        }
-        else if (!show && Mouse.isCursorShown) {
+        } else if (!show && Mouse.isCursorShown) {
             alt.showCursor(false)
             Mouse.isCursorShown = false
         }

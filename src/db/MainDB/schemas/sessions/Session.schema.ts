@@ -10,23 +10,25 @@ export const SessionSchema = new Schema({
 
     startTime: {
         type: Date,
-        required: true
+        required: true,
     },
 
     loggedAccount: {
         accountType: {
             type: String,
-            enum: ['REGISTERED', 'DISCORD']
+            enum: ['REGISTERED', 'DISCORD'],
         },
 
-        loggedAccount: Types.ObjectId
+        loggedAccount: Types.ObjectId,
     },
 
-    movement: [{
-        x: Number,
-        y: Number,
-        z: Number
-    }]
+    movement: [
+        {
+            x: Number,
+            y: Number,
+            z: Number,
+        },
+    ],
 })
 
 export default SessionSchema

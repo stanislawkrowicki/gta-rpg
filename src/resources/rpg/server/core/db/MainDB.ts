@@ -9,8 +9,7 @@ import VehicleEquipmentSchema from '../../../../../db/MainDB/schemas/equipments/
 import NPCSchema from '../../../../../db/MainDB/schemas/npcs/NPC.schema'
 import GameDeviceSchema from '../../../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
 import { getModelForClass } from '@typegoose/typegoose'
-import SuspiciousEventSchema from "../../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema"
-
+import SuspiciousEventSchema from '../../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema'
 
 export default class MainDB {
     static NAME = 'rpg'
@@ -20,51 +19,58 @@ export default class MainDB {
     static isConnected = false
 
     static collections: {
-        [key: string]: any,
+        [key: string]: any
 
-        gameDevices?: mongoose.Model<GameDeviceSchema>,
+        gameDevices?: mongoose.Model<GameDeviceSchema>
 
         suspiciousEvents?: mongoose.Model<SuspiciousEventSchema>
         // groups?: mongoose.Model<any>,
-        accounts?: mongoose.Model<AccountSchema>,
+        accounts?: mongoose.Model<AccountSchema>
 
         // sessions?: mongoose.Model<any>,
 
         // properties?: mongoose.Model<any>,
-        vehicles?: mongoose.Model<VehicleSchema>,
+        vehicles?: mongoose.Model<VehicleSchema>
         //
         // vehicleEquipments?: mongoose.Model<any>
     } = {}
 
     static connect() {
-        return MainDB.connection = mongoose.createConnection(`mongodb://${process.env['MONGODB_USER']}:${process.env['MONGODB_PASSWORD']}@${process.env['MONGODB_HOST']}:${process.env['MONGODB_PORT']}/${MainDB.NAME}`)
+        return (MainDB.connection = mongoose
+            .createConnection(
+                `mongodb://${process.env['MONGODB_USER']}:${process.env['MONGODB_PASSWORD']}@${process.env['MONGODB_HOST']}:${process.env['MONGODB_PORT']}/${MainDB.NAME}`
+            )
             .on('error', (error: unknown) => {
                 alt.logError('~r~' + `Failed to connect to the database ${MainDB.NAME}`)
-            }).on('connected', (event: unknown) => {
+            })
+            .on('connected', (event: unknown) => {
                 alt.log('~lg~' + `Successfully connected to the database ~lb~${MainDB.NAME}`)
 
                 MainDB.initializeCollections()
 
                 MainDB.isConnected = true
-            }).on('disconnect', (error: unknown) => {
+            })
+            .on('disconnect', (error: unknown) => {
                 alt.logError('~lr~' + 'Disconnected from the database')
 
-                for(let i = 0; i < alt.Player.all.length; ++i) {
-                    alt.Player.all[i].kick("Problem with the server... Try to connect again later...")
+                for (let i = 0; i < alt.Player.all.length; ++i) {
+                    alt.Player.all[i].kick(
+                        'Problem with the server... Try to connect again later...'
+                    )
                 }
 
                 MainDB.isConnected = false
-            })
+            }))
     }
     static addCollection<T>(schema: any, collectionName: string) {
         MainDB.collections[collectionName] = getModelForClass(schema, {
             existingConnection: MainDB.connection,
             schemaOptions: {
-                versionKey: false
+                versionKey: false,
             },
             options: {
-                customName: collectionName
-            }
+                customName: collectionName,
+            },
         })
     }
     static initializeCollections() {

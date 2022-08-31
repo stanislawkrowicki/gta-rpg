@@ -4,7 +4,7 @@ export default class Vehicle {
     wrapped: alt.Vehicle
 
     entranceState: {
-        canEnterAsDriver?: boolean,
+        canEnterAsDriver?: boolean
         canEnterAsPassenger?: boolean
     }
 }

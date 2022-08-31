@@ -2,16 +2,16 @@ import type ClientEvent from './ClientEvent'
 import type ServerEvent from './ServerEvent'
 import Events from './Events'
 /// #if CLIENT
-import altClient from "alt-client"
+import altClient from 'alt-client'
 /// #endif
 
 /// #if SERVER
-import altServer from "alt-server"
+import altServer from 'alt-server'
 /// #endif
 
 export enum EventType {
     CLIENT,
-    SERVER
+    SERVER,
 }
 
 export default abstract class Event {

@@ -1,5 +1,5 @@
 import type alt from 'alt-server'
-import World from "./World"
+import World from './World'
 
 export default class Vehicle {
     id?: string

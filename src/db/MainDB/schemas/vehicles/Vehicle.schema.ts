@@ -2,18 +2,16 @@ import typegoose from '@typegoose/typegoose'
 import type { Ref } from '@typegoose/typegoose'
 import AccountSchema from '../accounts/Account.schema'
 import VehicleEquipmentSchema from '../equipments/VehicleEquipment.schema'
-import GroupSchema from "../groups/Group.schema"
+import GroupSchema from '../groups/Group.schema'
 
 const { prop } = typegoose
 
 export enum VehicleOwnerType {
     INDIVIDUAL,
-    GROUP
+    GROUP,
 }
 
-export class VehicleConditionSchema {
-
-}
+export class VehicleConditionSchema {}
 
 export class VehiclePositionSchema {
     @prop() x: number

@@ -1,11 +1,11 @@
-import type VehicleStorehouse from "./VehicleStorehouse"
-import VehicleStorehouses from "./VehicleStorehouses"
-import type {Client} from "../../../index"
-import Logger from "../../../core/logger/Logger"
-import Vehicles from "../Vehicles"
-import alt from "alt-server"
-import ServerEvent from "../../../../shared/events/ServerEvent"
-import ClosePanel from "../../../../shared/events/server/world/vehicles/vehicle_storehouse/ClosePanel"
+import type VehicleStorehouse from './VehicleStorehouse'
+import VehicleStorehouses from './VehicleStorehouses'
+import type { Client } from '../../../index'
+import Logger from '../../../core/logger/Logger'
+import Vehicles from '../Vehicles'
+import alt from 'alt-server'
+import ServerEvent from '../../../../shared/events/ServerEvent'
+import ClosePanel from '../../../../shared/events/server/world/vehicles/vehicle_storehouse/ClosePanel'
 
 export default class VehicleStorehouseManager {
     static storehouses: VehicleStorehouse[] = []
@@ -20,16 +20,22 @@ export default class VehicleStorehouseManager {
     }
 
     static takeVehicleOut(vehicleId: string, storehouseID: number, sourceClient: Client) {
-        const storehouse = VehicleStorehouseManager.storehouses.find(sh => sh.ID === storehouseID)
+        const storehouse = VehicleStorehouseManager.storehouses.find((sh) => sh.ID === storehouseID)
 
         if (!storehouse) {
-            Logger.logError('vehicle_storehouse_manager', 'Storehouse to take vehicle out of was not found')
-                .then()
+            Logger.logError(
+                'vehicle_storehouse_manager',
+                'Storehouse to take vehicle out of was not found'
+            ).then()
             return
         }
 
         const spawn = storehouse.vehicleSpawnColshapes[0]
-        Vehicles.spawnWorldVehicleFromDB(vehicleId, new alt.Vector3(spawn.x, spawn.y, spawn.z), new alt.Vector3(0, 0 ,0))
+        Vehicles.spawnWorldVehicleFromDB(
+            vehicleId,
+            new alt.Vector3(spawn.x, spawn.y, spawn.z),
+            new alt.Vector3(0, 0, 0)
+        )
 
         ServerEvent.emit(sourceClient, new ClosePanel())
     }

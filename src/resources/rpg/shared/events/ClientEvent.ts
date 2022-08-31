@@ -4,10 +4,10 @@ import Logger from '../../server/core/logger/Logger'
 /// #endif
 
 /// #if CLIENT
-import altClient from "alt-client"
+import altClient from 'alt-client'
 /// #endif
 
-import Event, {EventType} from './Event'
+import Event, { EventType } from './Event'
 
 export default abstract class ClientEvent extends Event {
     protected static eventType = EventType.CLIENT

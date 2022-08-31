@@ -2,11 +2,11 @@ import alt from 'alt-server'
 import amqplib from 'amqplib'
 
 export enum QueueChannels {
-    logs = 'log_channel'
+    logs = 'log_channel',
 }
 
 export class Queues {
-    static channels: Record<QueueChannels, amqplib.Channel> = {log_channel: undefined}
+    static channels: Record<QueueChannels, amqplib.Channel> = { log_channel: undefined }
 
     static async channel(name: QueueChannels): Promise<amqplib.Channel> {
         if (Queues.channels[name]) return Queues.channels[name]
@@ -19,7 +19,9 @@ export class Queues {
     }
 
     private static async openChannel(): Promise<amqplib.Channel> {
-        const conn =  await amqplib.connect(`amqp://${process.env['RABBITMQ_USER']}:${process.env['RABBITMQ_PASSWORD']}@${process.env['RABBITMQ_HOST']}:${process.env['RABBITMQ_PORT']}`)
+        const conn = await amqplib.connect(
+            `amqp://${process.env['RABBITMQ_USER']}:${process.env['RABBITMQ_PASSWORD']}@${process.env['RABBITMQ_HOST']}:${process.env['RABBITMQ_PORT']}`
+        )
 
         const channel = await conn.createChannel()
 

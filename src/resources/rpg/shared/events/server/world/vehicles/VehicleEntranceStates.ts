@@ -3,13 +3,13 @@ import altClient from 'alt-client'
 import type Vehicle from '../../../../../client/world/Vehicle'
 /// #endif
 
-import ServerEvent from "../../../ServerEvent"
+import ServerEvent from '../../../ServerEvent'
 
 export default class VehicleEntranceStates extends ServerEvent {
     states: {
-        vehicleId: number,
+        vehicleId: number
 
-        canEnterAsDriver?: boolean,
+        canEnterAsDriver?: boolean
         canEnterAsPassenger?: boolean
     }[]
 
@@ -22,20 +22,20 @@ export default class VehicleEntranceStates extends ServerEvent {
     static onHandle(object: VehicleEntranceStates) {
         const vehicles = altClient.Vehicle.all
 
-        for(let i = 0; i < object.states.length; ++i) {
+        for (let i = 0; i < object.states.length; ++i) {
             const entranceState = object.states[i]
 
-            for(let j = 0; j < vehicles.length; ++j) {
+            for (let j = 0; j < vehicles.length; ++j) {
                 const altVehicle = vehicles[j]
 
-                if(altVehicle.id === entranceState.vehicleId) {
+                if (altVehicle.id === entranceState.vehicleId) {
                     const vehicle = altVehicle.getMeta('wrapper') as Vehicle
 
-                    if(entranceState.canEnterAsDriver) {
+                    if (entranceState.canEnterAsDriver) {
                         vehicle.entranceState.canEnterAsDriver = true
                     }
 
-                    if(entranceState.canEnterAsPassenger) {
+                    if (entranceState.canEnterAsPassenger) {
                         vehicle.entranceState.canEnterAsPassenger = true
                     }
                 }

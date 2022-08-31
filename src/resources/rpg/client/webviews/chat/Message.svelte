@@ -1,7 +1,12 @@
 <script lang="ts">
-    export let author = ""
-    export let message = ""
+    export let author = ''
+    export let message = ''
 </script>
+
+<div class="message">
+    <div class="author">{author}</div>
+    <div class="message-content">{message}</div>
+</div>
 
 <style>
     .message {
@@ -11,13 +16,9 @@
         display: inline-block;
     }
     .author:after {
-        content: ": ";
+        content: ': ';
     }
     .message-content {
         display: inline-block;
     }
 </style>
-
-<div class="message">
-    <div class="author">{author}</div><div class="message-content">{message}</div>
-</div>

@@ -1,4 +1,4 @@
-import ServerEvent from "../../ServerEvent"
+import ServerEvent from '../../ServerEvent'
 
 /// #if CLIENT
 import altClient from 'alt-client'

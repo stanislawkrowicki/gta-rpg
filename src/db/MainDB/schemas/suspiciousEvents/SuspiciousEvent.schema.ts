@@ -1,7 +1,7 @@
 import typegoose from '@typegoose/typegoose'
-import type {Ref} from '@typegoose/typegoose'
+import type { Ref } from '@typegoose/typegoose'
 import AccountSchema from '../accounts/Account.schema'
-import GameDeviceSchema from "../gameDevices/GameDevice.schema"
+import GameDeviceSchema from '../gameDevices/GameDevice.schema'
 
 const { prop, modelOptions, Severity } = typegoose
 

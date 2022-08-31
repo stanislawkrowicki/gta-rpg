@@ -4,10 +4,10 @@
     export let x = 0
     export let y = 0
 
-    export let message = ""
+    export let message = ''
 </script>
+
+<div class="message" style="left: {x}; top: {y};">{message}</div>
 
 <style>
 </style>
-
-<div class="message" style="left: {x}; top: {y};">{message}</div>

@@ -3,16 +3,16 @@ import ClientEvent from '../shared/events/ClientEvent'
 import RequestLogin from '../shared/events/client/auth/RequestLogin'
 import RequestRegistration from '../shared/events/client/auth/RequestRegistration'
 import Password from './auth/Password'
-import Camera from "./Camera"
-import View from "./View"
-import SetPlayerCameraPos from "../shared/events/client/hub/SetPlayerCameraPos"
-import LocationConfirm from "../shared/events/client/hub/LocationConfirm"
-import Mouse, {MouseMode} from "./input/Mouse"
-import Utils from "../shared/utils/Utils"
+import Camera from './Camera'
+import View from './View'
+import SetPlayerCameraPos from '../shared/events/client/hub/SetPlayerCameraPos'
+import LocationConfirm from '../shared/events/client/hub/LocationConfirm'
+import Mouse, { MouseMode } from './input/Mouse'
+import Utils from '../shared/utils/Utils'
 
 export enum Stage {
     WAITING_FOR_AUTHORIZATION,
-    CHOOSING_LOCATION
+    CHOOSING_LOCATION,
 }
 
 export interface IAvailableLocation {
@@ -96,9 +96,7 @@ export default class Hub {
 
         View.setCamera(this.camera)
 
-        this.webview = new alt.WebView(
-            '/resource/client/webviews/hub/index.html'
-        )
+        this.webview = new alt.WebView('/resource/client/webviews/hub/index.html')
 
         Mouse.setMode(MouseMode.SCREEN_POINTING)
 
@@ -118,9 +116,7 @@ export default class Hub {
 
         this.webview.on('AUTH:REGISTRATION', (username, password) => {
             Password.hashPassword(password, (passwordHash) => {
-                ClientEvent.emit(
-                    new RequestRegistration(username, passwordHash)
-                )
+                ClientEvent.emit(new RequestRegistration(username, passwordHash))
             })
         })
     }
@@ -141,11 +137,7 @@ export default class Hub {
 
         const location = Hub.locations[locationId]
 
-        const spawnPosVector = new alt.Vector3(
-            location.sx,
-            location.sy,
-            location.sz
-        )
+        const spawnPosVector = new alt.Vector3(location.sx, location.sy, location.sz)
 
         ClientEvent.emit(new SetPlayerCameraPos(spawnPosVector))
 
@@ -164,11 +156,7 @@ export default class Hub {
 
     static spawnPlayer(locationId: number) {
         const location = Hub.locations[locationId]
-        const spawnPosVector = new alt.Vector3(
-            location.sx,
-            location.sy,
-            location.sz
-        )
+        const spawnPosVector = new alt.Vector3(location.sx, location.sy, location.sz)
 
         ClientEvent.emit(new LocationConfirm(spawnPosVector))
         Hub.webview.destroy()

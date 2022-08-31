@@ -27,5 +27,5 @@ export const SessionSchema = new Schema(Session, {
     rz: { type: 'number' },
 
     pedCamViewMode: { type: 'number' },
-    vehicleCamViewMode: { type: 'number' }
+    vehicleCamViewMode: { type: 'number' },
 })

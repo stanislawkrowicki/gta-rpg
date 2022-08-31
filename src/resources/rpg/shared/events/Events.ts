@@ -11,41 +11,57 @@ import Event from './Event'
 const Events: any = {
     map: {} as Record<number, Event>,
 
-    readyToUse: false
+    readyToUse: false,
 }
 
 function add(eventModule: any): any {
     return eventModule.default.new()
 }
 
-Events.initialize = (async () => {
+Events.initialize = async () => {
     Events.Server = {
         auth: {
-            Authorize: add(await import('./server/auth/Authorize'))
+            Authorize: add(await import('./server/auth/Authorize')),
         },
         chat: {
             Message: add(await import('./server/chat/Message')),
-            ClientMessage: add(await import('./server/chat/ClientMessage'))
+            ClientMessage: add(await import('./server/chat/ClientMessage')),
         },
         gui: {
-            OkDialog: add(await import('./server/gui/OkDialog'))
+            OkDialog: add(await import('./server/gui/OkDialog')),
         },
         world: {
             markers: {
-                ClientEnterAcknowledgeZone: add(await import('./server/world/markers/ClientEnterAcknowledgeZone')),
-                ClientLeaveAcknowledgeZone: add(await import('./server/world/markers/ClientLeaveAcknowledgeZone'))
+                ClientEnterAcknowledgeZone: add(
+                    await import('./server/world/markers/ClientEnterAcknowledgeZone')
+                ),
+                ClientLeaveAcknowledgeZone: add(
+                    await import('./server/world/markers/ClientLeaveAcknowledgeZone')
+                ),
             },
 
             vehicles: {
-                VehicleEntranceStates: add(await import('./server/world/vehicles/VehicleEntranceStates'))
+                VehicleEntranceStates: add(
+                    await import('./server/world/vehicles/VehicleEntranceStates')
+                ),
             },
 
             vehicleStorehouse: {
-                ClientEnterStorehouseMarker: add(await import('./server/world/vehicles/vehicle_storehouse/ClientEnterStorehouseMarker')),
-                ClientLeaveStorehouseMarker: add(await import('./server/world/vehicles/vehicle_storehouse/ClientLeaveStorehouseMarker')),
-                ClosePanel: add(await import('./server/world/vehicles/vehicle_storehouse/ClosePanel'))
-            }
-        }
+                ClientEnterStorehouseMarker: add(
+                    await import(
+                        './server/world/vehicles/vehicle_storehouse/ClientEnterStorehouseMarker'
+                    )
+                ),
+                ClientLeaveStorehouseMarker: add(
+                    await import(
+                        './server/world/vehicles/vehicle_storehouse/ClientLeaveStorehouseMarker'
+                    )
+                ),
+                ClosePanel: add(
+                    await import('./server/world/vehicles/vehicle_storehouse/ClosePanel')
+                ),
+            },
+        },
     }
 
     Events.Client = {
@@ -55,33 +71,33 @@ Events.initialize = (async () => {
         },
         hub: {
             SetPlayerCameraPos: add(await import('./client/hub/SetPlayerCameraPos')),
-            LocationConfirm: add(await import('./client/hub/LocationConfirm'))
+            LocationConfirm: add(await import('./client/hub/LocationConfirm')),
         },
         chat: {
-            Message: add(await import('./client/chat/Message'))
+            Message: add(await import('./client/chat/Message')),
         },
         world: {
             vehicleStorehouse: {
-                TakeVehicleOut: add(await import('./client/world/vehicles/vehicle_storehouse/TakeVehicleOut'))
-            }
-        }
+                TakeVehicleOut: add(
+                    await import('./client/world/vehicles/vehicle_storehouse/TakeVehicleOut')
+                ),
+            },
+        },
     }
 
     /// #if SERVER
     altServer.onClient((eventId, player, object) => {
-        if((eventId as unknown as number) > Event.ID || (eventId as unknown as number) < 0) {
+        if ((eventId as unknown as number) > Event.ID || (eventId as unknown as number) < 0) {
             return
         }
 
         const handleEvent = Events.map[eventId]
 
-        if(handleEvent) {
+        if (handleEvent) {
             handleEvent(player.getMeta('wrapper'), object)
-        }
-        else {
+        } else {
             altServer.logError('Uninitialized event: ' + eventId)
         }
-
     })
     /// #endif
 
@@ -94,6 +110,6 @@ Events.initialize = (async () => {
     /// #endif
 
     Events.readyToUse = true
-})
+}
 
 export default Events

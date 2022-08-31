@@ -1,14 +1,5 @@
-<svelte:window
-    on:keydown={(event) => {
-        if (event.key === 'ArrowLeft' || event.key === 'a') goPrev()
-        if (event.key === 'ArrowRight' || event.key === 'd') goNext()
-
-        if(event.key === 'Enter') spawn()
-    }}
-></svelte:window>
-
 <script lang="ts">
-    import {createEventDispatcher} from "svelte"
+    import { createEventDispatcher } from 'svelte'
 
     import Carousel from 'svelte-carousel'
 
@@ -22,12 +13,12 @@
     let currentLocation = 0
 
     export let availableLocations: {
-        name: string,
-        sx: number,
-        sy: number,
-        sz: number,
-        cx: number,
-        cy: number,
+        name: string
+        sx: number
+        sy: number
+        sz: number
+        cx: number
+        cy: number
         cz: number
     }[] = []
 
@@ -51,57 +42,71 @@
     }
 </script>
 
-<style lang="scss">
-  .selector {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(40deg, var(--theme-color-a), var(--theme-color-b));
-  }
+<svelte:window
+    on:keydown={(event) => {
+        if (event.key === 'ArrowLeft' || event.key === 'a') goPrev()
+        if (event.key === 'ArrowRight' || event.key === 'd') goNext()
 
-  .carousel {
-    width: 25%;
-  }
+        if (event.key === 'Enter') spawn()
+    }}
+/>
 
-  .location {
-    text-align: center;
-
-    span {
-      color: white;
-      font-family: Roboto, sans-serif;
-      font-size: 42px;
-    }
-  }
-
-  .chevron-wrapper {
-    cursor: pointer;
-    transition: 0.5s;
-
-    &:hover {
-      background-color: hsla(0, 0%, 60%, 50%);
-      box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
-    }
-  }
-</style>
-
-{ #if availableLocations.length > 0 }
+{#if availableLocations.length > 0}
     <div class="selector">
         <div class="chevron-wrapper" on:click={goPrev}>
-            <ChevronLeft color="white" size="4rem"></ChevronLeft>
+            <ChevronLeft color="white" size="4rem" />
         </div>
 
         <div class="carousel" on:click={spawn}>
-            <Carousel bind:this={carousel} on:pageChange={onLocationChange} arrows={false} swiping={false}>
-                { #each availableLocations as location }
+            <Carousel
+                bind:this={carousel}
+                on:pageChange={onLocationChange}
+                arrows={false}
+                swiping={false}
+            >
+                {#each availableLocations as location}
                     <div class="location">
-                        <span>{ location.name }</span>
+                        <span>{location.name}</span>
                     </div>
-                { /each }
+                {/each}
             </Carousel>
         </div>
 
         <div class="chevron-wrapper" on:click={goNext}>
-            <ChevronRight color="white" size="4rem"></ChevronRight>
+            <ChevronRight color="white" size="4rem" />
         </div>
     </div>
-{ /if }
+{/if}
+
+<style lang="scss">
+    .selector {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(40deg, var(--theme-color-a), var(--theme-color-b));
+    }
+
+    .carousel {
+        width: 25%;
+    }
+
+    .location {
+        text-align: center;
+
+        span {
+            color: white;
+            font-family: Roboto, sans-serif;
+            font-size: 42px;
+        }
+    }
+
+    .chevron-wrapper {
+        cursor: pointer;
+        transition: 0.5s;
+
+        &:hover {
+            background-color: hsla(0, 0%, 60%, 50%);
+            box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+        }
+    }
+</style>

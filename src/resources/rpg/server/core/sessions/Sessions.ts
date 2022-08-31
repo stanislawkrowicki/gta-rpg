@@ -1,10 +1,10 @@
 import alt from 'alt-server'
-import type {Repository} from "redis-om"
-import type {Session} from "../../../../../db/QuickAccessDB/schemas/sessions/Session.schema"
-import QuickDB from "../db/QuickDB"
-import {SessionSchema} from "../../../../../db/QuickAccessDB/schemas/sessions/Session.schema"
-import type {Client} from "../../index"
-import Logger from "../logger/Logger"
+import type { Repository } from 'redis-om'
+import type { Session } from '../../../../../db/QuickAccessDB/schemas/sessions/Session.schema'
+import QuickDB from '../db/QuickDB'
+import { SessionSchema } from '../../../../../db/QuickAccessDB/schemas/sessions/Session.schema'
+import type { Client } from '../../index'
+import Logger from '../logger/Logger'
 
 export default class Sessions {
     private static SESSION_SAVE_INTERVAL = 5 * 1000 // TODO: *60 after testing
@@ -31,13 +31,13 @@ export default class Sessions {
         const rotY = altPlayer.rot.y
         const rotZ = altPlayer.rot.z
 
-        Sessions.sessionRepository.search()
+        Sessions.sessionRepository
+            .search()
             .where('clientHwidHash')
             .equals(hwidHash)
             .return.first()
             .then((session) => {
-                if (session === null)
-                    session = Sessions.sessionRepository.createEntity()
+                if (session === null) session = Sessions.sessionRepository.createEntity()
 
                 session.clientHwidHash = hwidHash
 
@@ -65,11 +65,13 @@ export default class Sessions {
     }
 
     static async restoreSessionIfPossible(client: Client) {
-        return Sessions.sessionRepository.search()
+        return Sessions.sessionRepository
+            .search()
             .where('clientHwidHash')
             .equals(client.wrapped.hwidHash)
-            .return.first().then((session) => {
-                if(session === null) return false
+            .return.first()
+            .then((session) => {
+                if (session === null) return false
 
                 client.wrapped.pos = new alt.Vector3(session.x, session.y, session.z)
                 client.wrapped.rot = new alt.Vector3(0, session.ry, session.rz)
@@ -84,9 +86,11 @@ export default class Sessions {
     }
 
     static async checkIfSessionExistsForHwidHash(hwidHash: string) {
-        return Sessions.sessionRepository.search()
+        return Sessions.sessionRepository
+            .search()
             .where('clientHwidHash')
             .equals(hwidHash)
-            .return.first().then((session) => session !== null)
+            .return.first()
+            .then((session) => session !== null)
     }
 }

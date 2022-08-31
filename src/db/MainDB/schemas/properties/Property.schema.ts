@@ -7,13 +7,13 @@ const { prop } = typegoose
 
 enum LockType {
     ELECTRONIC,
-    MECHANICAL
+    MECHANICAL,
 }
 
 class EntranceLockSchema {
     @prop() position: Vector3Schema
 
-    @prop( { enum: LockType }) lockType: LockType
+    @prop({ enum: LockType }) lockType: LockType
 }
 
 class BuildingEntranceSchema {
@@ -29,7 +29,7 @@ class BuildingSchema {
 }
 
 export default class PropertySchema {
-    @prop( { ref: () => AccountSchema }) owners: Ref<AccountSchema>[]
+    @prop({ ref: () => AccountSchema }) owners: Ref<AccountSchema>[]
 
     @prop({ type: () => Vector3Schema }) lotArea: Vector3Schema[]
 

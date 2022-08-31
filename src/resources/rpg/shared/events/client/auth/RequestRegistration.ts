@@ -25,8 +25,11 @@ export default class RequestRegistration extends ClientEvent {
 
     /// #if SERVER
     static onHandle(client: Client, object: RequestRegistration) {
-        if(typeof object.name !== 'string' || typeof object.passwordHash !== 'string' ||
-            object.name.length === 0 || object.name.length > RequestRegistration.MAX_NAME_LENGTH ||
+        if (
+            typeof object.name !== 'string' ||
+            typeof object.passwordHash !== 'string' ||
+            object.name.length === 0 ||
+            object.name.length > RequestRegistration.MAX_NAME_LENGTH ||
             object.passwordHash.length !== 64 ||
             !object.passwordHash
         ) {
@@ -35,22 +38,24 @@ export default class RequestRegistration extends ClientEvent {
 
         const hwidHash = client.wrapped.hwidHash
 
-        MainDB.collections.accounts
-            .findOne({ name: object.name })
-            .then((account) => {
-                if(!account) {
-                    Password.hashClientHashedPassword(object.passwordHash, hwidHash, (finalHash) => {
-                        MainDB.collections.accounts.create(Utils.typeCheck<AccountSchema>({
-                            name: object.name,
-                            passwordHash: finalHash
-                        })).then(() => {
+        MainDB.collections.accounts.findOne({ name: object.name }).then((account) => {
+            if (!account) {
+                Password.hashClientHashedPassword(object.passwordHash, hwidHash, (finalHash) => {
+                    MainDB.collections.accounts
+                        .create(
+                            Utils.typeCheck<AccountSchema>({
+                                name: object.name,
+                                passwordHash: finalHash,
+                            })
+                        )
+                        .then(() => {
                             ServerEvent.emit(client, new Authorize())
                         })
-                    })
-                } else {
-                    ServerEvent.emit(client, new OkDialog("This name is already in use"))
-                }
-            })
+                })
+            } else {
+                ServerEvent.emit(client, new OkDialog('This name is already in use'))
+            }
+        })
     }
     /// #endif
 }

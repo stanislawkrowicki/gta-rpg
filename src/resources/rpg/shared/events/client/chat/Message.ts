@@ -22,8 +22,7 @@ export default class Message extends ClientEvent {
 
     /// #if SERVER
     static onHandle(client: Client, object: Message): void {
-        if (typeof object.message !== 'string')
-            return this.logAsSuspicious(client, Message)
+        if (typeof object.message !== 'string') return this.logAsSuspicious(client, Message)
 
         Logger.chat.logMessage(client, object.message)
 
@@ -35,7 +34,10 @@ export default class Message extends ClientEvent {
                 continue
             }
 
-            const distance = Vector3.getDistanceBetweenTwoVectors(client.wrapped.pos, player.wrapped.pos)
+            const distance = Vector3.getDistanceBetweenTwoVectors(
+                client.wrapped.pos,
+                player.wrapped.pos
+            )
 
             if (distance <= Message.MAX_MESSAGE_DISTANCE)
                 ServerEvent.emit(player, new ClientMessage(client.wrapped.name, object.message))

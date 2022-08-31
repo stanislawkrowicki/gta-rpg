@@ -1,17 +1,15 @@
 /// #if CLIENT
-import Markers from "../../../../client/world/markers/Markers"
+import Markers from '../../../../client/world/markers/Markers'
 /// #endif
 
-import ServerEvent from "../../ServerEvent"
+import ServerEvent from '../../ServerEvent'
 
 export default class Unauthorize extends ServerEvent {
-
     constructor() {
         super()
     }
 
     /// #if CLIENT
-    static onHandle(object: Unauthorize) {
-    }
+    static onHandle(object: Unauthorize) {}
     /// #endif
 }

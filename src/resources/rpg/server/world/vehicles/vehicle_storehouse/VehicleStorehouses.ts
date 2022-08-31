@@ -1,6 +1,6 @@
 import alt from 'alt-server'
-import VehicleStorehouse from "./VehicleStorehouse"
-import {CylinderMarker} from "../../../../shared/world/markers/Markers"
+import VehicleStorehouse from './VehicleStorehouse'
+import { CylinderMarker } from '../../../../shared/world/markers/Markers'
 
 export default [
     new VehicleStorehouse(

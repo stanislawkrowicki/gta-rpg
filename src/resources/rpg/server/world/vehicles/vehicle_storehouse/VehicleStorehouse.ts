@@ -1,13 +1,13 @@
 import alt from 'alt-server'
-import type {Marker} from "../../../../shared/world/markers/Markers"
-import MarkerManager from "../../markers/MarkerManager"
-import type {Client} from "../../../index"
-import MainDB from "../../../core/db/MainDB"
-import type {IStorehousePersonalVehicleData} from "../../../../shared/world/vehicles/VehicleStorehouse"
-import ClientEnterStorehouseMarker from "../../../../shared/events/server/world/vehicles/vehicle_storehouse/ClientEnterStorehouseMarker"
-import ServerEvent from "../../../../shared/events/ServerEvent"
-import Vehicles from "../Vehicles"
-import type Vehicle from "../../Vehicle"
+import type { Marker } from '../../../../shared/world/markers/Markers'
+import MarkerManager from '../../markers/MarkerManager'
+import type { Client } from '../../../index'
+import MainDB from '../../../core/db/MainDB'
+import type { IStorehousePersonalVehicleData } from '../../../../shared/world/vehicles/VehicleStorehouse'
+import ClientEnterStorehouseMarker from '../../../../shared/events/server/world/vehicles/vehicle_storehouse/ClientEnterStorehouseMarker'
+import ServerEvent from '../../../../shared/events/ServerEvent'
+import Vehicles from '../Vehicles'
+import type Vehicle from '../../Vehicle'
 
 export default class VehicleStorehouse {
     ID: number
@@ -20,7 +20,12 @@ export default class VehicleStorehouse {
     panelMarker: Marker
     vehicleLeaveZoneMarkers: Marker[]
 
-    constructor(description: string, panelMarker: Marker, vehicleSpawnColshapes: {x: number, y: number, z: number}[], vehicleLeaveZoneMarkers: Marker[]) {
+    constructor(
+        description: string,
+        panelMarker: Marker,
+        vehicleSpawnColshapes: { x: number; y: number; z: number }[],
+        vehicleLeaveZoneMarkers: Marker[]
+    ) {
         /* All markers passed should not be yet added to MarkerManager, and their onEnter functions will be overwritten. */
         this.description = description
         this.panelMarker = panelMarker
@@ -37,14 +42,19 @@ export default class VehicleStorehouse {
     }
 
     onPlayerPanelMarkerEnter(entity: alt.Entity) {
-        const player = alt.Player.all.find(p => p.id === entity.id) // TODO: this should be taken from World.Clients when its stable
+        const player = alt.Player.all.find((p) => p.id === entity.id) // TODO: this should be taken from World.Clients when its stable
         const wrapper = player.getMeta('wrapper') as Client
 
         if (player.vehicle) return
 
         MainDB.collections.vehicles.find().then((vehicles) => {
-            const playerVehicles: IStorehousePersonalVehicleData[] = vehicles.map(veh => ({id: veh.id, model: veh.model} as IStorehousePersonalVehicleData))
-            ServerEvent.emit(wrapper, new ClientEnterStorehouseMarker(this.ID, this.description, playerVehicles))
+            const playerVehicles: IStorehousePersonalVehicleData[] = vehicles.map(
+                (veh) => ({ id: veh.id, model: veh.model } as IStorehousePersonalVehicleData)
+            )
+            ServerEvent.emit(
+                wrapper,
+                new ClientEnterStorehouseMarker(this.ID, this.description, playerVehicles)
+            )
         })
     }
 

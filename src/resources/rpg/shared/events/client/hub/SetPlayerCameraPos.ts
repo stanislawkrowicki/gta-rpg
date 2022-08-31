@@ -3,7 +3,7 @@ import type { Client } from '../../../../server'
 /// #endif
 
 import ClientEvent from '../../../events/ClientEvent'
-import type altShared from "alt-shared"
+import type altShared from 'alt-shared'
 
 export default class SetPlayerCameraPos extends ClientEvent {
     pos: altShared.Vector3
@@ -15,7 +15,7 @@ export default class SetPlayerCameraPos extends ClientEvent {
 
     /// #if SERVER
     static onHandle(client: Client, object: SetPlayerCameraPos) {
-        if(!object.pos || !object.pos.x || !object.pos.y || !object.pos.z) {
+        if (!object.pos || !object.pos.x || !object.pos.y || !object.pos.z) {
             return this.logAsSuspicious(client, object)
         }
 
