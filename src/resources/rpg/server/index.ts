@@ -19,6 +19,7 @@ import VehicleStorehouse from './world/vehicles/vehicle_storehouse/VehicleStoreh
 import VehicleStorehouseManager from './world/vehicles/vehicle_storehouse/VehicleStorehouseManager'
 import ServerEvent from '../shared/events/ServerEvent'
 import Authorize from '../shared/events/server/auth/Authorize'
+import type GroupMap from './core/permissions/groups/GroupMap'
 
 {
     console.log = alt.log
@@ -57,15 +58,29 @@ class HubCamera {
     }
 }
 
+export class Account {
+    name: string
+    groups: (keyof typeof GroupMap)[] = ['player']
+}
+
 export class Client {
     wrapped: alt.Player
+
+    isLoggedIn = true
+    account: Account
 
     pedCamViewMode = 1 // TODO: this is not being watched
     vehicleCamViewMode = 1
 
     constructor(player: alt.Player) {
         this.wrapped = player
+
+        const acc = new Account()
+        acc.name = player.name // TODO: players should set their name in account settings
+        this.account = acc
+
         this.wrapped.setMeta('wrapper', this)
+
         Clients.push(this)
     }
 }
@@ -149,7 +164,8 @@ alt.on('playerDisconnect', async (player) => {
     for (let i = 0; i < Clients.length; i++) {
         const client = Clients[i]
 
-        if (client === wrapper) {
+        // FIXME: should be checked against whole client instead of just wrapper
+        if (client.wrapped === wrapper.wrapped) {
             Clients.splice(i, 1)
         }
     }
@@ -158,6 +174,7 @@ alt.on('playerDisconnect', async (player) => {
     await Sessions.saveSessionForPlayer(wrapper)
 
     player.deleteMeta('wrapper')
+    player.destroy()
 })
 
 HotReload.startWatching()

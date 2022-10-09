@@ -1,0 +1,78 @@
+import type { Client } from 'rpg/server'
+import Logger from '../logger/Logger'
+import GroupMap from './groups/GroupMap'
+
+export type PermissionsTree = Record<string, boolean | any>
+
+export type TPermissionQuery<T, A extends Array<PropertyKey> = []> = T extends object
+    ? { [K in keyof T]: [...A, K] | TPermissionQuery<T[K], [...A, K]> }[keyof T]
+    : A
+
+export default class Permissions {
+    static DEFAULT_GROUP = GroupMap.player
+
+    private static _isFullyTrue(node: PermissionsTree) {
+        if (typeof node === 'boolean') return node
+
+        const children = Object.getOwnPropertyNames(node)
+
+        for (const child of children) if (!Permissions._isFullyTrue(node[child])) return false
+
+        return true
+    }
+
+    private static _checkPermission(
+        permissionsTree: PermissionsTree,
+        query: string[],
+        currentQueryIndex = 0
+    ): boolean {
+        const queried = query[currentQueryIndex]
+
+        if (typeof queried === 'undefined') return false
+
+        const currentEntry = permissionsTree[queried]
+
+        if (typeof currentEntry === 'undefined') {
+            Logger.logWarn(
+                'permissions',
+                0,
+                `Nonexistent index in query. query: ${query}, current tree: ${JSON.stringify(
+                    permissionsTree
+                )}`
+            )
+            return false
+        } else if (typeof currentEntry === 'boolean') {
+            return currentEntry
+        } else if (currentQueryIndex < query.length - 1) {
+            return Permissions._checkPermission(currentEntry, query, currentQueryIndex + 1)
+        } else if (currentQueryIndex === query.length - 1) {
+            return Permissions._isFullyTrue(currentEntry)
+        }
+    }
+
+    static hasDefaultPermission(
+        client: Client,
+        tree: TPermissionQuery<typeof Permissions.DEFAULT_GROUP.permissionsTree>
+    ) {
+        return Permissions._checkPermission(Permissions.DEFAULT_GROUP.permissionsTree, tree)
+    }
+
+    static queryCheck<T>(tree: TPermissionQuery<T>) {
+        return tree
+    }
+
+    static hasPermissionInGroup(client: Client, group: keyof typeof GroupMap, tree: string[]) {
+        if (!(client.isLoggedIn && client.account)) return false
+
+        if (!Permissions.belongsToGroup(client, group)) return false
+
+        return Permissions._checkPermission(GroupMap[group].permissionsTree, tree)
+    }
+
+    static belongsToGroup(client: Client, group: keyof typeof GroupMap) {
+        if (typeof client.account === 'undefined' || typeof client.account.groups === 'undefined')
+            return false
+
+        return client.account.groups.includes(group)
+    }
+}

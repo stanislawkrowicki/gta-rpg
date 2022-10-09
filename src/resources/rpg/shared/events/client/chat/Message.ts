@@ -3,6 +3,7 @@ import Logger from '../../../../server/core/logger/Logger'
 import ServerEvent from '../../ServerEvent'
 import type { Client } from '../../../../server'
 import { Clients } from '../../../../server'
+import Permissions from 'rpg/server/core/permissions/Permissions'
 /// #endif
 
 import ClientEvent from '../../ClientEvent'
@@ -24,6 +25,9 @@ export default class Message extends ClientEvent {
     static onHandle(client: Client, object: Message): void {
         if (typeof object.message !== 'string') return this.logAsSuspicious(client, Message)
 
+        console.log(client.account)
+
+        console.log(Permissions.hasDefaultPermission(client, ['chat']))
         Logger.chat.logMessage(client, object.message)
 
         for (let i = 0; i < Clients.length; i++) {
