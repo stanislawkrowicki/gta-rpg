@@ -46,6 +46,7 @@ export default class RequestRegistration extends ClientEvent {
                             Utils.typeCheck<AccountSchema>({
                                 name: object.name,
                                 passwordHash: finalHash,
+                                individualPermissions: {},
                             })
                         )
                         .then(() => {

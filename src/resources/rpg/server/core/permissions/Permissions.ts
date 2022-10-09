@@ -9,7 +9,8 @@ export type TPermissionQuery<T, A extends Array<PropertyKey> = []> = T extends o
     : A
 
 export default class Permissions {
-    static DEFAULT_GROUP = GroupMap.player
+    static DEFAULT_GROUP_ID: keyof typeof GroupMap = 'player'
+    static DEFAULT_GROUP = GroupMap[Permissions.DEFAULT_GROUP_ID]
 
     private static _isFullyTrue(node: PermissionsTree) {
         if (typeof node === 'boolean') return node
@@ -24,29 +25,44 @@ export default class Permissions {
     private static _checkPermission(
         permissionsTree: PermissionsTree,
         query: string[],
+        allowUndefined = false,
         currentQueryIndex = 0
-    ): boolean {
+    ): boolean | undefined {
         const queried = query[currentQueryIndex]
 
         if (typeof queried === 'undefined') return false
 
+        if (typeof permissionsTree === 'undefined') {
+            if (allowUndefined) return undefined
+            else {
+                Logger.logError(
+                    'permissions',
+                    `First element of permissionsTree is undefined. Query: ${query}`
+                )
+                return false
+            }
+        }
         const currentEntry = permissionsTree[queried]
 
         if (typeof currentEntry === 'undefined') {
-            Logger.logWarn(
-                'permissions',
-                0,
-                `Nonexistent index in query. query: ${query}, current tree: ${JSON.stringify(
-                    permissionsTree
-                )}`
-            )
-            return false
+            if (allowUndefined) return undefined
+            else {
+                Logger.logWarn(
+                    'permissions',
+                    0,
+                    `Nonexistent index in query. query: ${query}, current tree: ${JSON.stringify(
+                        permissionsTree
+                    )}`
+                )
+                return false
+            }
         } else if (typeof currentEntry === 'boolean') {
             return currentEntry
         } else if (currentQueryIndex < query.length - 1) {
-            return Permissions._checkPermission(currentEntry, query, currentQueryIndex + 1)
+            return Permissions._checkPermission(currentEntry, query, false, currentQueryIndex + 1)
         } else if (currentQueryIndex === query.length - 1) {
-            return Permissions._isFullyTrue(currentEntry)
+            if (allowUndefined) return undefined
+            else return Permissions._isFullyTrue(currentEntry)
         }
     }
 
@@ -54,6 +70,14 @@ export default class Permissions {
         client: Client,
         tree: TPermissionQuery<typeof Permissions.DEFAULT_GROUP.permissionsTree>
     ) {
+        const hasIndividual = Permissions._checkPermission(
+            client.account.individualPermissions[Permissions.DEFAULT_GROUP_ID],
+            tree,
+            true
+        )
+
+        if (typeof hasIndividual === 'boolean') return hasIndividual
+
         return Permissions._checkPermission(Permissions.DEFAULT_GROUP.permissionsTree, tree)
     }
 
@@ -61,12 +85,24 @@ export default class Permissions {
         return tree
     }
 
-    static hasPermissionInGroup(client: Client, group: keyof typeof GroupMap, tree: string[]) {
+    static hasPermissionInGroup(client: Client, group: keyof typeof GroupMap, query: string[]) {
         if (!(client.isLoggedIn && client.account)) return false
 
         if (!Permissions.belongsToGroup(client, group)) return false
 
-        return Permissions._checkPermission(GroupMap[group].permissionsTree, tree)
+        if (client.account.individualPermissions[group]) {
+            const hasIndividual = Permissions._checkPermission(
+                client.account.individualPermissions[group],
+                query,
+                true
+            )
+
+            if (typeof hasIndividual === 'boolean') return hasIndividual
+
+            return Permissions._checkPermission(GroupMap[group].permissionsTree, query)
+        }
+
+        return Permissions._checkPermission(GroupMap[group].permissionsTree, query)
     }
 
     static belongsToGroup(client: Client, group: keyof typeof GroupMap) {

@@ -1,4 +1,5 @@
 import typegoose from '@typegoose/typegoose'
+const { modelOptions, Severity } = typegoose
 import type { Ref } from '@typegoose/typegoose'
 import GroupSchema from '../groups/Group.schema'
 import VehicleSchema from '../vehicles/Vehicle.schema'
@@ -39,12 +40,15 @@ class Owned {
     // @prop({ ref: BuildingSchema }) buildings: BuildingSchema[]
 }
 
+@modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export default class AccountSchema {
     @prop() name: string
     @prop({ maxlength: 319 }) email?: string
     @prop() passwordHash: string
 
     @prop({ ref: () => GroupSchema }) groups?: Ref<GroupSchema>[]
+
+    @prop() individualPermissions: Record<string, any | boolean>
 
     @prop() owned?: Owned
 }
