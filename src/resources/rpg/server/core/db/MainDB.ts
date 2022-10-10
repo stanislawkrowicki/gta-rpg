@@ -10,7 +10,7 @@ import NPCSchema from '../../../../../db/MainDB/schemas/npcs/NPC.schema'
 import GameDeviceSchema from '../../../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
 import { getModelForClass } from '@typegoose/typegoose'
 import SuspiciousEventSchema from '../../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema'
-
+import TemporaryPermissionSchema from '../../../../../db/MainDB/schemas/temporaryPermissions/TemporaryPermission.schema'
 export default class MainDB {
     static NAME = 'rpg'
 
@@ -33,6 +33,7 @@ export default class MainDB {
         vehicles?: mongoose.Model<VehicleSchema>
         //
         // vehicleEquipments?: mongoose.Model<any>
+        temporaryPermissions?: mongoose.Model<TemporaryPermissionSchema>
     } = {}
 
     static connect() {
@@ -89,5 +90,16 @@ export default class MainDB {
         // MainDB.addCollection('VehicleEquipment', VehicleEquipmentSchema, 'vehicleEquipments')
 
         // MainDB.addCollection('NPC', NPCSchema, 'npcs')
+
+        MainDB.collections['temporaryPermissions'] = getModelForClass(TemporaryPermissionSchema, {
+            existingConnection: MainDB.connection,
+            schemaOptions: {
+                versionKey: false,
+                expireAfterSeconds: 0,
+            },
+            options: {
+                customName: 'temporaryPermissions',
+            },
+        })
     }
 }

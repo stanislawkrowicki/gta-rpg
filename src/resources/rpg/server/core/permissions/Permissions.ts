@@ -22,6 +22,15 @@ export default class Permissions {
         return true
     }
 
+    private static _hasTemporaryPermission(
+        temporaryPermissions: Record<string, boolean>,
+        key: string
+    ) {
+        if (typeof temporaryPermissions === 'undefined') return false
+
+        return Object.hasOwn(temporaryPermissions, key)
+    }
+
     private static _checkPermission(
         permissionsTree: PermissionsTree,
         query: string[],
@@ -57,7 +66,12 @@ export default class Permissions {
         } else if (typeof currentEntry === 'boolean') {
             return currentEntry
         } else if (currentQueryIndex < query.length - 1) {
-            return Permissions._checkPermission(currentEntry, query, false, currentQueryIndex + 1)
+            return Permissions._checkPermission(
+                currentEntry,
+                query,
+                allowUndefined,
+                currentQueryIndex + 1
+            )
         } else if (currentQueryIndex === query.length - 1) {
             if (allowUndefined) return undefined
             else return Permissions._isFullyTrue(currentEntry)
@@ -66,17 +80,27 @@ export default class Permissions {
 
     static hasDefaultPermission(
         client: Client,
-        tree: TPermissionQuery<typeof Permissions.DEFAULT_GROUP.permissionsTree>
+        query: TPermissionQuery<typeof Permissions.DEFAULT_GROUP.permissionsTree>
     ) {
+        const temporaryPermissionKey = Permissions.DEFAULT_GROUP_ID + '.' + query.join('.')
+
+        if (
+            Permissions._hasTemporaryPermission(
+                client.account.temporaryPermissions,
+                temporaryPermissionKey
+            )
+        )
+            return client.account.temporaryPermissions[temporaryPermissionKey]
+
         const hasIndividual = Permissions._checkPermission(
             client.account.individualPermissions[Permissions.DEFAULT_GROUP_ID],
-            tree,
+            query,
             true
         )
 
         if (typeof hasIndividual === 'boolean') return hasIndividual
 
-        return Permissions._checkPermission(Permissions.DEFAULT_GROUP.permissionsTree, tree)
+        return Permissions._checkPermission(Permissions.DEFAULT_GROUP.permissionsTree, query)
     }
 
     static queryCheck<T>(tree: TPermissionQuery<T>) {
@@ -87,6 +111,16 @@ export default class Permissions {
         if (!(client.isLoggedIn && client.account)) return false
 
         if (!Permissions.belongsToGroup(client, group)) return false
+
+        const temporaryPermissionKey = group + '.' + query.join('.')
+
+        if (
+            Permissions._hasTemporaryPermission(
+                client.account.temporaryPermissions,
+                temporaryPermissionKey
+            )
+        )
+            return client.account.temporaryPermissions[temporaryPermissionKey]
 
         if (client.account.individualPermissions[group]) {
             const hasIndividual = Permissions._checkPermission(
