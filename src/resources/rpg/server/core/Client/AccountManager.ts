@@ -5,19 +5,15 @@ import Permissions from '../permissions/Permissions'
 import Account from './Account'
 
 export default class AccountManager {
-    static async writeClientAccountMetaFromDB(
-        client: Client,
-        accountId: string,
-        accountDocument: AccountSchema
-    ) {
+    static async writeClientAccountMetaFromDB(client: Client, accountDocument: AccountSchema) {
         const account = new Account()
 
-        account.id = accountId
+        account.id = accountDocument._id
         account.name = accountDocument.name
         account.groups = accountDocument.groups as (keyof typeof GroupMap)[]
         account.individualPermissions = accountDocument.individualPermissions
         account.temporaryPermissions = await Permissions.getTemporaryPermissionsByAccountId(
-            accountId
+            accountDocument._id
         )
 
         client.account = account

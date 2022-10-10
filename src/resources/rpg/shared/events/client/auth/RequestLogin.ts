@@ -39,7 +39,7 @@ export default class RequestLogin extends ClientEvent {
             // if(account && account.passwordHash === finalHash) {
             if (account) {
                 client.isLoggedIn = true
-                AccountManager.writeClientAccountMetaFromDB(client, account.id, account).then()
+                AccountManager.writeClientAccountMetaFromDB(client, account).then()
                 ServerEvent.emit(client, new LocationSelectStage())
             } else {
                 ServerEvent.emit(

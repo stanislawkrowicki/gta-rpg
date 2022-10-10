@@ -41,6 +41,7 @@ class Owned {
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export default class AccountSchema {
+    @prop() _id!: string
     @prop() name: string
     @prop({ maxlength: 319 }) email?: string
     @prop() passwordHash: string
