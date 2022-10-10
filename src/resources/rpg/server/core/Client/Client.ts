@@ -5,7 +5,7 @@ import { Clients } from '../../index'
 export class Client {
     wrapped: alt.Player
 
-    isLoggedIn = true
+    isLoggedIn = false
     account: Account
 
     pedCamViewMode = 1 // TODO: this is not being watched

@@ -38,6 +38,7 @@ export default class RequestLogin extends ClientEvent {
         MainDB.collections.accounts.findOne({ name: object.name }).then((account) => {
             // if(account && account.passwordHash === finalHash) {
             if (account) {
+                client.isLoggedIn = true
                 AccountManager.writeClientAccountMetaFromDB(client, account.id, account).then()
                 ServerEvent.emit(client, new LocationSelectStage())
             } else {
