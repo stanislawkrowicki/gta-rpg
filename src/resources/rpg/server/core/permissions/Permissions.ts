@@ -28,20 +28,18 @@ export default class Permissions {
         allowUndefined = false,
         currentQueryIndex = 0
     ): boolean | undefined {
+        if (typeof permissionsTree === 'undefined') {
+            if (allowUndefined) return undefined
+            else {
+                Logger.logError('permissions', `Permissions tree is undefined. Query: ${query}`)
+                return false
+            }
+        }
+
         const queried = query[currentQueryIndex]
 
         if (typeof queried === 'undefined') return false
 
-        if (typeof permissionsTree === 'undefined') {
-            if (allowUndefined) return undefined
-            else {
-                Logger.logError(
-                    'permissions',
-                    `First element of permissionsTree is undefined. Query: ${query}`
-                )
-                return false
-            }
-        }
         const currentEntry = permissionsTree[queried]
 
         if (typeof currentEntry === 'undefined') {
