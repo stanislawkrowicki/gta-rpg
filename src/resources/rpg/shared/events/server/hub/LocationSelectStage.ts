@@ -4,13 +4,13 @@ import Hub from '../../../../client/Hub'
 
 import ServerEvent from '../../ServerEvent'
 
-export default class Authorize extends ServerEvent {
+export default class LocationSelectStage extends ServerEvent {
     constructor() {
         super()
     }
 
     /// #if CLIENT
-    static onHandle(object: Authorize) {
+    static onHandle(object: LocationSelectStage) {
         Hub.locationSelectStage()
     }
     /// #endif

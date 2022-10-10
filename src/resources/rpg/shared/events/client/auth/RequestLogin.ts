@@ -2,7 +2,7 @@
 import type { Client } from '../../../../server'
 import MainDB from '../../../../server/core/db/MainDB'
 import ServerEvent from '../../ServerEvent'
-import Authorize from '../../server/auth/Authorize'
+import LocationSelectStage from '../../server/hub/LocationSelectStage'
 import OkDialog from '../../server/gui/OkDialog'
 /// #endif
 
@@ -37,7 +37,7 @@ export default class RequestLogin extends ClientEvent {
         MainDB.collections.accounts.findOne({ name: object.name }).then((account) => {
             // if(account && account.passwordHash === finalHash) {
             if (account) {
-                ServerEvent.emit(client, new Authorize())
+                ServerEvent.emit(client, new LocationSelectStage())
             } else {
                 ServerEvent.emit(
                     client,

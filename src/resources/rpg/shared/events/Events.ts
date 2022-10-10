@@ -21,7 +21,7 @@ function add(eventModule: any): any {
 Events.initialize = async () => {
     Events.Server = {
         auth: {
-            Authorize: add(await import('./server/auth/Authorize')),
+            Authorize: add(await import('./server/hub/LocationSelectStage')),
         },
         chat: {
             Message: add(await import('./server/chat/Message')),

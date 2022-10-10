@@ -18,7 +18,7 @@ import { CylinderMarker, Marker } from '../shared/world/markers/Markers'
 import VehicleStorehouse from './world/vehicles/vehicle_storehouse/VehicleStorehouse'
 import VehicleStorehouseManager from './world/vehicles/vehicle_storehouse/VehicleStorehouseManager'
 import ServerEvent from '../shared/events/ServerEvent'
-import Authorize from '../shared/events/server/auth/Authorize'
+import LocationSelectStage from '../shared/events/server/hub/LocationSelectStage'
 import type GroupMap from './core/permissions/groups/GroupMap'
 
 {

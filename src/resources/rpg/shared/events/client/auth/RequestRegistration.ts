@@ -2,7 +2,7 @@
 import type { Client } from '../../../../server'
 import MainDB from '../../../../server/core/db/MainDB'
 import ServerEvent from '../../ServerEvent'
-import Authorize from '../../server/auth/Authorize'
+import LocationSelectStage from '../../server/hub/LocationSelectStage'
 import OkDialog from '../../server/gui/OkDialog'
 import Utils from '../../../utils/Utils'
 import type AccountSchema from '../../../../../../db/MainDB/schemas/accounts/Account.schema'
@@ -50,7 +50,7 @@ export default class RequestRegistration extends ClientEvent {
                             })
                         )
                         .then(() => {
-                            ServerEvent.emit(client, new Authorize())
+                            ServerEvent.emit(client, new LocationSelectStage())
                         })
                 })
             } else {
