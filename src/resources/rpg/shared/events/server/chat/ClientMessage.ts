@@ -18,7 +18,7 @@ export default class ClientMessage extends ServerEvent {
     static onHandle(object: ClientMessage): void {
         Chat.webview.emit('CLIENT_MESSAGE', {
             author: object.author,
-            logMessage: object.message,
+            message: object.message,
         })
     }
     /// #endif

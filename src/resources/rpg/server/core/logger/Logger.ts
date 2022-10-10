@@ -33,6 +33,7 @@ export default class Logger {
     }
 
     // WARNS, ERRORS -> REDIS
+    // TODO: drop arg id
     static logWarn = async (resource: string, id: number, message: string) => {
         /// #if process.env['ENVIRONMENT'] !== 'prod'
         alt.logWarning(`[${resource}][${id}]: ${message}`)
