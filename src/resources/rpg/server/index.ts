@@ -59,6 +59,7 @@ class HubCamera {
 }
 
 export class Account {
+    id: string
     name: string
     groups: (keyof typeof GroupMap)[] = ['player']
     individualPermissions: Record<string, boolean | any>

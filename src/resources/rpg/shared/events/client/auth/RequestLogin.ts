@@ -4,6 +4,7 @@ import MainDB from '../../../../server/core/db/MainDB'
 import ServerEvent from '../../ServerEvent'
 import LocationSelectStage from '../../server/hub/LocationSelectStage'
 import OkDialog from '../../server/gui/OkDialog'
+import AccountManager from 'rpg/server/core/Client/AccountManager'
 /// #endif
 
 import ClientEvent from '../../../events/ClientEvent'
@@ -37,6 +38,7 @@ export default class RequestLogin extends ClientEvent {
         MainDB.collections.accounts.findOne({ name: object.name }).then((account) => {
             // if(account && account.passwordHash === finalHash) {
             if (account) {
+                AccountManager.writeClientAccountMetaFromDB(client, account.id, account).then()
                 ServerEvent.emit(client, new LocationSelectStage())
             } else {
                 ServerEvent.emit(

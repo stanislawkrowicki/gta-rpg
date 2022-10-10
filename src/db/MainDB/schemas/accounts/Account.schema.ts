@@ -1,7 +1,6 @@
 import typegoose from '@typegoose/typegoose'
 const { modelOptions, Severity } = typegoose
 import type { Ref } from '@typegoose/typegoose'
-import GroupSchema from '../groups/Group.schema'
 import VehicleSchema from '../vehicles/Vehicle.schema'
 import PropertySchema from '../properties/Property.schema'
 
@@ -46,7 +45,7 @@ export default class AccountSchema {
     @prop({ maxlength: 319 }) email?: string
     @prop() passwordHash: string
 
-    @prop({ ref: () => GroupSchema }) groups?: Ref<GroupSchema>[]
+    @prop() groups?: string[]
 
     @prop() individualPermissions: Record<string, any | boolean>
 

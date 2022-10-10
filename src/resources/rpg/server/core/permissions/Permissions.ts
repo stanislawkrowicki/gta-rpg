@@ -1,4 +1,5 @@
 import type { Client } from 'rpg/server'
+import MainDB from '../db/MainDB'
 import Logger from '../logger/Logger'
 import GroupMap from './groups/GroupMap'
 
@@ -141,5 +142,19 @@ export default class Permissions {
             return false
 
         return client.account.groups.includes(group)
+    }
+
+    static async getClientTemporaryPermissions(client: Client) {
+        const permissions = await MainDB.collections.temporaryPermissions.find({
+            account: client.account.id,
+        })
+
+        const temporaryPermissionsMap: Record<string, boolean> = {}
+
+        permissions.forEach((permission) => {
+            temporaryPermissionsMap[permission.key] = permission.value
+        })
+
+        return temporaryPermissionsMap
     }
 }

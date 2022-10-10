@@ -1,7 +1,6 @@
 import mongoose from 'mongoose'
 import alt from 'alt-server'
 
-import GroupSchema from '../../../../../db/MainDB/schemas/groups/Group.schema'
 import AccountSchema from '../../../../../db/MainDB/schemas/accounts/Account.schema'
 import PropertySchema from '../../../../../db/MainDB/schemas/properties/Property.schema'
 import VehicleSchema from '../../../../../db/MainDB/schemas/vehicles/Vehicle.schema'
@@ -24,7 +23,6 @@ export default class MainDB {
         gameDevices?: mongoose.Model<GameDeviceSchema>
 
         suspiciousEvents?: mongoose.Model<SuspiciousEventSchema>
-        // groups?: mongoose.Model<any>,
         accounts?: mongoose.Model<AccountSchema>
 
         // sessions?: mongoose.Model<any>,
@@ -80,7 +78,6 @@ export default class MainDB {
         MainDB.addCollection(SuspiciousEventSchema, 'suspiciousEvents')
 
         MainDB.addCollection(VehicleSchema, 'vehicles')
-        // MainDB.addCollection('Group', GroupSchema, 'groups')
         MainDB.addCollection(AccountSchema, 'accounts')
 
         // MainDB.addCollection('Session', SessionSchema, 'sessions')
