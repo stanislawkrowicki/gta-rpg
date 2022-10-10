@@ -1,7 +1,7 @@
 /// #if SERVER
 import Logger from '../../../../server/core/logger/Logger'
 import ServerEvent from '../../ServerEvent'
-import type { Client } from '../../../../server'
+import type { Client } from 'rpg/server/core/client/Client'
 import { Clients } from '../../../../server'
 /// #endif
 

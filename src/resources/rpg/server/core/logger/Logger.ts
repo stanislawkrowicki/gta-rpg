@@ -13,7 +13,7 @@ import {
 import type Event from '../../../shared/events/Event'
 import type SuspiciousEventSchema from '../../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema'
 import Utils from '../../../shared/utils/Utils'
-import type { Client } from '../../index'
+import type { Client } from '../client/Client'
 
 const logQueue = 'logs'
 

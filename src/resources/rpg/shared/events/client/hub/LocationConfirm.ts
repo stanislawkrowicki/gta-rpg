@@ -1,5 +1,5 @@
 /// #if SERVER
-import type { Client } from '../../../../server'
+import type { Client } from 'rpg/server/core/client/Client'
 import altServer from 'alt-server'
 /// #endif
 

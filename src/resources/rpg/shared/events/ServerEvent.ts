@@ -1,6 +1,6 @@
 /// #if SERVER
 import altServer from 'alt-server'
-import type { Client } from '../../server'
+import type { Client } from '../../server/core/client/Client'
 /// #endif
 
 import Event, { EventType } from './Event'

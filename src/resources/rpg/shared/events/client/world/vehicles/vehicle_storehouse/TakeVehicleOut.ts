@@ -1,6 +1,6 @@
 /// #if SERVER
 import Logger from '../../../../../../server/core/logger/Logger'
-import type { Client } from '../../../../../../server'
+import type { Client } from 'rpg/server/core/client/Client'
 import VehicleStorehouseManager from '../../../../../../server/world/vehicles/vehicle_storehouse/VehicleStorehouseManager'
 /// #endif
 

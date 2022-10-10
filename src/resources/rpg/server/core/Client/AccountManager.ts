@@ -1,7 +1,8 @@
-import { Account, type Client } from 'rpg/server'
+import type { Client } from './Client'
 import type AccountSchema from '../../../../../db/MainDB/schemas/accounts/Account.schema'
 import type GroupMap from '../permissions/groups/GroupMap'
 import Permissions from '../permissions/Permissions'
+import Account from './Account'
 
 export default class AccountManager {
     static async writeClientAccountMetaFromDB(
@@ -15,7 +16,9 @@ export default class AccountManager {
         account.name = accountDocument.name
         account.groups = accountDocument.groups as (keyof typeof GroupMap)[]
         account.individualPermissions = accountDocument.individualPermissions
-        account.temporaryPermissions = await Permissions.getClientTemporaryPermissions(client)
+        account.temporaryPermissions = await Permissions.getTemporaryPermissionsByAccountId(
+            accountId
+        )
 
         client.account = account
     }

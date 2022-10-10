@@ -1,7 +1,7 @@
 /// #if SERVER
 import type altServer from 'alt-server'
 import Logger from '../../../../server/core/logger/Logger'
-import type { Client } from '../../../../server'
+import type { Client } from 'rpg/server/core/client/Client'
 /// #endif
 
 import ClientEvent from '../../../events/ClientEvent'

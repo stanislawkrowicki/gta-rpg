@@ -3,7 +3,7 @@ import altServer from 'alt-server'
 import ServerEvent from '../../events/ServerEvent'
 import ClientEnterAcknowledgeZone from '../../events/server/world/markers/ClientEnterAcknowledgeZone'
 import ClientLeaveAcknowledgeZone from '../../events/server/world/markers/ClientLeaveAcknowledgeZone'
-import type { Client } from '../../../server'
+import type { Client } from 'rpg/server/core/client/Client'
 /// #endif
 
 import type altShared from 'alt-shared'

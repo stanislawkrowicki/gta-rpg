@@ -1,6 +1,6 @@
 import type VehicleStorehouse from './VehicleStorehouse'
 import VehicleStorehouses from './VehicleStorehouses'
-import type { Client } from '../../../index'
+import type { Client } from '../../../core/client/Client'
 import Logger from '../../../core/logger/Logger'
 import Vehicles from '../Vehicles'
 import alt from 'alt-server'

@@ -18,8 +18,7 @@ import { CylinderMarker, Marker } from '../shared/world/markers/Markers'
 import VehicleStorehouse from './world/vehicles/vehicle_storehouse/VehicleStorehouse'
 import VehicleStorehouseManager from './world/vehicles/vehicle_storehouse/VehicleStorehouseManager'
 import ServerEvent from '../shared/events/ServerEvent'
-import LocationSelectStage from '../shared/events/server/hub/LocationSelectStage'
-import type GroupMap from './core/permissions/groups/GroupMap'
+import { Client } from './core/client/Client'
 
 {
     console.log = alt.log
@@ -55,36 +54,6 @@ class HubCamera {
     static transitionDelta = 0
     static update() {
         // TODO: linear interpolation(with sin, cos), transition between waypoints, goal detection
-    }
-}
-
-export class Account {
-    id: string
-    name: string
-    groups: (keyof typeof GroupMap)[] = ['player']
-    individualPermissions: Record<string, boolean | any>
-    temporaryPermissions: Record<string, boolean>
-}
-
-export class Client {
-    wrapped: alt.Player
-
-    isLoggedIn = true
-    account: Account
-
-    pedCamViewMode = 1 // TODO: this is not being watched
-    vehicleCamViewMode = 1
-
-    constructor(player: alt.Player) {
-        this.wrapped = player
-
-        const acc = new Account()
-        acc.name = player.name // TODO: players should set their name in account settings
-        this.account = acc
-
-        this.wrapped.setMeta('wrapper', this)
-
-        Clients.push(this)
     }
 }
 

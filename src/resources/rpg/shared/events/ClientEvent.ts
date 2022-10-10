@@ -1,5 +1,5 @@
 /// #if SERVER
-import type { Client } from '../../server'
+import type { Client } from '../../server/core/client/Client'
 import Logger from '../../server/core/logger/Logger'
 /// #endif
 

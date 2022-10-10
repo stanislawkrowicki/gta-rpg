@@ -3,7 +3,7 @@ import type { Repository } from 'redis-om'
 import type { Session } from '../../../../../db/QuickAccessDB/schemas/sessions/Session.schema'
 import QuickDB from '../db/QuickDB'
 import { SessionSchema } from '../../../../../db/QuickAccessDB/schemas/sessions/Session.schema'
-import type { Client } from '../../index'
+import type { Client } from '../client/Client'
 import Logger from '../logger/Logger'
 
 export default class Sessions {

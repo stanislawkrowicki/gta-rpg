@@ -1,10 +1,10 @@
 /// #if SERVER
-import type { Client } from '../../../../server'
+import type { Client } from 'rpg/server/core/client/Client'
 import MainDB from '../../../../server/core/db/MainDB'
 import ServerEvent from '../../ServerEvent'
 import LocationSelectStage from '../../server/hub/LocationSelectStage'
 import OkDialog from '../../server/gui/OkDialog'
-import AccountManager from 'rpg/server/core/Client/AccountManager'
+import AccountManager from 'rpg/server/core/client/AccountManager'
 /// #endif
 
 import ClientEvent from '../../../events/ClientEvent'
