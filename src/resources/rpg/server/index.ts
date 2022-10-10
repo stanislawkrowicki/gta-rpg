@@ -59,7 +59,7 @@ class HubCamera {
 
 export const Clients: Client[] = []
 
-const populateClientsAfterRestart = () => {
+const populateClientsAfterResourceRestart = () => {
     const players = alt.Player.all
 
     if (!(players.length > Clients.length)) return
@@ -184,4 +184,4 @@ MarkerManager.add(
 
 VehicleStorehouseManager.initialize()
 
-populateClientsAfterRestart()
+populateClientsAfterResourceRestart()
