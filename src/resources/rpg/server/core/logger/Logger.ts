@@ -33,16 +33,14 @@ export default class Logger {
     }
 
     // WARNS, ERRORS -> REDIS
-    // TODO: drop arg id
-    static logWarn = async (resource: string, id: number, message: string) => {
+    static logWarn = async (resource: string, message: string) => {
         /// #if process.env['ENVIRONMENT'] !== 'prod'
-        alt.logWarning(`[${resource}][${id}]: ${message}`)
+        alt.logWarning(`[${resource}]: ${message}`)
         /// #endif
 
         const warn = Logger.warnRepository.createEntity()
 
         warn.resource = resource
-        warn.id = id
         warn.message = message
 
         await Logger.warnRepository.save(warn)

@@ -56,7 +56,6 @@ export default class Permissions {
             else {
                 Logger.logWarn(
                     'permissions',
-                    0,
                     `Nonexistent index in query. query: ${query}, current tree: ${JSON.stringify(
                         permissionsTree
                     )}`
