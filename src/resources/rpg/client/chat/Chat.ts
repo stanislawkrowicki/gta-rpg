@@ -6,6 +6,7 @@ import ClientEvent from '../../shared/events/ClientEvent'
 export default class Chat {
     static webview: alt.WebView
     static controlAction: number
+    static isInitialized = false
 
     static initialize() {
         this.webview = new alt.WebView('/resource/client/webviews/chat/index.html')
@@ -32,5 +33,7 @@ export default class Chat {
         this.webview.on('MESSAGE', (message: string) => {
             ClientEvent.emit(new Message(message))
         })
+
+        this.isInitialized = true
     }
 }

@@ -77,7 +77,7 @@ class Interactivities {
 alt.on('spawned', () => {
     game.setPedDefaultComponentVariation(alt.Player.local.scriptID)
 
-    Chat.initialize()
+    if (!Chat.isInitialized) Chat.initialize()
 })
 
 // alt.onServer('GAME:LOGIN_PANEL:SHOW', async () => {
