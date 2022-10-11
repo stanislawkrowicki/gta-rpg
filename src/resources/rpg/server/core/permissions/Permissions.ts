@@ -10,6 +10,16 @@ export type TPermissionQuery<T, A extends Array<PropertyKey> = []> = T extends o
     ? { [K in keyof T]: [...A, K] | TPermissionQuery<T[K], [...A, K]> }[keyof T]
     : A
 
+export class RequiredPermission {
+    group: keyof typeof GroupMap
+    query: string[]
+
+    constructor(group: keyof typeof GroupMap, query: string[]) {
+        this.group = group
+        this.query = query
+    }
+}
+
 export default class Permissions {
     static DEFAULT_GROUP_ID: keyof typeof GroupMap = 'player'
     static DEFAULT_GROUP = GroupMap[Permissions.DEFAULT_GROUP_ID]
@@ -161,5 +171,13 @@ export default class Permissions {
         })
 
         return temporaryPermissionsMap
+    }
+
+    static hasRequiredPermission(client: Client, requiredPermission: RequiredPermission) {
+        return Permissions.hasPermissionInGroup(
+            client,
+            requiredPermission.group,
+            requiredPermission.query
+        )
     }
 }
