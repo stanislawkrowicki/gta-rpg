@@ -20,6 +20,7 @@
     const onKeyPress = (e: KeyboardEvent): void => {
         if (e.key === 'Escape') {
             dispatch('unfocus')
+            shouldAllowTyping = false
             return
         }
 
@@ -29,7 +30,10 @@
             return
         }
 
-        if (e.key === 'Enter') send()
+        if (e.key === 'Enter') {
+            send()
+            shouldAllowTyping = false
+        }
     }
 
     const send = () => {
