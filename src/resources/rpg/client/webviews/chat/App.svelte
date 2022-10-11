@@ -2,6 +2,9 @@
     import Message from './Message.svelte'
     import Input from './Input.svelte'
 
+    import type { ICommandDefinition } from 'rpg/shared/commands/Commands'
+    import CommandsDropdown from './CommandsDropdown.svelte'
+
     interface IMessage {
         author: string
         message: string
@@ -10,6 +13,7 @@
     const MAX_MESSAGES = 15
 
     let messages: IMessage[] = []
+    let commands: ICommandDefinition[] = []
     let inputComponent: Input
 
     const handleMessage = (messageEvent: { detail: string }) => {
@@ -29,6 +33,7 @@
     const unfocus = () => {
         inputComponent.unfocus()
         alt.emit('UNFOCUS')
+        commands = []
     }
 
     alt.on('FOCUS', () => {
@@ -37,6 +42,10 @@
 
     alt.on('CLIENT_MESSAGE', (obj) => {
         messages = [...messages, { author: obj.author, message: obj.message }].slice(-MAX_MESSAGES)
+    })
+
+    alt.on('PERMITTED_COMMANDS', (permittedCommands: ICommandDefinition[]) => {
+        commands = permittedCommands
     })
 </script>
 
@@ -55,5 +64,9 @@
 
     <div class="message-input">
         <Input bind:this={inputComponent} on:input={handleMessage} on:unfocus={unfocus} />
+    </div>
+
+    <div class="commands-dropdown">
+        <CommandsDropdown {commands} />
     </div>
 </div>
