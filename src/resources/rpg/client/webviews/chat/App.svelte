@@ -14,6 +14,7 @@
 
     let messages: IMessage[] = []
     let commands: ICommandDefinition[] = []
+    let filteredCommands: ICommandDefinition[] = []
     let inputComponent: Input
 
     let isInCommandMode = false
@@ -42,6 +43,20 @@
         isInCommandMode = toggleEvent.detail
     }
 
+    const onInputChange = (changeEvent: { detail: string }) => {
+        // changeEvent is current text in input
+        if (!isInCommandMode) return
+
+        let currentCommand = changeEvent.detail.replace('/', '')
+
+        if (currentCommand === '') {
+            filteredCommands = commands
+            return
+        }
+
+        filteredCommands = commands.filter((command) => command.name.startsWith(currentCommand))
+    }
+
     const focus = () => {
         inputComponent.focus()
     }
@@ -63,6 +78,7 @@
 
     alt.on('PERMITTED_COMMANDS', (permittedCommands: ICommandDefinition[]) => {
         commands = permittedCommands
+        filteredCommands = permittedCommands
     })
 </script>
 
@@ -84,13 +100,14 @@
             bind:this={inputComponent}
             on:input={handleMessage}
             on:toggleCommandMode={toggleCommandMode}
+            on:keyPress={onInputChange}
             on:unfocus={unfocus}
         />
     </div>
 
     {#if isInCommandMode}
         <div class="commands-dropdown">
-            <CommandPalette {commands} />
+            <CommandPalette commands={filteredCommands} />
         </div>
     {/if}
 </div>
