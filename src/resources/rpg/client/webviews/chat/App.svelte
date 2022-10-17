@@ -30,6 +30,7 @@
             const commandArgs = commandInvocation.slice(1)
 
             alt.emit('COMMAND', commandName, commandArgs)
+            isInCommandMode = false
             return
         }
 
