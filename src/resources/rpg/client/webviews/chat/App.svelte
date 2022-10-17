@@ -16,6 +16,8 @@
     let commands: ICommandDefinition[] = []
     let inputComponent: Input
 
+    let isInCommandMode = false
+
     const handleMessage = (messageEvent: { detail: string }) => {
         if (messageEvent.detail === '') {
             unfocus()
@@ -24,6 +26,10 @@
 
         alt.emit('MESSAGE', messageEvent.detail)
         unfocus()
+    }
+
+    const toggleCommandMode = (toggleEvent: { detail: boolean }) => {
+        isInCommandMode = toggleEvent.detail
     }
 
     const focus = () => {
@@ -63,10 +69,17 @@
     </div>
 
     <div class="message-input">
-        <Input bind:this={inputComponent} on:input={handleMessage} on:unfocus={unfocus} />
+        <Input
+            bind:this={inputComponent}
+            on:input={handleMessage}
+            on:toggleCommandMode={toggleCommandMode}
+            on:unfocus={unfocus}
+        />
     </div>
 
-    <div class="commands-dropdown">
-        <CommandPalette {commands} />
-    </div>
+    {#if isInCommandMode}
+        <div class="commands-dropdown">
+            <CommandPalette {commands} />
+        </div>
+    {/if}
 </div>

@@ -34,6 +34,14 @@
             send()
             shouldAllowTyping = false
         }
+
+        if (e.key === '/') {
+            dispatch('toggleCommandMode', true)
+        }
+
+        if (e.key === 'Backspace') {
+            if (message.at(-1) === '/') dispatch('toggleCommandMode', false)
+        }
     }
 
     const send = () => {
