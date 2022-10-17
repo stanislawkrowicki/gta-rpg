@@ -47,7 +47,13 @@
         // changeEvent is current text in input
         if (!isInCommandMode) return
 
-        let currentCommand = changeEvent.detail.replace('/', '')
+        const currentCommand = changeEvent.detail.replace('/', '').split(' ')[0]
+
+        const exactCommand = commands.find((command) => command.name === currentCommand)
+        if (exactCommand) {
+            filteredCommands = [exactCommand]
+            return
+        }
 
         if (currentCommand === '') {
             filteredCommands = commands
