@@ -3,7 +3,7 @@
     import Input from './Input.svelte'
 
     import type { ICommandDefinition } from 'rpg/shared/commands/Commands'
-    import CommandsDropdown from './CommandsDropdown.svelte'
+    import CommandPalette from './CommandPalette.svelte'
 
     interface IMessage {
         author: string
@@ -67,6 +67,6 @@
     </div>
 
     <div class="commands-dropdown">
-        <CommandsDropdown {commands} />
+        <CommandPalette {commands} />
     </div>
 </div>
