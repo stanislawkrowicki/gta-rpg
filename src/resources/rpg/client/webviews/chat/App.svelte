@@ -50,6 +50,7 @@
         inputComponent.unfocus()
         alt.emit('UNFOCUS')
         commands = []
+        isInCommandMode = false
     }
 
     alt.on('FOCUS', () => {
