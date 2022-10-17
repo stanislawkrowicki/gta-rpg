@@ -32,6 +32,7 @@
 
             alt.emit('COMMAND', commandName, commandArgs)
             isInCommandMode = false
+            unfocus()
             return
         }
 
