@@ -15,6 +15,7 @@
 
     export function unfocus() {
         inputField.blur()
+        message = ''
     }
 
     const onKeyPress = (e: KeyboardEvent): void => {
