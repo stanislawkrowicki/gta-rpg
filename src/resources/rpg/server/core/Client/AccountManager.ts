@@ -10,14 +10,9 @@ export default class AccountManager {
 
         account.id = accountDocument._id
         account.name = accountDocument.name
-        account.groups = []
 
-        // For some reason, Mongo returns this array as object? like {"0": "player"}
-        if (accountDocument.groups)
-            accountDocument.groups.forEach((group: keyof typeof GroupMap) => {
-                if (!account.groups.includes(group)) account.groups.push(group)
-            })
-
+        // Mongoose returns a pseudo-array, so we need to convert it to an array
+        account.groups = Array.from(accountDocument.groups) as (keyof typeof GroupMap)[]
         account.individualPermissions = accountDocument.individualPermissions
         account.temporaryPermissions = await Permissions.getTemporaryPermissionsByAccountId(
             accountDocument._id
