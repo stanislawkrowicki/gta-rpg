@@ -115,7 +115,7 @@ export default class Permissions {
     }
 
     static queryCheck<T>(tree: TPermissionQuery<T>) {
-        return tree
+        return tree as string[]
     }
 
     static hasPermissionInGroup(client: Client, group: keyof typeof GroupMap, query: string[]) {

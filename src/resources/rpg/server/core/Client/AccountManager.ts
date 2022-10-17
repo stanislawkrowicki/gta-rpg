@@ -10,12 +10,22 @@ export default class AccountManager {
 
         account.id = accountDocument._id
         account.name = accountDocument.name
-        account.groups = accountDocument.groups as (keyof typeof GroupMap)[]
+        account.groups = []
+
+        // For some reason, Mongo returns this array as object? like {"0": "player"}
+        if (accountDocument.groups)
+            accountDocument.groups.forEach((group: keyof typeof GroupMap) => {
+                if (!account.groups.includes(group)) account.groups.push(group)
+            })
+
         account.individualPermissions = accountDocument.individualPermissions
         account.temporaryPermissions = await Permissions.getTemporaryPermissionsByAccountId(
             accountDocument._id
         )
 
-        client.account = account
+        if (!account.groups.includes(Permissions.DEFAULT_GROUP_ID))
+            account.groups.push(Permissions.DEFAULT_GROUP_ID)
+
+        client.wrapped.setMeta('wrapper', Object.assign(client, { account: account }))
     }
 }

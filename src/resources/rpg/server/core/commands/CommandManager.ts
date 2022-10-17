@@ -1,6 +1,8 @@
 import type { Client } from '../client/Client'
 import Logger from '../logger/Logger'
 import type { ICommandDefinition, ICommand } from 'rpg/shared/commands/Commands'
+import Permissions, { RequiredPermission } from '../permissions/Permissions'
+import type GroupMap from '../permissions/groups/GroupMap'
 
 export default class CommandManager {
     static commandsMap: Record<string, ICommand> = {}
@@ -42,5 +44,9 @@ CommandManager.registerCommand({
     callback: (client: Client, ...args: any) => {
         console.log('echo2', ...args)
     },
-    description: 'Również odpowiada tym samym',
+    description: 'Również odpowiada tym samym, ale wymaga permisji',
+    requiredPermission: new RequiredPermission(
+        'player',
+        Permissions.queryCheck<typeof GroupMap.player.permissionsTree>(['chat', 'message'])
+    ),
 })

@@ -270,4 +270,23 @@ export default class Logger {
             )
         },
     }
+
+    static commands = {
+        logChatCommand: (client: Client, commandName: string, commandArgs: string[]) => {
+            Logger.qChannel.sendToQueue(
+                logQueue,
+                Buffer.from(
+                    JSON.stringify({
+                        type: 'commands.chatCommand',
+                        username: client.wrapped.name,
+                        hwidHash: client.wrapped.hwidHash,
+                        hwidExHash: client.wrapped.hwidExHash,
+                        commandName: commandName,
+                        commandArgs: commandArgs,
+                        timestamp: Date.now(),
+                    })
+                )
+            )
+        },
+    }
 }

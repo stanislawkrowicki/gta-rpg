@@ -22,6 +22,7 @@ export default class Message extends ClientEvent {
 
     /// #if SERVER
     static onHandle(client: Client, object: Message): void {
+        // TODO: Shouldn't second arg be object instead of Message?
         if (typeof object.message !== 'string') return this.logAsSuspicious(client, Message)
 
         Logger.chat.logMessage(client, object.message)

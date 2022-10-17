@@ -77,6 +77,7 @@ Events.initialize = async () => {
         chat: {
             Message: add(await import('./client/chat/Message')),
             RequestPermittedCommands: add(await import('./client/chat/RequestPermittedCommands')),
+            ChatCommand: add(await import('./client/chat/ChatCommand')),
         },
         world: {
             vehicleStorehouse: {

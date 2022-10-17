@@ -1,6 +1,7 @@
 import alt from 'alt-client'
 import native from 'natives'
 import type { ICommandDefinition } from 'rpg/shared/commands/Commands'
+import ChatCommand from 'rpg/shared/events/client/chat/ChatCommand'
 import RequestPermittedCommands from 'rpg/shared/events/client/chat/RequestPermittedCommands'
 import Message from '../../shared/events/client/chat/Message'
 import ClientEvent from '../../shared/events/ClientEvent'
@@ -42,6 +43,10 @@ export default class Chat {
 
         this.webview.on('MESSAGE', (message: string) => {
             ClientEvent.emit(new Message(message))
+        })
+
+        this.webview.on('COMMAND', (commandName: string, commandArgs: string[]) => {
+            ClientEvent.emit(new ChatCommand(commandName, commandArgs))
         })
 
         this.isInitialized = true

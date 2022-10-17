@@ -22,10 +22,14 @@ export default class Commands {
     }
 
     static canUseCommand(client: Client, command: ICommand) {
+        if (typeof command.requiredPermission === 'undefined') return true
+
         return Permissions.hasRequiredPermission(client, command.requiredPermission)
     }
 
     static canUseCommandByDefinition(client: Client, definition: ICommandDefinition) {
+        if (typeof definition.requiredPermission === 'undefined') return true
+
         return Permissions.hasRequiredPermission(client, definition.requiredPermission)
     }
 
@@ -38,9 +42,10 @@ export default class Commands {
             return
         }
 
-        return Permissions.hasRequiredPermission(
-            client,
-            CommandManager.commandsMap[commandName].requiredPermission
-        )
+        const requiredPermission = CommandManager.commandsMap[commandName].requiredPermission
+
+        if (typeof requiredPermission === 'undefined') return true
+
+        return Permissions.hasRequiredPermission(client, requiredPermission)
     }
 }

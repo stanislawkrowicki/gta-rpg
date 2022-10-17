@@ -24,6 +24,15 @@
             return
         }
 
+        if (isInCommandMode && messageEvent.detail[0] === '/') {
+            const commandInvocation = messageEvent.detail.split(' ')
+            const commandName = commandInvocation[0].replace('/', '')
+            const commandArgs = commandInvocation.slice(1)
+
+            alt.emit('COMMAND', commandName, commandArgs)
+            return
+        }
+
         alt.emit('MESSAGE', messageEvent.detail)
         unfocus()
     }
