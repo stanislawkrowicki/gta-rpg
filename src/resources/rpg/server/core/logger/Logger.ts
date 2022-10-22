@@ -17,6 +17,11 @@ import type { Client } from '../client/Client'
 
 const logQueue = 'logs'
 
+interface ILog {
+    type: string
+    [x: string]: any
+}
+
 export default class Logger {
     private static qChannel: Channel
 
@@ -113,6 +118,10 @@ export default class Logger {
             })
     }
 
+    private static publishLog(obj: ILog) {
+        Logger.qChannel.sendToQueue(logQueue, Buffer.from(JSON.stringify(obj)))
+    }
+
     // NORMAL LOGS -> RABBIT -> ELASTIC
     static connection = {
         logDisconnection: (client: Client) => {
@@ -127,166 +136,121 @@ export default class Logger {
             const posY = altPlayer.pos.y
             const posZ = altPlayer.pos.z
 
-            Logger.qChannel.sendToQueue(
-                logQueue,
-                Buffer.from(
-                    JSON.stringify({
-                        type: 'connection.disconnection',
-                        username: username,
-                        hwidHash: hwidHash,
-                        hwidExHash: hwidExHash,
-                        ip: ip,
-                        x: posX,
-                        y: posY,
-                        z: posZ,
-                        timestamp: Date.now(),
-                    })
-                )
-            )
+            Logger.publishLog({
+                type: 'connection.disconnection',
+                username: username,
+                hwidHash: hwidHash,
+                hwidExHash: hwidExHash,
+                ip: ip,
+                x: posX,
+                y: posY,
+                z: posZ,
+                timestamp: Date.now(),
+            })
         },
     }
 
     static auth = {
         login: {
             logSuccess: (client: Client) => {
-                Logger.qChannel.sendToQueue(
-                    logQueue,
-                    Buffer.from(
-                        JSON.stringify({
-                            type: 'auth.login.success',
-                            username: client.wrapped.name,
-                            hwidHash: client.wrapped.hwidHash,
-                            hwidExHash: client.wrapped.hwidExHash,
-                            ip: client.wrapped.ip,
-                            timestamp: Date.now(),
-                        })
-                    )
-                )
+                Logger.publishLog({
+                    type: 'auth.login.success',
+                    username: client.wrapped.name,
+                    hwidHash: client.wrapped.hwidHash,
+                    hwidExHash: client.wrapped.hwidExHash,
+                    ip: client.wrapped.ip,
+                    timestamp: Date.now(),
+                })
             },
 
             logRestoration: (client: Client) => {
-                Logger.qChannel.sendToQueue(
-                    logQueue,
-                    Buffer.from(
-                        JSON.stringify({
-                            type: 'auth.login.restoration',
-                            username: client.wrapped.name,
-                            hwidHash: client.wrapped.hwidHash,
-                            hwidExHash: client.wrapped.hwidExHash,
-                            ip: client.wrapped.ip,
-                            timestamp: Date.now(),
-                        })
-                    )
-                )
+                Logger.publishLog({
+                    type: 'auth.login.restoration',
+                    username: client.wrapped.name,
+                    hwidHash: client.wrapped.hwidHash,
+                    hwidExHash: client.wrapped.hwidExHash,
+                    ip: client.wrapped.ip,
+                    timestamp: Date.now(),
+                })
             },
 
             logError: (client: Client, tryCount: number) => {
-                Logger.qChannel.sendToQueue(
-                    logQueue,
-                    Buffer.from(
-                        JSON.stringify({
-                            type: 'auth.login.error',
-                            username: client.wrapped.name,
-                            hwidHash: client.wrapped.hwidHash,
-                            hwidExHash: client.wrapped.hwidExHash,
-                            ip: client.wrapped.ip,
-                            tryCount: tryCount,
-                            timestamp: Date.now(),
-                        })
-                    )
-                )
+                Logger.publishLog({
+                    type: 'auth.login.error',
+                    username: client.wrapped.name,
+                    hwidHash: client.wrapped.hwidHash,
+                    hwidExHash: client.wrapped.hwidExHash,
+                    ip: client.wrapped.ip,
+                    tryCount: tryCount,
+                    timestamp: Date.now(),
+                })
             },
         },
 
         register: {
             logSuccess: (client: Client) => {
-                Logger.qChannel.sendToQueue(
-                    logQueue,
-                    Buffer.from(
-                        JSON.stringify({
-                            type: 'auth.register.success',
-                            username: client.wrapped.name,
-                            hwidHash: client.wrapped.hwidHash,
-                            hwidExHash: client.wrapped.hwidExHash,
-                            ip: client.wrapped.ip,
-                            timestamp: Date.now(),
-                        })
-                    )
-                )
+                Logger.publishLog({
+                    type: 'auth.register.success',
+                    username: client.wrapped.name,
+                    hwidHash: client.wrapped.hwidHash,
+                    hwidExHash: client.wrapped.hwidExHash,
+                    ip: client.wrapped.ip,
+                    timestamp: Date.now(),
+                })
             },
 
             logError: (client: Client) => {
-                Logger.qChannel.sendToQueue(
-                    logQueue,
-                    Buffer.from(
-                        JSON.stringify({
-                            type: 'auth.register.error',
-                            username: client.wrapped.name,
-                            hwidHash: client.wrapped.hwidHash,
-                            hwidExHash: client.wrapped.hwidExHash,
-                            ip: client.wrapped.ip,
-                            timestamp: Date.now(),
-                        })
-                    )
-                )
+                Logger.publishLog({
+                    type: 'auth.register.error',
+                    username: client.wrapped.name,
+                    hwidHash: client.wrapped.hwidHash,
+                    hwidExHash: client.wrapped.hwidExHash,
+                    ip: client.wrapped.ip,
+                    timestamp: Date.now(),
+                })
             },
         },
     }
 
     static chat = {
         logMessage: (client: Client, message: string) => {
-            Logger.qChannel.sendToQueue(
-                logQueue,
-                Buffer.from(
-                    JSON.stringify({
-                        type: 'chat.message',
-                        username: client.wrapped.name,
-                        hwidHash: client.wrapped.hwidHash,
-                        hwidExHash: client.wrapped.hwidExHash,
-                        message: message,
-                        posX: client.wrapped.pos.x,
-                        posY: client.wrapped.pos.y,
-                        posZ: client.wrapped.pos.z,
-                        timestamp: Date.now(),
-                    })
-                )
-            )
+            Logger.publishLog({
+                type: 'chat.message',
+                username: client.wrapped.name,
+                hwidHash: client.wrapped.hwidHash,
+                hwidExHash: client.wrapped.hwidExHash,
+                message: message,
+                posX: client.wrapped.pos.x,
+                posY: client.wrapped.pos.y,
+                posZ: client.wrapped.pos.z,
+                timestamp: Date.now(),
+            })
         },
     }
 
     static sessions = {
         logRestoration: (client: Client) => {
-            Logger.qChannel.sendToQueue(
-                logQueue,
-                Buffer.from(
-                    JSON.stringify({
-                        type: 'session.restoration',
-                        username: client.wrapped.name,
-                        hwidHash: client.wrapped.hwidHash,
-                        hwidExHash: client.wrapped.hwidExHash,
-                        timestamp: Date.now(),
-                    })
-                )
-            )
+            Logger.publishLog({
+                type: 'session.restoration',
+                username: client.wrapped.name,
+                hwidHash: client.wrapped.hwidHash,
+                hwidExHash: client.wrapped.hwidExHash,
+                timestamp: Date.now(),
+            })
         },
     }
 
     static commands = {
         logChatCommand: (client: Client, commandName: string, commandArgs: string[]) => {
-            Logger.qChannel.sendToQueue(
-                logQueue,
-                Buffer.from(
-                    JSON.stringify({
-                        type: 'commands.chatCommand',
-                        username: client.wrapped.name,
-                        hwidHash: client.wrapped.hwidHash,
-                        hwidExHash: client.wrapped.hwidExHash,
-                        commandName: commandName,
-                        commandArgs: commandArgs,
-                        timestamp: Date.now(),
-                    })
-                )
-            )
+            Logger.publishLog({
+                type: 'commands.chatCommand',
+                username: client.wrapped.name,
+                hwidHash: client.wrapped.hwidHash,
+                hwidExHash: client.wrapped.hwidExHash,
+                commandName: commandName,
+                commandArgs: commandArgs,
+                timestamp: Date.now(),
+            })
         },
     }
 }
