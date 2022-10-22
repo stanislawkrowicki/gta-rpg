@@ -26,6 +26,7 @@ Events.initialize = async () => {
         chat: {
             Message: add(await import('./server/chat/Message')),
             ClientMessage: add(await import('./server/chat/ClientMessage')),
+            SendPermittedCommands: add(await import('./server/chat/SendPermittedCommands')),
         },
         gui: {
             OkDialog: add(await import('./server/gui/OkDialog')),
@@ -75,6 +76,8 @@ Events.initialize = async () => {
         },
         chat: {
             Message: add(await import('./client/chat/Message')),
+            RequestPermittedCommands: add(await import('./client/chat/RequestPermittedCommands')),
+            ChatCommand: add(await import('./client/chat/ChatCommand')),
         },
         world: {
             vehicleStorehouse: {
@@ -103,6 +106,7 @@ Events.initialize = async () => {
 
     /// #if CLIENT
     altClient.onServer((eventId, object) => {
+        // TODO: log this
         if (!(eventId in Events.map)) return
 
         Events.map[eventId](object)

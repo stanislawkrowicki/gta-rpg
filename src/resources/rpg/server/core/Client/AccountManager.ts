@@ -10,12 +10,17 @@ export default class AccountManager {
 
         account.id = accountDocument._id
         account.name = accountDocument.name
-        account.groups = accountDocument.groups as (keyof typeof GroupMap)[]
+
+        // Mongoose returns a pseudo-array, so we need to convert it to an array
+        account.groups = Array.from(accountDocument.groups) as (keyof typeof GroupMap)[]
         account.individualPermissions = accountDocument.individualPermissions
         account.temporaryPermissions = await Permissions.getTemporaryPermissionsByAccountId(
             accountDocument._id
         )
 
-        client.account = account
+        if (!account.groups.includes(Permissions.DEFAULT_GROUP_ID))
+            account.groups.push(Permissions.DEFAULT_GROUP_ID)
+
+        client.wrapped.setMeta('wrapper', Object.assign(client, { account: account }))
     }
 }
