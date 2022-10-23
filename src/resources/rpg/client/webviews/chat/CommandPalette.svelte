@@ -95,4 +95,9 @@
     .highlighted:before {
         content: '> ';
     }
+
+    .highlighted:after {
+        opacity: 1;
+        visibility: visible;
+    }
 </style>
