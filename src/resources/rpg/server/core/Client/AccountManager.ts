@@ -6,17 +6,11 @@ import Account from './Account'
 
 export default class AccountManager {
     static async writeClientAccountMetaFromDB(client: Client, accountDocument: AccountSchema) {
-        const account = await AccountManager.generateClientAccountMetaFromDB(
-            client,
-            accountDocument
-        )
+        const account = await AccountManager.generateClientAccountMetaFromDB(accountDocument)
         client.wrapped.setMeta('wrapper', Object.assign(client, { account: account }))
     }
 
-    static async generateClientAccountMetaFromDB(
-        client: Client,
-        accountDocument: AccountSchema
-    ): Promise<Account> {
+    static async generateClientAccountMetaFromDB(accountDocument: AccountSchema): Promise<Account> {
         const account = new Account()
 
         account.id = accountDocument._id.toString()

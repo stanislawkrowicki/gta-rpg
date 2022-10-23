@@ -89,7 +89,6 @@ export default class Sessions {
 
                 client.isLoggedIn = true
                 client.account = await AccountManager.generateClientAccountMetaFromDB(
-                    client,
                     accountDocument
                 )
 
