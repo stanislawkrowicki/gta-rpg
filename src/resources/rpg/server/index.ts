@@ -155,7 +155,7 @@ alt.on('playerDisconnect', async (player) => {
     await Sessions.saveSessionForPlayer(wrapper)
 
     player.deleteMeta('wrapper')
-    player.destroy()
+    player.despawn()
 })
 
 HotReload.startWatching()
