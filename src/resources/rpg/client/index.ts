@@ -74,12 +74,6 @@ class Interactivities {
     }
 }
 
-alt.on('spawned', () => {
-    game.setPedDefaultComponentVariation(alt.Player.local.scriptID)
-
-    if (!Chat.isInitialized) Chat.initialize()
-})
-
 // alt.onServer('GAME:LOGIN_PANEL:SHOW', async () => {
 //     const loginView = new alt.WebView('resource/client/webviews/login/index.html')
 //
@@ -126,5 +120,3 @@ Events.initialize().then(() => {
 })
 
 Markers.initialize()
-
-Hub.initialize()

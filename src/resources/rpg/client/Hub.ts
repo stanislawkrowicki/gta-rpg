@@ -9,6 +9,7 @@ import SetPlayerCameraPos from '../shared/events/client/hub/SetPlayerCameraPos'
 import LocationConfirm from '../shared/events/client/hub/LocationConfirm'
 import Mouse, { MouseMode } from './input/Mouse'
 import Utils from '../shared/utils/Utils'
+import postAuth from './auth/PostAuth'
 
 export enum Stage {
     WAITING_FOR_AUTHORIZATION,
@@ -162,5 +163,7 @@ export default class Hub {
         Hub.webview.destroy()
         Mouse.setMode(MouseMode.CAMERA_CONTROL)
         View.restoreDefault()
+
+        postAuth()
     }
 }

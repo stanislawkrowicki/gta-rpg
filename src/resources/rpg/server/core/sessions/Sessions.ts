@@ -5,6 +5,8 @@ import QuickDB from '../db/QuickDB'
 import { SessionSchema } from '../../../../../db/QuickAccessDB/schemas/sessions/Session.schema'
 import type { Client } from '../client/Client'
 import Logger from '../logger/Logger'
+import MainDB from '../db/MainDB'
+import AccountManager from '../client/AccountManager'
 
 export default class Sessions {
     private static SESSION_SAVE_INTERVAL = 5 * 1000 // TODO: *60 after testing
@@ -20,8 +22,10 @@ export default class Sessions {
         })
     }
 
-    static async saveSessionForPlayer(player: Client) {
-        const altPlayer = player.wrapped
+    static async saveSessionForPlayer(client: Client) {
+        if (!client.account) return
+
+        const altPlayer = client.wrapped
 
         const hwidHash = altPlayer.hwidHash
         const posX = altPlayer.pos.x
@@ -37,9 +41,13 @@ export default class Sessions {
             .equals(hwidHash)
             .return.first()
             .then((session) => {
+                if (!client.account) return
+
                 if (session === null) session = Sessions.sessionRepository.createEntity()
 
                 session.clientHwidHash = hwidHash
+
+                session.accountId = client.account.id
 
                 session.x = posX
                 session.y = posY
@@ -48,8 +56,8 @@ export default class Sessions {
                 session.ry = rotY
                 session.rz = rotZ
 
-                session.pedCamViewMode = player.pedCamViewMode
-                session.vehicleCamViewMode = player.vehicleCamViewMode
+                session.pedCamViewMode = client.pedCamViewMode
+                session.vehicleCamViewMode = client.vehicleCamViewMode
 
                 Sessions.sessionRepository.save(session).then((id) => {
                     Sessions.sessionRepository.expire(id, Sessions.SESSION_TTL)
@@ -70,14 +78,30 @@ export default class Sessions {
             .where('clientHwidHash')
             .equals(client.wrapped.hwidHash)
             .return.first()
-            .then((session) => {
+            .then(async (session) => {
                 if (session === null) return false
+
+                const accountDocument = await MainDB.collections.accounts.findById(
+                    session.accountId
+                )
+
+                if (!accountDocument) return false
+
+                client.isLoggedIn = true
+                client.account = await AccountManager.generateClientAccountMetaFromDB(
+                    client,
+                    accountDocument
+                )
 
                 client.wrapped.pos = new alt.Vector3(session.x, session.y, session.z)
                 client.wrapped.rot = new alt.Vector3(0, session.ry, session.rz)
 
                 client.pedCamViewMode = session.pedCamViewMode
                 client.vehicleCamViewMode = session.vehicleCamViewMode
+
+                client.wrapped.setMeta('wrapper', client)
+
+                client.wrapped.spawn(session.x, session.y, session.z)
 
                 Logger.sessions.logRestoration(client)
 

@@ -3,6 +3,7 @@ const { modelOptions, Severity } = typegoose
 import type { Ref } from '@typegoose/typegoose'
 import VehicleSchema from '../vehicles/Vehicle.schema'
 import PropertySchema from '../properties/Property.schema'
+import mongoose from 'mongoose'
 
 const { prop } = typegoose
 
@@ -41,7 +42,7 @@ class Owned {
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export default class AccountSchema {
-    @prop() _id!: string
+    @prop() _id: mongoose.Types.ObjectId
     @prop() name: string
     @prop({ maxlength: 319 }) email?: string
     @prop() passwordHash: string

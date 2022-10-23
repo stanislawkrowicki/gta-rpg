@@ -21,7 +21,7 @@ function add(eventModule: any): any {
 Events.initialize = async () => {
     Events.Server = {
         auth: {
-            Authorize: add(await import('./server/hub/LocationSelectStage')),
+            PostAuth: add(await import('./server/auth/PostAuth')),
         },
         chat: {
             Message: add(await import('./server/chat/Message')),
@@ -30,6 +30,10 @@ Events.initialize = async () => {
         },
         gui: {
             OkDialog: add(await import('./server/gui/OkDialog')),
+        },
+        hub: {
+            LocationSelectStage: add(await import('./server/hub/LocationSelectStage')),
+            InitializeHub: add(await import('./server/hub/InitializeHub')),
         },
         world: {
             markers: {

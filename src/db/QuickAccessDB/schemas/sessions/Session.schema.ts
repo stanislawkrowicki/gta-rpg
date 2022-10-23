@@ -3,6 +3,8 @@ import { Entity, Schema } from 'redis-om'
 export interface Session {
     clientHwidHash: string
 
+    accountId: string
+
     x: number
     y: number
     z: number
@@ -18,6 +20,8 @@ export class Session extends Entity {}
 
 export const SessionSchema = new Schema(Session, {
     clientHwidHash: { type: 'string' },
+
+    accountId: { type: 'string' },
 
     x: { type: 'number' },
     y: { type: 'number' },

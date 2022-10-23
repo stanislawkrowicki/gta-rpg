@@ -19,6 +19,8 @@ import VehicleStorehouse from './world/vehicles/vehicle_storehouse/VehicleStoreh
 import VehicleStorehouseManager from './world/vehicles/vehicle_storehouse/VehicleStorehouseManager'
 import ServerEvent from '../shared/events/ServerEvent'
 import { Client } from './core/client/Client'
+import InitializeHub from 'rpg/shared/events/server/hub/InitializeHub'
+import PostAuth from 'rpg/shared/events/server/auth/PostAuth'
 
 {
     console.log = alt.log
@@ -67,6 +69,18 @@ const populateClientsAfterResourceRestart = () => {
     for (let i = 0; i < players.length; i++) {
         const wrapper = players[i].getMeta('wrapper') as Client
         Clients.push(wrapper)
+
+        // TODO: temporary, we need to restart with data dump to redis
+        Sessions.restoreSessionIfPossible(wrapper).then((didRestore) => {
+            if (!didRestore) {
+                ServerEvent.emit(wrapper, new InitializeHub())
+                return
+            }
+
+            setTimeout(() => {
+                ServerEvent.emit(wrapper, new PostAuth())
+            }, 200)
+        })
     }
 }
 
@@ -112,21 +126,15 @@ alt.on('connectionQueueAdd', (connectionQueueInfo: alt.IConnectionQueueInfo) => 
 })
 
 alt.on('playerConnect', async (player) => {
-    const wrappedPlayer = new Client(player)
+    const client = new Client(player)
 
-    // try {
-    //     const veh = new alt.Vehicle("PARIAH", spawn.x, spawn.y, spawn.z, 0, 0, 0)
-    // } catch (e) {
-    //     alt.log(e)
-    // }
-    Logger.auth.login.logSuccess(wrappedPlayer)
-
-    Sessions.restoreSessionIfPossible(wrappedPlayer).then((wereItPossible) => {
-        if (!wereItPossible) {
-            // ServerEvent.emit(wrappedPlayer, new Authorize())
-            //
-            // player.spawn(spawn.x, spawn.y, spawn.z, 0)
+    Sessions.restoreSessionIfPossible(client).then((didRestore) => {
+        if (!didRestore) {
+            ServerEvent.emit(client, new InitializeHub())
+            return
         }
+
+        ServerEvent.emit(client, new PostAuth())
     })
 })
 
