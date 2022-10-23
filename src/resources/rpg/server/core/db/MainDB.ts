@@ -35,6 +35,10 @@ export default class MainDB {
     } = {}
 
     static connect() {
+        /// #if process.env['ENVIRONMENT'] !== 'prod'
+        mongoose.set('debug', true)
+        /// #endif
+
         return (MainDB.connection = mongoose
             .createConnection(
                 `mongodb://${process.env['MONGODB_USER']}:${process.env['MONGODB_PASSWORD']}@${process.env['MONGODB_HOST']}:${process.env['MONGODB_PORT']}/${MainDB.NAME}`
