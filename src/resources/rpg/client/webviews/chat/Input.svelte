@@ -27,39 +27,26 @@
             dispatch('unfocus')
             shouldAllowTyping = false
             return
-        }
-
-        if (!shouldAllowTyping) {
+        } else if (!shouldAllowTyping) {
             shouldAllowTyping = true
             e.preventDefault()
             return
-        }
-
-        if (e.key === 'Enter') {
+        } else if (e.key === 'Enter') {
             send()
             shouldAllowTyping = false
             return
-        }
-
-        if (e.key === '/') {
+        } else if (e.key === '/') {
             dispatch('toggleCommandMode', true)
             return
-        }
-
-        if (e.key === 'Backspace') {
+        } else if (e.key === 'Backspace') {
             if (message.at(-1) === '/') dispatch('toggleCommandMode', false)
             else dispatch('keyPress', message.slice(0, -1))
             return
-        }
-
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') return
-
-        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') return
+        else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             e.preventDefault()
             return
-        }
-
-        dispatch('keyPress', message + e.key)
+        } else dispatch('keyPress', message + e.key)
     }
 
     const send = () => {
