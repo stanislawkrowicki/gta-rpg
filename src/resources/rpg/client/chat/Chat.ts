@@ -52,6 +52,11 @@ export default class Chat {
         this.isInitialized = true
     }
 
+    static deinitialize() {
+        this.webview.destroy()
+        this.isInitialized = false
+    }
+
     static passPermittedCommandsToWebView(permittedCommands: ICommandDefinition[]) {
         if (!this.webview) return
 

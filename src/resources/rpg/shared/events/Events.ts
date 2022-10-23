@@ -22,6 +22,7 @@ Events.initialize = async () => {
     Events.Server = {
         auth: {
             PostAuth: add(await import('./server/auth/PostAuth')),
+            UnauthorizeDev: add(await import('./server/auth/UnauthorizeDev')),
         },
         chat: {
             Message: add(await import('./server/chat/Message')),

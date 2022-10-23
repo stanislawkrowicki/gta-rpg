@@ -21,6 +21,7 @@ import ServerEvent from '../shared/events/ServerEvent'
 import { Client } from './core/client/Client'
 import InitializeHub from 'rpg/shared/events/server/hub/InitializeHub'
 import PostAuth from 'rpg/shared/events/server/auth/PostAuth'
+import AccountManager from './core/client/AccountManager'
 
 {
     console.log = alt.log
@@ -191,5 +192,7 @@ MarkerManager.add(
 )
 
 VehicleStorehouseManager.initialize()
+
+AccountManager.initialize()
 
 populateClientsAfterResourceRestart()
