@@ -18,6 +18,10 @@
         message = ''
     }
 
+    export function setMessage(messageToSet: string) {
+        message = messageToSet
+    }
+
     const onKeyPress = (e: KeyboardEvent): void => {
         if (e.key === 'Escape') {
             dispatch('unfocus')
@@ -47,6 +51,8 @@
             else dispatch('keyPress', message.slice(0, -1))
             return
         }
+
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return
 
         dispatch('keyPress', message + e.key)
     }

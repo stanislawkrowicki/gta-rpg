@@ -64,6 +64,10 @@
         filteredCommands = commands.filter((command) => command.name.startsWith(currentCommand))
     }
 
+    const fillCommand = (commandEvent: { detail: number }) => {
+        inputComponent.setMessage('/' + filteredCommands[commandEvent.detail].name)
+    }
+
     const focus = () => {
         inputComponent.focus()
     }
@@ -114,7 +118,7 @@
 
     {#if isInCommandMode}
         <div class="commands-dropdown">
-            <CommandPalette commands={filteredCommands} />
+            <CommandPalette commands={filteredCommands} on:commandIndexChange={fillCommand} />
         </div>
     {/if}
 </div>

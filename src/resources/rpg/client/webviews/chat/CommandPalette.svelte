@@ -1,12 +1,58 @@
 <script lang="ts">
     import type { ICommandDefinition } from 'rpg/shared/commands/Commands'
+    import { createEventDispatcher } from 'svelte'
 
     export let commands: ICommandDefinition[]
+
+    const dispatch = createEventDispatcher()
+
+    let allowNavigation = false
+    let selectedCommandIndex = 0
+
+    $: commands, (selectedCommandIndex = 0), (allowNavigation = false)
+
+    const incrementCommandIndex = () => {
+        if (selectedCommandIndex === commands.length - 1) selectedCommandIndex = 0
+        else selectedCommandIndex++
+
+        dispatch('commandIndexChange', selectedCommandIndex)
+    }
+
+    const decrementCommandIndex = () => {
+        if (selectedCommandIndex == 0) selectedCommandIndex = commands.length - 1
+        else selectedCommandIndex--
+
+        dispatch('commandIndexChange', selectedCommandIndex)
+    }
+
+    const setCommandIndex = (num: number) => {
+        selectedCommandIndex = num
+        dispatch('commandIndexChange', num)
+    }
 </script>
 
+<svelte:window
+    on:keydown={(e) => {
+        if (e.key === 'ArrowUp')
+            if (!allowNavigation) {
+                allowNavigation = true
+                setCommandIndex(0)
+            } else decrementCommandIndex()
+        else if (e.key === 'ArrowDown')
+            if (!allowNavigation) {
+                allowNavigation = true
+                setCommandIndex(0)
+            } else incrementCommandIndex()
+    }}
+/>
+
 <ul>
-    {#each commands as command}
-        <li data-description={command.description}>/{command.name}</li>
+    {#each commands as command, i}
+        {#if allowNavigation && i === selectedCommandIndex}
+            <li data-description={command.description} class="highlighted">/{command.name}</li>
+        {:else}
+            <li data-description={command.description}>/{command.name}</li>
+        {/if}
     {/each}
 </ul>
 
@@ -40,5 +86,13 @@
     li:hover:after {
         opacity: 1;
         visibility: visible;
+    }
+
+    .highlighted {
+        background-color: rgba(50, 50, 50, 0.5);
+    }
+
+    .highlighted:before {
+        content: '> ';
     }
 </style>
