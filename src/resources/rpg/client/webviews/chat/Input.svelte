@@ -52,7 +52,12 @@
             return
         }
 
-        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') return
+
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault()
+            return
+        }
 
         dispatch('keyPress', message + e.key)
     }
