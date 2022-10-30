@@ -51,6 +51,8 @@
 </main>
 
 <style lang="scss">
+    @import '../components/theme.scss';
+
     main {
         width: 40vw;
         height: 60vh;
@@ -72,7 +74,7 @@
 
             li {
                 list-style-type: none;
-                background-image: linear-gradient(to right, #9c20aa, #fb3570);
+                background-image: linear-gradient(to right, $THEME-COLOR-A, $THEME-COLOR-B);
                 cursor: pointer;
                 padding-bottom: 0.2em;
                 transition: all 0.2s ease-in-out;
