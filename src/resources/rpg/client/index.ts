@@ -22,16 +22,15 @@ class GameDefaultsInitiator {
             // @ts-ignore
             game.drawRect(0, 0, 0, 0, 0, 0, 0, 0, 0)
 
-            game.setPauseMenuActive(false)
             // disable weapon wheel
             game.disableControlAction(0, 37, true)
         })
 
         GameDefaultsInitiator.initiateAudio()
 
-        game.displayRadar(false)
         game.triggerScreenblurFadeOut(0)
 
+        game.restartFrontendMenu(alt.hash('FE_MENU_VERSION_MP_PAUSE'), -1)
         View.restoreDefault()
     }
 
