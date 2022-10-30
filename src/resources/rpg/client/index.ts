@@ -11,6 +11,7 @@ import Events from '../shared/events/Events'
 import Markers from './world/markers/Markers'
 import Hub from './Hub'
 import { ClientKeyBinds } from './settings/ClientSettings'
+import ClientSettingsPanel from './settings/ClientSettingsPanel'
 
 const LocalPlayer: Player = null
 
@@ -33,7 +34,7 @@ class GameDefaultsInitiator {
 
         game.displayRadar(false)
 
-        game.restartFrontendMenu(alt.hash('FE_MENU_VERSION_MP_PAUSE'), -1)
+        // game.restartFrontendMenu(alt.hash('FE_MENU_VERSION_MP_PAUSE'), -1)
         View.restoreDefault()
     }
 
@@ -124,3 +125,4 @@ Events.initialize().then(() => {
 Markers.initialize()
 
 ClientKeyBinds.initialize()
+ClientSettingsPanel.initialize()

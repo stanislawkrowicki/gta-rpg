@@ -5,11 +5,14 @@ export type KeydownFunction = () => void
 export class ClientSettings {}
 
 export class ClientKeyBinds {
-    private static map: Record<string, number> = {
-        chat: 84, // t
+    private static map = {
+        chat: 84, // t,
+        clientSettingsPanel: 114, // f3
     }
 
-    private static keydownCallbacks: Record<keyof typeof ClientKeyBinds.map, KeydownFunction> = {}
+    private static keydownCallbacks: Partial<
+        Record<keyof typeof ClientKeyBinds.map, KeydownFunction>
+    > = {}
 
     static initialize() {
         ClientKeyBinds.loadFromLocalStorage()
@@ -17,7 +20,7 @@ export class ClientKeyBinds {
         alt.on('keydown', (key: number) => {
             for (const [bindKey, bindValue] of Object.entries(ClientKeyBinds.map)) {
                 if (bindValue === key && Object.hasOwn(ClientKeyBinds.keydownCallbacks, bindKey))
-                    ClientKeyBinds.keydownCallbacks[bindKey]()
+                    ClientKeyBinds.keydownCallbacks[bindKey as keyof typeof ClientKeyBinds.map]()
             }
         })
     }
@@ -44,6 +47,7 @@ export class ClientKeyBinds {
     }
 
     static registerListener(bindName: keyof typeof ClientKeyBinds.map, callback: KeydownFunction) {
+        callback.bind(callback)
         ClientKeyBinds.keydownCallbacks[bindName] = callback
     }
 }

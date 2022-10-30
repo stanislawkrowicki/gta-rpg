@@ -8,5 +8,11 @@
         "loginNoun": "Logowanie",
         "registration": "Rejestracja",
         "registerAction": "Zarejestruj"
+    },
+
+    "settingsPanel": {
+        "account": "Konto",
+        "binds": "Sterowanie",
+        "preferences": "Preferencje"
     }
 }
