@@ -10,6 +10,7 @@ import Chat from './chat/Chat'
 import Events from '../shared/events/Events'
 import Markers from './world/markers/Markers'
 import Hub from './Hub'
+import { ClientKeyBinds } from './settings/ClientSettings'
 
 const LocalPlayer: Player = null
 
@@ -121,3 +122,5 @@ Events.initialize().then(() => {
 })
 
 Markers.initialize()
+
+ClientKeyBinds.loadFromLocalStorage()
