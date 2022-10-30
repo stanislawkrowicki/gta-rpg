@@ -100,6 +100,7 @@ export default class Sessions {
 
                 client.wrapped.setMeta('wrapper', client)
 
+                client.wrapped.model = 'u_m_m_jesus_01'
                 client.wrapped.spawn(session.x, session.y, session.z)
 
                 Logger.sessions.logRestoration(client)
