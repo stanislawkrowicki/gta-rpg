@@ -23,8 +23,8 @@ class GameDefaultsInitiator {
             game.drawRect(0, 0, 0, 0, 0, 0, 0, 0, 0)
 
             game.setPauseMenuActive(false)
-            game.hudWeaponWheelIgnoreControlInput(true)
-            game.blockWeaponWheelThisFrame()
+            // disable weapon wheel
+            game.disableControlAction(0, 37, true)
         })
 
         GameDefaultsInitiator.initiateAudio()
