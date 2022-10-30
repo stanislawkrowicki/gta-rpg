@@ -123,4 +123,4 @@ Events.initialize().then(() => {
 
 Markers.initialize()
 
-ClientKeyBinds.loadFromLocalStorage()
+ClientKeyBinds.initialize()

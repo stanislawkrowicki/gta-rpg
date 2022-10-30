@@ -6,6 +6,7 @@ import RequestPermittedCommands from 'rpg/shared/events/client/chat/RequestPermi
 import Message from '../../shared/events/client/chat/Message'
 import ClientEvent from '../../shared/events/ClientEvent'
 import Mouse from '../input/Mouse'
+import { ClientKeyBinds } from '../settings/ClientSettings'
 
 export default class Chat {
     static webview: alt.WebView
@@ -15,9 +16,7 @@ export default class Chat {
     static initialize() {
         this.webview = new alt.WebView('/resource/client/webviews/chat/index.html')
 
-        alt.on('keydown', (key) => {
-            if (key !== 84) return
-
+        ClientKeyBinds.registerListener('chat', () => {
             if (!this.webview.focused) {
                 this.webview.focus()
                 this.webview.emit('FOCUS')
