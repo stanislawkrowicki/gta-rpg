@@ -5,13 +5,21 @@
 
     import { settingsPanel as trans } from 'lang'
 
+    import type { IBindDefinition } from 'rpg/client/settings/ClientSettings'
+
     type SectionKey = 'account' | 'binds' | 'preferences'
 
     let selectedSection: SectionKey = 'account'
 
+    let availableBinds: IBindDefinition[] = []
+
     const selectSection = (sectionToSelect: SectionKey) => {
         selectedSection = sectionToSelect
     }
+
+    alt.on('availableBinds', (bindDefinitions: IBindDefinition[]) => {
+        availableBinds = bindDefinitions
+    })
 </script>
 
 <main>
@@ -50,7 +58,7 @@
         </div>
     {:else if selectedSection === 'binds'}
         <div class="section section-binds">
-            <BindsSettings />
+            <BindsSettings {availableBinds} />
         </div>
     {:else if selectedSection === 'preferences'}
         <div class="section section-preferences">
@@ -68,8 +76,6 @@
         margin: auto;
         margin-top: 10vh;
         opacity: 0.95;
-        font-family: Roboto, sans-serif;
-        font-weight: 600;
     }
 
     nav {
@@ -82,6 +88,8 @@
             color: white;
             background-color: #333;
             margin: 0;
+            font-family: Roboto, sans-serif;
+            font-weight: 500;
 
             li {
                 list-style-type: none;

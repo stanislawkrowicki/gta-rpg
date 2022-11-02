@@ -14,5 +14,10 @@
         "account": "Konto",
         "binds": "Sterowanie",
         "preferences": "Preferencje"
+    },
+
+    "binds": {
+        "chat": "Otwiera chat",
+        "clientSettingsPanel": "Otwiera panel ustawień"
     }
 }

@@ -1,13 +1,37 @@
 import alt from 'alt-client'
+import { binds as trans } from 'lang'
 
 export type KeydownFunction = () => void
+
+export interface IBind {
+    keyCode: number
+    modifierCode?: ModifierKey // shift, ctrl, alt
+}
+export interface IBindDefinition {
+    name: string
+    description: string
+    keyCode: number
+    modifierCode?: ModifierKey // shift, ctrl, alt
+}
+
+export type ModifierKey = 16 | 17 | 18
 
 export class ClientSettings {}
 
 export class ClientKeyBinds {
-    private static map = {
-        chat: 84, // t,
-        clientSettingsPanel: 114, // f3
+    private static map: Record<string, IBind> = {
+        // those are default values
+        chat: {
+            keyCode: 84, // t
+        },
+        clientSettingsPanel: {
+            keyCode: 114, // f3
+        },
+    }
+
+    private static bindsDescriptions: Record<keyof typeof ClientKeyBinds.map, string> = {
+        chat: trans.chat,
+        clientSettingsPanel: trans.clientSettingsPanel,
     }
 
     private static keydownCallbacks: Partial<
@@ -18,9 +42,12 @@ export class ClientKeyBinds {
         ClientKeyBinds.loadFromLocalStorage()
 
         alt.on('keydown', (key: number) => {
-            for (const [bindKey, bindValue] of Object.entries(ClientKeyBinds.map)) {
-                if (bindValue === key && Object.hasOwn(ClientKeyBinds.keydownCallbacks, bindKey))
-                    ClientKeyBinds.keydownCallbacks[bindKey as keyof typeof ClientKeyBinds.map]()
+            for (const [bindName, bindValue] of Object.entries(ClientKeyBinds.map)) {
+                if (
+                    bindValue.keyCode === key &&
+                    Object.hasOwn(ClientKeyBinds.keydownCallbacks, bindName)
+                )
+                    ClientKeyBinds.keydownCallbacks[bindName as keyof typeof ClientKeyBinds.map]()
             }
         })
     }
@@ -40,10 +67,33 @@ export class ClientKeyBinds {
         return ClientKeyBinds.map[bindName]
     }
 
-    static set(bindName: keyof typeof ClientKeyBinds.map, value: number) {
-        ClientKeyBinds.map[bindName] = value
+    static set(
+        bindName: keyof typeof ClientKeyBinds.map,
+        keyCode: number,
+        modifierCode?: ModifierKey
+    ) {
+        ClientKeyBinds.map[bindName] = { keyCode: keyCode, modifierCode: modifierCode }
         alt.LocalStorage.set('binds', ClientKeyBinds.map)
         alt.LocalStorage.save()
+    }
+
+    static getAll() {
+        return ClientKeyBinds.map
+    }
+
+    static getAllWithDefinitions() {
+        const res: IBindDefinition[] = []
+
+        for (const [name, bind] of Object.entries(ClientKeyBinds.map)) {
+            res.push({
+                name: name,
+                description: ClientKeyBinds.bindsDescriptions[name],
+                keyCode: bind.keyCode,
+                modifierCode: bind.modifierCode,
+            })
+        }
+
+        return res
     }
 
     static registerListener(bindName: keyof typeof ClientKeyBinds.map, callback: KeydownFunction) {

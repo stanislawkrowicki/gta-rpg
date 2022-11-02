@@ -18,6 +18,8 @@ export default class ClientSettingsPanel {
         ClientSettingsPanel.webview = new alt.WebView(
             '/resource/client/webviews/settings/index.html'
         )
+
+        ClientSettingsPanel.webview.emit('availableBinds', ClientKeyBinds.getAllWithDefinitions())
         ClientSettingsPanel.webview.focus()
 
         Mouse.setMode(MouseMode.SCREEN_POINTING)
