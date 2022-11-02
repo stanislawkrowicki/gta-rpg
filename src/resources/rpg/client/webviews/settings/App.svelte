@@ -17,17 +17,26 @@
 <main>
     <nav>
         <ul>
-            <li on:click={() => selectSection('account')}>
+            <li
+                class={selectedSection === 'account' ? 'selected' : ''}
+                on:click={() => selectSection('account')}
+            >
                 <div class="inner">
                     {trans.account}
                 </div>
             </li>
-            <li on:click={() => selectSection('binds')}>
+            <li
+                class={selectedSection === 'binds' ? 'selected' : ''}
+                on:click={() => selectSection('binds')}
+            >
                 <div class="inner">
                     {trans.binds}
                 </div>
             </li>
-            <li on:click={() => selectSection('preferences')}>
+            <li
+                class={selectedSection === 'preferences' ? 'selected' : ''}
+                on:click={() => selectSection('preferences')}
+            >
                 <div class="inner">
                     {trans.preferences}
                 </div>
@@ -58,7 +67,9 @@
         height: 60vh;
         margin: auto;
         margin-top: 10vh;
-        opacity: 0.9;
+        opacity: 0.95;
+        font-family: Roboto, sans-serif;
+        font-weight: 600;
     }
 
     nav {
@@ -76,13 +87,15 @@
                 list-style-type: none;
                 background-image: linear-gradient(to right, $THEME-COLOR-A, $THEME-COLOR-B);
                 cursor: pointer;
-                padding-bottom: 0.2em;
-                transition: all 0.2s ease-in-out;
                 user-select: none;
 
+                &.selected .inner {
+                    padding-bottom: 0.2em;
+                }
                 &:hover {
-                    transform: scale(1.1);
-                    padding: 0.1em;
+                    .inner {
+                        padding-bottom: 0.3em;
+                    }
                 }
 
                 .inner {
@@ -90,7 +103,7 @@
                     height: auto;
                     width: auto;
                     padding: 0.5em;
-                    z-index: 3;
+                    transition: all 0.2s ease-in-out;
                 }
             }
         }
