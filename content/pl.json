@@ -14,7 +14,8 @@
         "account": "Konto",
         "binds": "Sterowanie",
         "preferences": "Preferencje",
-        "setBind": "Wciśnij klawisz lub kombinację klawiszy, które chcesz przypisać"
+        "setBind": "Wciśnij klawisz lub kombinację klawiszy, które chcesz przypisać",
+        "keyAlreadyDefined": "Ta kombinacja klawiszy jest już przypisana."
     },
 
     "binds": {

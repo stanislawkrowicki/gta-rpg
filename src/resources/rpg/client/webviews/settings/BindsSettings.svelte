@@ -13,7 +13,8 @@
     const dispatch = createEventDispatcher()
 
     let showBindPrompt = false
-    let currentlyBinding: string = undefined
+    let showAlreadyDefinedMessage = false
+    let currentlyBinding: string = null
 
     const bindChangePrompt = (bindName: string) => {
         if (showBindPrompt) return
@@ -26,6 +27,8 @@
     }
 
     const onChangePromptKeypress = (event: KeyboardEvent) => {
+        showAlreadyDefinedMessage = false
+
         if (event.key === 'Escape') {
             closeBindPrompt()
             return
@@ -46,11 +49,24 @@
             return
         }
 
-        let modifier: 'Control' | 'Alt' | 'Shift' = undefined
+        let modifier: 'Control' | 'Alt' | 'Shift' = null
 
         if (event.ctrlKey) modifier = 'Control'
         else if (event.shiftKey) modifier = 'Shift'
         else if (event.altKey) modifier = 'Alt'
+
+        const modifierKeyCode = modifierToKeyCode(modifier)
+
+        for (const alreadyDefinedBind of availableBinds) {
+            if (alreadyDefinedBind.name === currentlyBinding) continue
+            if (
+                alreadyDefinedBind.keyCode === keyCode &&
+                alreadyDefinedBind.modifierCode === modifierKeyCode
+            ) {
+                showAlreadyDefinedMessage = true
+                return
+            }
+        }
 
         onChangeFinish({
             keyCode: keyCode,
@@ -63,7 +79,7 @@
         if (modifier === 'Shift') return 16
         else if (modifier === 'Control') return 17
         else if (modifier === 'Alt') return 18
-        else return undefined
+        else return null
     }
 
     const onChangeFinish = (changedBind: IBindChange) => {
@@ -75,7 +91,7 @@
         dispatch('enableBinds')
         document.removeEventListener('keydown', onChangePromptKeypress)
         showBindPrompt = false
-        currentlyBinding = undefined
+        currentlyBinding = null
     }
 </script>
 
@@ -99,7 +115,11 @@
 
     {#if showBindPrompt}
         <div class="prompt">
-            <span>{trans.setBind}</span>
+            <span id="text">{trans.setBind}</span>
+
+            {#if showAlreadyDefinedMessage}
+                <span id="already-defined-message">{trans.keyAlreadyDefined}</span>
+            {/if}
         </div>
     {/if}
 </div>
@@ -148,13 +168,22 @@
         font-weight: 600;
         background-color: #444;
 
-        span {
+        #text {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
             font-size: 3em;
+        }
+
+        #already-defined-message {
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1em;
         }
     }
 </style>
