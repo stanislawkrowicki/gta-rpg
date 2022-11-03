@@ -13,7 +13,8 @@
     "settingsPanel": {
         "account": "Konto",
         "binds": "Sterowanie",
-        "preferences": "Preferencje"
+        "preferences": "Preferencje",
+        "setBind": "Wciśnij klawisz lub kombinację klawiszy, które chcesz przypisać"
     },
 
     "binds": {
