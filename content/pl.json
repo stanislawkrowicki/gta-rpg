@@ -19,5 +19,20 @@
     "binds": {
         "chat": "Otwiera chat",
         "clientSettingsPanel": "Otwiera panel ustawień"
+    },
+
+    "chars": {
+        "mouseLeft": "Lewy myszy",
+        "mouseRight": "Prawy myszy",
+        "mouseMiddle": "Środkowy myszy",
+        "mouse4": "Mysz 4",
+        "mouse5": "Mysz 5",
+        "arrowLeft": "Strzałka w lewo",
+        "arrowUp": "Strzałka w górę",
+        "arrowRight": "Strzałka w prawo",
+        "arrowDown": "Strzałka w dół",
+        "space": "Spacja",
+        "myComputer": "Mój komputer",
+        "myCalculator": "Mój kalkulator"
     }
 }

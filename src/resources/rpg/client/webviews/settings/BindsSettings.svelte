@@ -1,4 +1,5 @@
 <script lang="ts">
+    import KeyboardUtils from 'rpg/shared/utils/KeyboardUtils'
     import type { IBindDefinition } from 'rpg/client/settings/ClientSettings'
 
     export let availableBinds: IBindDefinition[] = []
@@ -11,7 +12,7 @@
             <input
                 type="text"
                 name={bind.name}
-                value={String.fromCharCode(bind.keyCode)}
+                value={KeyboardUtils.getTranslatedCharFromKeyCode(bind.keyCode)}
                 readonly
             />
         </div>
