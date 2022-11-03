@@ -4,13 +4,9 @@
     import KeyboardUtils from 'rpg/shared/utils/KeyboardUtils'
     import type { IBindDefinition } from 'rpg/client/settings/ClientSettings'
 
-    import { settingsPanel as trans } from 'lang'
+    import type { IBindChange } from 'rpg/client/settings/ClientSettings'
 
-    interface IBindChange {
-        key: string
-        modifier?: 'Control' | 'Alt' | 'Shift'
-        bindName: string
-    }
+    import { settingsPanel as trans } from 'lang'
 
     export let availableBinds: IBindDefinition[] = []
 
@@ -22,12 +18,19 @@
     const bindChangePrompt = (bindName: string) => {
         if (showBindPrompt) return
 
+        dispatch('disableAllBinds')
+
         showBindPrompt = true
         currentlyBinding = bindName
         document.addEventListener('keydown', onChangePromptKeypress)
     }
 
     const onChangePromptKeypress = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+            closeBindPrompt()
+            return
+        }
+
         if (['Alt', 'Shift', 'Control'].includes(event.key)) {
             return
         }
@@ -37,7 +40,9 @@
         // make caps lock not matter as it does not in altV
         if (event.key.length === 1) sanitizedKey = event.key.toUpperCase()
 
-        if (typeof KeyboardUtils.getKeyCodeFromChar(sanitizedKey) === 'undefined') {
+        const keyCode = KeyboardUtils.getKeyCodeFromChar(sanitizedKey)
+
+        if (typeof keyCode === 'undefined') {
             return
         }
 
@@ -47,11 +52,27 @@
         else if (event.shiftKey) modifier = 'Shift'
         else if (event.altKey) modifier = 'Alt'
 
-        onChangeFinish({ key: sanitizedKey, modifier: modifier, bindName: currentlyBinding })
+        onChangeFinish({
+            keyCode: keyCode,
+            modifierCode: modifierToKeyCode(modifier),
+            bindName: currentlyBinding,
+        })
+    }
+
+    const modifierToKeyCode = (modifier: 'Control' | 'Alt' | 'Shift') => {
+        if (modifier === 'Shift') return 16
+        else if (modifier === 'Control') return 17
+        else if (modifier === 'Alt') return 18
+        else return undefined
     }
 
     const onChangeFinish = (changedBind: IBindChange) => {
         dispatch('bindChange', changedBind)
+        closeBindPrompt()
+    }
+
+    const closeBindPrompt = () => {
+        dispatch('enableBinds')
         document.removeEventListener('keydown', onChangePromptKeypress)
         showBindPrompt = false
         currentlyBinding = undefined
@@ -65,7 +86,11 @@
             <input
                 type="text"
                 name={bind.name}
-                value={KeyboardUtils.getTranslatedCharFromKeyCode(bind.keyCode)}
+                value={bind.modifierCode
+                    ? `${KeyboardUtils.getTranslatedCharFromKeyCode(
+                          bind.modifierCode
+                      )} + ${KeyboardUtils.getTranslatedCharFromKeyCode(bind.keyCode)}`
+                    : KeyboardUtils.getTranslatedCharFromKeyCode(bind.keyCode)}
                 readonly
                 on:click={() => bindChangePrompt(bind.name)}
             />

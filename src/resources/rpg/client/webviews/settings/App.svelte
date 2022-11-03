@@ -6,6 +6,7 @@
     import { settingsPanel as trans } from 'lang'
 
     import type { IBindDefinition } from 'rpg/client/settings/ClientSettings'
+    import type { IBindChange } from 'rpg/client/settings/ClientSettings'
 
     type SectionKey = 'account' | 'binds' | 'preferences'
 
@@ -15,6 +16,18 @@
 
     const selectSection = (sectionToSelect: SectionKey) => {
         selectedSection = sectionToSelect
+    }
+
+    const onBindChange = (event: { detail: IBindChange }) => {
+        alt.emit('bindChange', event.detail)
+    }
+
+    const disableAllBinds = () => {
+        alt.emit('disableAllBinds')
+    }
+
+    const enableBinds = () => {
+        alt.emit('enableBinds')
     }
 
     alt.on('availableBinds', (bindDefinitions: IBindDefinition[]) => {
@@ -58,7 +71,12 @@
         </div>
     {:else if selectedSection === 'binds'}
         <div class="section section-binds">
-            <BindsSettings {availableBinds} />
+            <BindsSettings
+                {availableBinds}
+                on:bindChange={onBindChange}
+                on:disableAllBinds={disableAllBinds}
+                on:enableBinds={enableBinds}
+            />
         </div>
     {:else if selectedSection === 'preferences'}
         <div class="section section-preferences">

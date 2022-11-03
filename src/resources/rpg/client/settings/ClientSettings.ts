@@ -14,6 +14,12 @@ export interface IBindDefinition {
     modifierCode?: ModifierKey // shift, ctrl, alt
 }
 
+export interface IBindChange {
+    keyCode: number
+    modifierCode?: ModifierKey
+    bindName: string
+}
+
 export type ModifierKey = 16 | 17 | 18
 
 export class ClientSettings {}
@@ -38,10 +44,14 @@ export class ClientKeyBinds {
         Record<keyof typeof ClientKeyBinds.map, KeydownFunction>
     > = {}
 
+    static forceDisable = false
+
     static initialize() {
         ClientKeyBinds.loadFromLocalStorage()
 
         alt.on('keydown', (key: number) => {
+            if (ClientKeyBinds.forceDisable) return
+
             for (const [bindName, bindValue] of Object.entries(ClientKeyBinds.map)) {
                 if (
                     bindValue.keyCode === key &&
