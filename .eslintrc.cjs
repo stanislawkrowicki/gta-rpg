@@ -28,7 +28,7 @@ module.exports = {
         alt: true,
     },
     rules: {
-        indent: ['error', 4],
+        indent: ['error', 4, { SwitchCase: 1 }],
         semi: ['error', 'never'],
         '@typescript-eslint/ban-ts-comment': 'off',
         '@typescript-eslint/no-unused-vars': 'off',

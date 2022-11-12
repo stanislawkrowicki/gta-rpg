@@ -103,7 +103,7 @@ Events.initialize = async () => {
 
         if (handleEvent) {
             handleEvent(player.getMeta('wrapper'), object)
-        } else {
+        } else if (eventId !== '___altv-esbuild:clientReady___') {
             altServer.logError('Uninitialized event: ' + eventId)
         }
     })

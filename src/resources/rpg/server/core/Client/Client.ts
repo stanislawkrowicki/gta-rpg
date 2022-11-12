@@ -1,6 +1,6 @@
 import type alt from 'alt-server'
 import type Account from './Account'
-import { Clients } from '../../index'
+import Clients from './Clients'
 
 export class Client {
     wrapped: alt.Player
@@ -17,3 +17,4 @@ export class Client {
         Clients.push(this)
     }
 }
+//test

@@ -2,7 +2,7 @@
 import Logger from '../../../../server/core/logger/Logger'
 import ServerEvent from '../../ServerEvent'
 import type { Client } from 'rpg/server/core/client/Client'
-import { Clients } from '../../../../server'
+import Clients from 'rpg/server/core/client/Clients'
 /// #endif
 
 import ClientEvent from '../../ClientEvent'

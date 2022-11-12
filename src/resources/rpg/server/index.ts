@@ -19,6 +19,7 @@ import VehicleStorehouse from './world/vehicles/vehicle_storehouse/VehicleStoreh
 import VehicleStorehouseManager from './world/vehicles/vehicle_storehouse/VehicleStorehouseManager'
 import ServerEvent from '../shared/events/ServerEvent'
 import { Client } from './core/client/Client'
+import Clients from './core/client/Clients'
 import InitializeHub from 'rpg/shared/events/server/hub/InitializeHub'
 import PostAuth from 'rpg/shared/events/server/auth/PostAuth'
 import AccountManager from './core/client/AccountManager'
@@ -57,31 +58,6 @@ class HubCamera {
     static transitionDelta = 0
     static update() {
         // TODO: linear interpolation(with sin, cos), transition between waypoints, goal detection
-    }
-}
-
-export const Clients: Client[] = []
-
-const populateClientsAfterResourceRestart = () => {
-    const players = alt.Player.all
-
-    if (!(players.length > Clients.length)) return
-
-    for (let i = 0; i < players.length; i++) {
-        const wrapper = players[i].getMeta('wrapper') as Client
-        Clients.push(wrapper)
-
-        // TODO: temporary, we need to restart with data dump to redis
-        Sessions.restoreSessionIfPossible(wrapper).then((didRestore) => {
-            if (!didRestore) {
-                ServerEvent.emit(wrapper, new InitializeHub())
-                return
-            }
-
-            setTimeout(() => {
-                ServerEvent.emit(wrapper, new PostAuth())
-            }, 200)
-        })
     }
 }
 
@@ -158,7 +134,7 @@ alt.on('playerDisconnect', async (player) => {
     player.despawn()
 })
 
-HotReload.startWatching()
+// HotReload.startWatching()
 
 MainDB.connect()
 
@@ -194,5 +170,3 @@ MarkerManager.add(
 VehicleStorehouseManager.initialize()
 
 AccountManager.initialize()
-
-populateClientsAfterResourceRestart()
