@@ -129,6 +129,7 @@ alt.on('playerDisconnect', async (player) => {
 
     Logger.connection.logDisconnection(wrapper)
     await Sessions.saveSessionForPlayer(wrapper)
+    Sessions.updateClientPlayedTimeTotal(wrapper)
 
     player.deleteMeta('wrapper')
     player.despawn()
