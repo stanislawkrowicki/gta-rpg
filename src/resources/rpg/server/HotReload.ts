@@ -20,21 +20,10 @@ export default class HotReload {
     }
 
     static reload(strPath: string) {
-        const parts = strPath.split(path.sep)
-
-        let resourceNameIndex = 0
-
-        for (; resourceNameIndex < parts.length; ++resourceNameIndex) {
-            if (parts[resourceNameIndex] === 'resources') {
-                resourceNameIndex++
-                break
-            }
-        }
-
-        const resourceName = parts[resourceNameIndex]
-
-        alt.restartResource(resourceName)
-
         alt.log('~c~' + `Detected changes in resource, reloading...`)
+
+        // force altv-esbuild to reload the resource
+        // @ts-ignore
+        alt.emit('consoleCommand', 'res')
     }
 }

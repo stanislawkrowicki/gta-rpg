@@ -134,7 +134,7 @@ alt.on('playerDisconnect', async (player) => {
     player.despawn()
 })
 
-// HotReload.startWatching()
+HotReload.startWatching()
 
 MainDB.connect()
 

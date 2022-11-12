@@ -265,13 +265,14 @@ const buildGamemode = (done) => {
         format: 'esm',
         platform: 'node',
         bundle: true,
-        watch: isDevMode,
         sourcemap: isDevMode ? 'inline' : false,
         plugins: [
             altvEsbuild({
                 mode: 'client',
                 dev: {
                     enabled: isDevMode,
+                    hotReload: false,
+                    restartCommand: isDevMode,
                 },
             }),
             ifdefPlugin.default({
@@ -288,13 +289,14 @@ const buildGamemode = (done) => {
         format: 'esm',
         platform: 'node',
         bundle: true,
-        watch: isDevMode,
         sourcemap: isDevMode ? 'inline' : false,
         plugins: [
             altvEsbuild({
                 mode: 'server',
                 dev: {
                     enabled: isDevMode,
+                    hotReload: false,
+                    restartCommand: isDevMode,
                 },
             }),
             esbuildDecorators(),
