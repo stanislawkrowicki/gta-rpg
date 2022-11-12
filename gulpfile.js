@@ -9,13 +9,13 @@ import esbuildSvelte from 'esbuild-svelte'
 import sveltePreprocess from 'svelte-preprocess'
 import esbuildPluginGLSL from 'esbuild-plugin-glsl'
 import ifdefPlugin from 'esbuild-ifdef'
-import { build } from 'esbuild'
+import 'dotenv/config'
 
 const DIST_FOLDER = 'dist'
 const SRC_FOLDER = 'src'
 const GAMEMODE_RESOURCE_NAME = 'rpg'
 
-const altvBranch = process.env['ALTV_BRANCH'] | 'release'
+const altvBranch = process.env['ALTV_BRANCH'] || 'release'
 const isDevMode = !(process.env['ENVIRONMENT'] === 'prod')
 
 const SERVER_CFG = `
@@ -105,7 +105,10 @@ const downloadExecutable = (done) => {
             throw 'There are no alt:V binaries for your OS.'
     }
 
-    if (fs.existsSync(DIST_FOLDER + '/' + fileName)) return
+    if (fs.existsSync(DIST_FOLDER + '/' + fileName)) {
+        done()
+        return
+    }
 
     log.info(`Downloading executable for ${process.platform}`)
 
@@ -211,7 +214,7 @@ const downloadJSModule = async () => {
     })
 }
 
-const downloadBytecodeModule = () => {
+const downloadBytecodeModule = (done) => {
     const moduleMap = {
         win32: `https://cdn.altv.mp/js-bytecode-module/${altvBranch}/x64_win32/modules/js-bytecode-module.dll`,
         linux: `https://cdn.altv.mp/js-bytecode-module/${altvBranch}/x64_linux/modules/libjs-bytecode-module.so`,
@@ -225,6 +228,7 @@ const downloadBytecodeModule = () => {
     const fileName = urlSplit[urlSplit.length - 1]
 
     if (fs.existsSync(DIST_FOLDER + '/modules/' + fileName)) {
+        done()
         return
     }
 
