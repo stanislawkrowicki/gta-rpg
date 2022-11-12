@@ -2,19 +2,13 @@ import gulp from 'gulp'
 import * as log from 'fancy-log'
 import https from 'https'
 import fs from 'fs'
-import { createGulpEsbuild } from 'gulp-esbuild'
+import gulpEsbuild from 'gulp-esbuild'
 import { esbuildDecorators } from '@anatine/esbuild-decorators'
 import { altvEsbuild } from 'altv-esbuild'
 import esbuildSvelte from 'esbuild-svelte'
 import sveltePreprocess from 'svelte-preprocess'
 import esbuildPluginGLSL from 'esbuild-plugin-glsl'
-
-import ServerConfig from './server.config.js'
-import ServerConfigUtils from './utils/ServerConfigUtils.js'
-import ResourceConfig from './utils/ResourceConfig.js'
 import ifdefPlugin from 'esbuild-ifdef'
-
-const gulpEsbuild = createGulpEsbuild({})
 
 const DIST_FOLDER = 'dist'
 const SRC_FOLDER = 'src'
