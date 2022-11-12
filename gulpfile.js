@@ -9,6 +9,7 @@ import esbuildSvelte from 'esbuild-svelte'
 import sveltePreprocess from 'svelte-preprocess'
 import esbuildPluginGLSL from 'esbuild-plugin-glsl'
 import ifdefPlugin from 'esbuild-ifdef'
+import { build } from 'esbuild'
 
 const DIST_FOLDER = 'dist'
 const SRC_FOLDER = 'src'
@@ -252,13 +253,9 @@ const downloadAll = async (done) => {
     })
 }
 
-const buildGamemode = (done) => {
+const buildGamemodeClient = (done) => {
     const gamemodeDistPath = `${DIST_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}`
     const clientIndexPath = `${SRC_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}/client/index.ts`
-    const serverIndexPath = `${SRC_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}/server/index.ts`
-
-    prepareDirectory(`/resources/${GAMEMODE_RESOURCE_NAME}/`)
-    fs.writeFileSync(gamemodeDistPath + '/resource.cfg', GAMEMODE_CFG)
 
     const clientEsbuildConfig = {
         outfile: 'index.js',
@@ -283,6 +280,24 @@ const buildGamemode = (done) => {
             }),
         ],
     }
+
+    gulp.src(clientIndexPath)
+        .pipe(gulpEsbuild(clientEsbuildConfig))
+        .on('error', (err) => {
+            if (err) {
+                log.error(`Error while building ${GAMEMODE_RESOURCE_NAME} client`)
+                throw err
+            }
+        })
+        .pipe(gulp.dest(`${gamemodeDistPath}/client/`))
+        .on('end', () => {
+            if (done) done()
+        })
+}
+
+const buildGamemodeServer = (done) => {
+    const gamemodeDistPath = `${DIST_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}`
+    const serverIndexPath = `${SRC_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}/server/index.ts`
 
     const serverEsbuildConfig = {
         outfile: 'index.js',
@@ -317,19 +332,6 @@ const buildGamemode = (done) => {
         ],
     }
 
-    gulp.src(clientIndexPath)
-        .pipe(gulpEsbuild(clientEsbuildConfig))
-        .on('error', (err) => {
-            if (err) {
-                log.error(`Error while building gamemode client`)
-                throw err
-            }
-        })
-        .pipe(gulp.dest(`${gamemodeDistPath}/client/`))
-        .on('end', () => {
-            if (done) done()
-        })
-
     gulp.src(serverIndexPath)
         .pipe(gulpEsbuild(serverEsbuildConfig))
         .on('error', (err) => {
@@ -342,6 +344,22 @@ const buildGamemode = (done) => {
         .on('end', () => {
             if (done) done()
         })
+}
+
+const buildGamemode = async (done) => {
+    const gamemodeDistPath = `${DIST_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}`
+
+    prepareDirectory(`/resources/${GAMEMODE_RESOURCE_NAME}/`)
+    fs.writeFileSync(gamemodeDistPath + '/resource.cfg', GAMEMODE_CFG)
+
+    await new Promise((resolve) => {
+        buildGamemodeClient(resolve)
+    })
+    await new Promise((resolve) => {
+        buildGamemodeServer(resolve)
+    })
+
+    done()
 }
 
 const buildWebView = (path, done) => {
@@ -466,6 +484,90 @@ const moveStaticWebviews = (done) => {
         .on('end', done)
 }
 
+const watchGamemodeClient = () => {
+    gulp.watch(
+        `${SRC_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}/client/**/*.ts`,
+        buildGamemodeClient
+    )
+}
+
+const watchGamemodeServer = () => {
+    gulp.watch(
+        `${SRC_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}/server/**/*.ts`,
+        buildGamemodeServer
+    )
+}
+
+const watchGamemodeShared = () => {
+    gulp.watch(
+        `${SRC_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}/shared/**/*.ts`,
+        gulp.series(buildGamemodeClient, buildGamemodeServer)
+    )
+}
+
+const watchClientAssets = () => {
+    gulp.watch(`./src/resources/${GAMEMODE_RESOURCE_NAME}/client/assets/`, moveClientAssets)
+}
+
+const watchSvelteWebViews = () => {
+    const watcher = gulp.watch([
+        './src/resources/**/client/webviews/**/*.ts',
+        './src/resources/**/client/webviews/**/*.svelte',
+        '!./src/resources/**/client/webviews/components',
+    ])
+
+    watcher.on('error', (err) => {
+        log.error('Client webview watcher threw an error.')
+        throw err
+    })
+
+    watcher.on('all', (_, path) => {
+        path = path.replace(/\\/g, '/')
+
+        const resourceName = path.split('/resources/')[1].split('/')[0]
+        const webviewName = path.split('/webviews/')[1].split('/')[0]
+
+        log.info(
+            `Detected change in ${resourceName} webview ${webviewName}, running Svelte compiler...`
+        )
+
+        if (path.endsWith('.svelte')) {
+            let split = path.split('/')
+            split[split.length - 1] = 'index.ts'
+            path = split.join('/')
+        }
+
+        buildWebView(path, () => {
+            log.info(`Successfully compiled ${resourceName} webview ${webviewName}.`)
+        })
+    })
+}
+
+const watchSvelteComponents = () => {
+    gulp.watch('./src/resources/**/client/webviews/components/*', buildWebviews)
+}
+
+const watchStaticWebViews = () => {
+    const watcher = gulp.watch('./src/resources/**/client/webviews/*.html')
+
+    watcher.on('error', (err) => {
+        log.error('Static WebViews watcher threw an error.')
+        throw err
+    })
+
+    watcher.on('all', (_, path) => {
+        path = path.replace(/\\/g, '/')
+
+        const file = path.split('/webviews/')[1]
+
+        gulp.src(`./src/resources/${GAMEMODE_RESOURCE_NAME}/client/webviews/${file}`)
+            .pipe(gulp.dest(`./${DIST_FOLDER}/resources/`))
+            .on('end', () => {
+                log.info(`Successfully built ${GAMEMODE_RESOURCE_NAME} static webview ${file}`)
+            })
+    })
+}
+
 gulp.task('download:executable', downloadExecutable)
 gulp.task('download:models', downloadModels)
 gulp.task('download:js_module', downloadJSModule)
@@ -482,3 +584,30 @@ gulp.task('build:gamemode', buildGamemode)
 gulp.task('build:webviews', buildWebviews)
 gulp.task('build:logs_consumer', buildLogsConsumer)
 gulp.task('build', buildAll)
+
+gulp.task('watch:client', watchGamemodeClient)
+gulp.task('watch:client_assets', watchClientAssets)
+gulp.task('watch:server', watchGamemodeServer)
+gulp.task('watch:shared', watchGamemodeShared)
+gulp.task('watch:svelte_webviews', watchSvelteWebViews)
+gulp.task('watch:static_webviews', watchStaticWebViews)
+gulp.task('watch:webview_components', watchSvelteComponents)
+gulp.task(
+    'watch:webviews',
+    gulp.parallel('watch:svelte_webviews', 'watch:static_webviews', 'watch:webview_components')
+)
+
+const watch = gulp.series(
+    'build',
+    gulp.parallel(
+        'watch:client',
+        'watch:client_assets',
+        'watch:server',
+        'watch:shared',
+        'watch:webviews'
+    )
+)
+
+gulp.task('watch', watch)
+
+export default watch
