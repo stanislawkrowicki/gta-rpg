@@ -47,6 +47,8 @@ export default class AccountSchema {
     @prop({ maxlength: 319 }) email?: string
     @prop() passwordHash: string
 
+    @prop() timePlayedTotal: number
+
     @prop() groups?: string[]
 
     @prop() individualPermissions: Record<string, any | boolean>

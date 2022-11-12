@@ -117,4 +117,15 @@ export default class Sessions {
             .return.first()
             .then((session) => session !== null)
     }
+
+    static async updateClientPlayedTimeTotal(client: Client) {
+        const timeDelta = Date.now() - client.sessionStartAt
+
+        if (timeDelta <= 0) return
+
+        await MainDB.collections.accounts.updateOne(
+            { _id: client.account.id },
+            { $inc: { timePlayedTotal: timeDelta } }
+        )
+    }
 }
