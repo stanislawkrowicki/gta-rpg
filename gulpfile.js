@@ -19,27 +19,27 @@ const altvBranch = process.env['ALTV_BRANCH'] || 'release'
 const isDevMode = !(process.env['ENVIRONMENT'] === 'prod')
 
 const SERVER_CFG = `
-name: "RPG Server"
-host: "127.0.0.1"
-port: 7788
-players: 512
-announce: false
-connectionQueue: true
-gamemode: "RPG"
-website: "<website>"
-language: "en"
-description: "RPG Server"
-debug: ${isDevMode}
-modules: ["js-module","js-bytecode-module"]
-resources: ["${GAMEMODE_RESOURCE_NAME}"]
+announce = false
+connectionQueue = true
+debug = ${isDevMode}
+description = 'RPG Server'
+gamemode = 'RPG'
+host = '127.0.0.1'
+language = 'en'
+modules = [ 'js-module', 'js-bytecode-module' ]
+name = 'RPG Server'
+players = 512
+port = 7788
+resources = [ 'rpg' ]
+website = '<website>'
 `
 
 const GAMEMODE_CFG = `
-type: "js"
-main: "server/index.js"
-client-main: "client/index.js"
-required-permissions: ["Screen Capture"]
-client-files: ["client/webviews/*"]
+client-files = [ 'client/webviews/*' ]
+client-main = 'client/index.js'
+main = 'server/index.js'
+required-permissions = [ 'Screen Capture' ]
+type = 'js'
 `
 
 const prepareDirectory = (path) => {
@@ -354,7 +354,7 @@ const buildGamemode = async (done) => {
     const gamemodeDistPath = `${DIST_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}`
 
     prepareDirectory(`/resources/${GAMEMODE_RESOURCE_NAME}/`)
-    fs.writeFileSync(gamemodeDistPath + '/resource.cfg', GAMEMODE_CFG)
+    fs.writeFileSync(gamemodeDistPath + '/resource.toml', GAMEMODE_CFG)
 
     await new Promise((resolve) => {
         buildGamemodeClient(resolve)
@@ -461,7 +461,7 @@ const buildLogsConsumer = (done) => {
 
 const writeServerConfig = (done) => {
     prepareDirectory('')
-    fs.writeFileSync(`${DIST_FOLDER}/server.cfg`, SERVER_CFG)
+    fs.writeFileSync(`${DIST_FOLDER}/server.toml`, SERVER_CFG)
     done()
 }
 
