@@ -56,10 +56,10 @@ export default class MainDB {
             .on('disconnect', (error: unknown) => {
                 alt.logError('~lr~' + 'Disconnected from the database')
 
-                for (let i = 0; i < alt.Player.all.length; ++i) {
-                    alt.Player.all[i].kick(
-                        'Problem with the server... Try to connect again later...'
-                    )
+                const players = alt.Player.all
+
+                for (let i = 0; i < players.length; ++i) {
+                    players[i].kick('Problem with the server... Try to connect again later...')
                 }
 
                 MainDB.isConnected = false
