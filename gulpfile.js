@@ -276,7 +276,7 @@ const buildGamemodeClient = (done) => {
                     restartCommand: isDevMode,
                 },
             }),
-            ifdefPlugin({
+            ifdefPlugin.default({
                 variables: {
                     SERVER: false,
                     CLIENT: true,
@@ -319,7 +319,7 @@ const buildGamemodeServer = (done) => {
                 },
             }),
             esbuildDecorators(),
-            ifdefPlugin({
+            ifdefPlugin.default({
                 variables: {
                     SERVER: true,
                     CLIENT: false,
