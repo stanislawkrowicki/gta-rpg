@@ -121,8 +121,7 @@ alt.on('playerDisconnect', async (player) => {
     for (let i = 0; i < Clients.length; i++) {
         const client = Clients[i]
 
-        // FIXME: should be checked against whole client instead of just wrapper
-        if (client.wrapped === wrapper.wrapped) {
+        if (client.wrapped.id === wrapper.wrapped.id) {
             Clients.splice(i, 1)
         }
     }
