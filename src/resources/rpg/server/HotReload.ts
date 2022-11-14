@@ -34,5 +34,7 @@ export default class HotReload {
         for (let i = 0; i < Clients.length; i++) {
             Sessions.updateClientPlayedTimeTotal(Clients[i])
         }
+
+        Clients.splice(0, Clients.length)
     }
 }
