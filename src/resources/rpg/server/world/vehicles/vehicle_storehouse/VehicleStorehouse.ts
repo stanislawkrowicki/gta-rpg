@@ -1,13 +1,13 @@
-import alt from 'alt-server'
+import type alt from 'alt-server'
 import type { Marker } from '../../../../shared/world/markers/Markers'
 import MarkerManager from '../../markers/MarkerManager'
-import type { Client } from '../../../core/client/Client'
 import MainDB from '../../../core/db/MainDB'
 import type { IStorehousePersonalVehicleData } from '../../../../shared/world/vehicles/VehicleStorehouse'
 import ClientEnterStorehouseMarker from '../../../../shared/events/server/world/vehicles/vehicle_storehouse/ClientEnterStorehouseMarker'
 import ServerEvent from '../../../../shared/events/ServerEvent'
 import Vehicles from '../Vehicles'
 import type Vehicle from '../../Vehicle'
+import Clients from 'rpg/server/core/client/Clients'
 
 export default class VehicleStorehouse {
     ID: number
@@ -42,17 +42,16 @@ export default class VehicleStorehouse {
     }
 
     onPlayerPanelMarkerEnter(entity: alt.Entity) {
-        const player = alt.Player.all.find((p) => p.id === entity.id) // TODO: this should be taken from World.Clients when its stable
-        const wrapper = player.getMeta('wrapper') as Client
+        const client = Clients.find((p) => p.wrapped.id === entity.id)
 
-        if (player.vehicle) return
+        if (client.wrapped.vehicle) return
 
         MainDB.collections.vehicles.find().then((vehicles) => {
             const playerVehicles: IStorehousePersonalVehicleData[] = vehicles.map(
                 (veh) => ({ id: veh.id, model: veh.model } as IStorehousePersonalVehicleData)
             )
             ServerEvent.emit(
-                wrapper,
+                client,
                 new ClientEnterStorehouseMarker(this.ID, this.description, playerVehicles)
             )
         })
