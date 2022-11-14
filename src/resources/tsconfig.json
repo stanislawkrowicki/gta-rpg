@@ -11,6 +11,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "preserveConstEnums": true,
+        "isolatedModules": false,
 
         "noImplicitAny": true,
         "sourceMap": false,
@@ -20,7 +21,10 @@
             "lang": ["../../content/pl.json"]
         },
 
-        "typeRoots": ["../../node_modules/@altv"]
+        "typeRoots": [
+            "../../node_modules/@altv",
+            "../../node_modules/altv-esbuild/altv-enums/types/"
+        ]
     },
     "extends": "@tsconfig/svelte/tsconfig.json",
     "include": [
