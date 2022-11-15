@@ -11,7 +11,7 @@ specifiers:
   '@elastic/elasticsearch': ^8.5.0
   '@tsconfig/svelte': ^3.0.0
   '@typegoose/typegoose': ^9.12.1
-  '@types/amqplib': ^0.8.2
+  '@types/amqplib': ^0.10.0
   '@typescript-eslint/eslint-plugin': ^5.42.1
   '@typescript-eslint/parser': ^5.42.1
   altv-esbuild: ^0.3.3
@@ -78,7 +78,7 @@ devDependencies:
   '@altv/types-worker': 1.0.7_@altv+types-client@2.3.7
   '@anatine/esbuild-decorators': 0.2.19_esbuild@0.15.13
   '@tsconfig/svelte': 3.0.0
-  '@types/amqplib': 0.8.2
+  '@types/amqplib': 0.10.0
   '@typescript-eslint/eslint-plugin': 5.42.1_2udltptbznfmezdozpdoa2aemq
   '@typescript-eslint/parser': 5.42.1_rmayb2veg2btbq6mbmnyivgasy
   esbuild-plugin-glsl: 1.1.0_esbuild@0.15.13
@@ -1203,15 +1203,10 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@types/amqplib/0.8.2:
-    resolution: {integrity: sha512-p+TFLzo52f8UanB+Nq6gyUi65yecAcRY3nYowU6MPGFtaJvEDxcnFWrxssSTkF+ts1W3zyQDvgVICLQem5WxRA==}
+  /@types/amqplib/0.10.0:
+    resolution: {integrity: sha512-39XGMpfVGqjYK+LjPqMb/98rm/KwZCfJj5S1K2lGg9PqzhUQek5iFhrtgOLQGw5QbArsPYCTj7ElEJpP3Hhb1w==}
     dependencies:
-      '@types/bluebird': 3.5.37
       '@types/node': 18.11.9
-    dev: true
-
-  /@types/bluebird/3.5.37:
-    resolution: {integrity: sha512-g2qEd+zkfkTEudA2SrMAeAvY7CrFqtbsLILm2dT2VIeKTqMqVzcdfURlvu6FU3srRgbmXN1Srm94pg34EIehww==}
     dev: true
 
   /@types/eslint/8.4.10:
