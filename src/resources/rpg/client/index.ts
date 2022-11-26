@@ -40,7 +40,7 @@ class GameDefaultsInitiator {
 
     static initiateAudio() {
         game.startAudioScene('FBI_HEIST_H5_MUTE_AMBIENCE_SCENE')
-        game.cancelCurrentPoliceReport()
+        game.cancelAllPoliceReports()
         game.clearAmbientZoneState('AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_GENERAL', true)
         game.clearAmbientZoneState('AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_WARNING', true)
         game.clearAmbientZoneState('AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_ALARM', true)
