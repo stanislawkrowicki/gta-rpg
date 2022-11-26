@@ -121,6 +121,8 @@ export default class Sessions {
     static async updateClientPlayedTimeTotal(client: Client) {
         const timeDelta = Date.now() - client.sessionStartAt
 
+        if (!client.account.id) return
+
         if (timeDelta <= 0) return
 
         await MainDB.collections.accounts.updateOne(
