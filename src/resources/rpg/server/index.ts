@@ -106,7 +106,6 @@ alt.on('playerConnect', async (player) => {
     const client = new Client(player)
 
     Sessions.restoreSessionIfPossible(client).then((didRestore) => {
-        console.log('restore')
         if (!didRestore) {
             ServerEvent.emit(client, new InitializeHub())
             return
