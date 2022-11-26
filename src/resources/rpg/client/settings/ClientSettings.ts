@@ -46,26 +46,18 @@ export class ClientKeyBinds {
 
     static forceDisable = false
 
-    static currentlyPressedModifiers: Set<ModifierKey> = new Set()
-
     static initialize() {
         ClientKeyBinds.loadFromLocalStorage()
 
         alt.on('keydown', (key: number) => {
             if (ClientKeyBinds.forceDisable) return
 
-            if (key === 16 || key === 17 || key === 18)
-                ClientKeyBinds.currentlyPressedModifiers.add(key as ModifierKey)
-
             for (const [bindName, bindValue] of Object.entries(ClientKeyBinds.map)) {
                 if (
                     bindValue.keyCode === key &&
                     Object.hasOwn(ClientKeyBinds.keydownCallbacks, bindName)
                 ) {
-                    if (
-                        bindValue.modifierCode &&
-                        ClientKeyBinds.currentlyPressedModifiers.has(bindValue.modifierCode)
-                    ) {
+                    if (bindValue.modifierCode && alt.isKeyDown(bindValue.modifierCode)) {
                         ClientKeyBinds.keydownCallbacks[
                             bindName as keyof typeof ClientKeyBinds.map
                         ]()
@@ -76,11 +68,6 @@ export class ClientKeyBinds {
                         ]()
                 }
             }
-        })
-
-        alt.on('keyup', (key: number) => {
-            if (key === 16 || key === 17 || key === 18)
-                ClientKeyBinds.currentlyPressedModifiers.delete(key as ModifierKey)
         })
     }
 
