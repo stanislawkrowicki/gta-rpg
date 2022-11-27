@@ -257,6 +257,20 @@ const downloadAll = async (done) => {
     })
 }
 
+const deleteAll = () => {
+    let executableFile = 'altv-server'
+    if (process.platform === 'win32') executableFile = 'altv-server.exe'
+
+    fs.rmSync(`${DIST_FOLDER}/modules`, { recursive: true, force: true })
+    fs.rmSync(`${DIST_FOLDER}/${executableFile}`, { force: true })
+    fs.rmSync(`${DIST_FOLDER}/data`, { recursive: true, force: true })
+}
+
+const update = (done) => {
+    deleteAll()
+    downloadAll(done)
+}
+
 const buildGamemodeClient = (done) => {
     const gamemodeDistPath = `${DIST_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}`
     const clientIndexPath = `${SRC_FOLDER}/resources/${GAMEMODE_RESOURCE_NAME}/client/index.ts`
@@ -578,6 +592,8 @@ gulp.task('download:js_module', downloadJSModule)
 gulp.task('download:bytecode_module', downloadBytecodeModule)
 gulp.task('download:modules', gulp.series('download:js_module', 'download:bytecode_module'))
 gulp.task('download', downloadAll)
+
+gulp.task('update', update)
 
 gulp.task('move:client_assets', moveClientAssets)
 gulp.task('move:static_webviews', moveStaticWebviews)
