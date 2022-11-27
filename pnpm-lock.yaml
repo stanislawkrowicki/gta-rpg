@@ -1,11 +1,11 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@altv/types-client': ^2.3.7
+  '@altv/types-client': ^2.4.0
   '@altv/types-natives': ^1.4.6
-  '@altv/types-server': ^2.5.0
-  '@altv/types-shared': ^1.3.1
-  '@altv/types-webview': ^1.0.4
+  '@altv/types-server': ^2.5.3
+  '@altv/types-shared': ^1.3.3
+  '@altv/types-webview': ^1.0.5
   '@altv/types-worker': ^1.0.7
   '@anatine/esbuild-decorators': ^0.2.19
   '@elastic/elasticsearch': ^8.5.0
@@ -70,12 +70,12 @@ dependencies:
   svelte-material-icons: 2.0.4_svelte@3.53.1
 
 devDependencies:
-  '@altv/types-client': 2.3.7_4txfriezoim2adstuhvead6xai
-  '@altv/types-natives': 1.4.6_@altv+types-client@2.3.7
-  '@altv/types-server': 2.5.0_@altv+types-shared@1.3.1
-  '@altv/types-shared': 1.3.1
-  '@altv/types-webview': 1.0.4
-  '@altv/types-worker': 1.0.7_@altv+types-client@2.3.7
+  '@altv/types-client': 2.4.0_oob4mkqcj3dz3akrwhd35l2tny
+  '@altv/types-natives': 1.4.6_@altv+types-client@2.4.0
+  '@altv/types-server': 2.5.3_@altv+types-shared@1.3.3
+  '@altv/types-shared': 1.3.3
+  '@altv/types-webview': 1.0.5
+  '@altv/types-worker': 1.0.7_@altv+types-client@2.4.0
   '@anatine/esbuild-decorators': 0.2.19_esbuild@0.15.13
   '@tsconfig/svelte': 3.0.0
   '@types/amqplib': 0.10.0
@@ -113,46 +113,46 @@ packages:
       - supports-color
     dev: false
 
-  /@altv/types-client/2.3.7_4txfriezoim2adstuhvead6xai:
-    resolution: {integrity: sha512-WtOIN2ow+s/lfcZhysvkCWrzUBzXhBUncYhExqHa4ySxi6tVhFRNIH5FNygILvAiFeqQPH52E0oGtBJr7xsu1w==}
+  /@altv/types-client/2.4.0_oob4mkqcj3dz3akrwhd35l2tny:
+    resolution: {integrity: sha512-PguxiKCLV2PwKd/ZfAmPfE8M6n6/10lPveqMMrQK90g09D1zohIXNUT3w6dgIL+ZYZclm17ztUG3DbQreTJUHQ==}
     peerDependencies:
       '@altv/types-shared': latest
       '@altv/types-worker': 1.0.x
     dependencies:
-      '@altv/types-shared': 1.3.1
-      '@altv/types-worker': 1.0.7_@altv+types-client@2.3.7
+      '@altv/types-shared': 1.3.3
+      '@altv/types-worker': 1.0.7_@altv+types-client@2.4.0
     dev: true
 
-  /@altv/types-natives/1.4.6_@altv+types-client@2.3.7:
+  /@altv/types-natives/1.4.6_@altv+types-client@2.4.0:
     resolution: {integrity: sha512-T1N6l6xitdPWBdHaZO4cG0rZ2DWqDtYrTDwnHCF7qQIsAzzuvOV31Ur2LI/bBEVg7TISRAW6D5NkSbFenjqekQ==}
     peerDependencies:
       '@altv/types-client': '>=1.7.0'
     dependencies:
-      '@altv/types-client': 2.3.7_4txfriezoim2adstuhvead6xai
+      '@altv/types-client': 2.4.0_oob4mkqcj3dz3akrwhd35l2tny
     dev: true
 
-  /@altv/types-server/2.5.0_@altv+types-shared@1.3.1:
-    resolution: {integrity: sha512-8tc3vz7+PdVHlquSKD5JZjQjFqtnbS+n93bz7xuDfQ6dEHWVIhTW1s3IugJTbMXBhJwhtuey7Vsd2ev4LGiExg==}
+  /@altv/types-server/2.5.3_@altv+types-shared@1.3.3:
+    resolution: {integrity: sha512-+51KaAMsJKqzvNX6CCy1ICIoK5LGd897WuUrYEc4Zuhfi3G3HZZkNJF4lvjlkJirkq4miUuhmT75nIWSuzEN8A==}
     peerDependencies:
       '@altv/types-shared': latest
     dependencies:
-      '@altv/types-shared': 1.3.1
+      '@altv/types-shared': 1.3.3
     dev: true
 
-  /@altv/types-shared/1.3.1:
-    resolution: {integrity: sha512-6zepdoj+PoVZOHFfNaevoAIUOKIj/QdnnrhP65tteXa5Slo893jr/RLHHsJsYmJp4K4hKMNt5KazGDzDZO6dEg==}
+  /@altv/types-shared/1.3.3:
+    resolution: {integrity: sha512-gop/t7/HybV94+0HljfDXNXfrOz1wRs4z6qh+F29rUYWpS4TWjFNbkf0uBWSPZK+HS1ppuzt7iNeTZDbt+L3rg==}
     dev: true
 
-  /@altv/types-webview/1.0.4:
-    resolution: {integrity: sha512-Rb32aPaREoWoxdbAnJsCA0GC5xq0E3IcXTs48ET5pWQ1B67ky0YJFhZl/S1/N6VCqBUz0Kx232VIA+hEkeVyjA==}
+  /@altv/types-webview/1.0.5:
+    resolution: {integrity: sha512-g1bYnkLLxhJr6CBq0qFZoJtzs+20nEmHBMftlAGAgEJsyKR5HWf0NUi2mmUS50IpVEsULqgK+hx4uRZpXLmS7A==}
     dev: true
 
-  /@altv/types-worker/1.0.7_@altv+types-client@2.3.7:
+  /@altv/types-worker/1.0.7_@altv+types-client@2.4.0:
     resolution: {integrity: sha512-mImzn79l5w1/T16sZU0F7pI/hehY84tUe0PNu5Q/1S0B2OsINntAFU/RxLIe5XhSepVg0zlF2ZaISZfLcdQlLA==}
     peerDependencies:
       '@altv/types-client': latest
     dependencies:
-      '@altv/types-client': 2.3.7_4txfriezoim2adstuhvead6xai
+      '@altv/types-client': 2.4.0_oob4mkqcj3dz3akrwhd35l2tny
     dev: true
 
   /@anatine/esbuild-decorators/0.2.19_esbuild@0.15.13:
