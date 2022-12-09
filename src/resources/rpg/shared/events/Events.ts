@@ -67,6 +67,11 @@ Events.initialize = async () => {
                     await import('./server/world/vehicles/vehicle_storehouse/ClosePanel')
                 ),
             },
+
+            mapEditor: {
+                EnableMapEditor: add(await import('./server/world/EnableMapEditor')),
+                DisableMapEditor: add(await import('./server/world/DisableMapEditor')),
+            },
         },
     }
 

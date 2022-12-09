@@ -69,4 +69,12 @@ export default class {
 
         return [pitchDeg, 0, yawDeg]
     }
+
+    static radiansToDirection(vector: altShared.Vector3) {
+        return new altShared.Vector3(
+            -Math.sin(vector.z) * Math.abs(Math.cos(vector.x)),
+            Math.cos(vector.z) * Math.abs(Math.cos(vector.x)),
+            Math.sin(vector.x)
+        )
+    }
 }

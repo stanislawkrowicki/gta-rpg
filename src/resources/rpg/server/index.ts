@@ -23,6 +23,7 @@ import Clients from './core/client/Clients'
 import InitializeHub from 'rpg/shared/events/server/hub/InitializeHub'
 import PostAuth from 'rpg/shared/events/server/auth/PostAuth'
 import AccountManager from './core/client/AccountManager'
+import MapEditor from 'rpg/server/world/MapEditor'
 
 {
     console.log = alt.log

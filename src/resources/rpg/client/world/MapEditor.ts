@@ -1,5 +1,14 @@
 import alt from 'alt-client'
 import Mouse from '../input/Mouse'
+import Chat from '../chat/Chat'
+import FreeCam from './FreeCam'
+
+export interface IEditorObject {
+    id: string
+    key: string
+    description: string
+    object: alt.Object
+}
 
 enum EditableObject {
     NPC,
@@ -25,8 +34,8 @@ const CurrentlyPressedKeys = []
  *
  */
 export default class MapEditor {
-    static editableObjects: any = []
-    static selectedObjects: any = []
+    static editableObjects: IEditorObject[] = []
+    static selectedObjects: IEditorObject[] = []
 
     static compoundGizmo = true
 
@@ -52,6 +61,10 @@ export default class MapEditor {
 
         Mouse.addMouseDownListener(mouseMoveListener)
 
+        FreeCam.enable()
+
+        Chat.deinitialize()
+
         MapEditor.deinitialize = () => {
             alt.clearInterval(updateInterval)
 
@@ -61,8 +74,13 @@ export default class MapEditor {
             Mouse.removeMouseDownListener(mouseUpListener)
 
             Mouse.removeMouseDownListener(mouseMoveListener)
+
+            FreeCam.disable()
+
+            Chat.initialize()
         }
     }
+
     static deinitialize() {}
 
     static update() {

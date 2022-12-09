@@ -7,5 +7,6 @@ export default class DevGroup implements Group {
         auth: {
             logout: true,
         },
+        mapEditor: true,
     }
 }
