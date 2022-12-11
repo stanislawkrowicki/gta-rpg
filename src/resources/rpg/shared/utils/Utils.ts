@@ -77,4 +77,21 @@ export default class {
             Math.sin(vector.x)
         )
     }
+
+    static degToRad(deg: number) {
+        return deg * (Math.PI / 180.0)
+    }
+
+    static radToDeg(rad: number) {
+        return rad * (180 / Math.PI)
+    }
+
+    static rotationToForward(rot: altShared.Vector3): altShared.Vector3 {
+        const rotInDegrees = rot.mul(Math.PI / 180)
+        return new altShared.Vector3(
+            -Math.sin(rotInDegrees.z) * Math.abs(Math.cos(rotInDegrees.x)),
+            Math.cos(rotInDegrees.z) * Math.abs(Math.cos(rotInDegrees.x)),
+            Math.sin(rotInDegrees.x)
+        )
+    }
 }

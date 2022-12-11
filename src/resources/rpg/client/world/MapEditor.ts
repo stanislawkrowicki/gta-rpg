@@ -1,8 +1,9 @@
 import alt from 'alt-client'
-import Mouse from '../input/Mouse'
+import natives from 'natives'
+import Mouse, { MouseMode } from '../input/Mouse'
 import Chat from '../chat/Chat'
 import FreeCam from './FreeCam'
-
+import ClientUtils from 'rpg/client/utils/Utils'
 export interface IEditorObject {
     id: string
     key: string
@@ -61,6 +62,8 @@ export default class MapEditor {
 
         Mouse.addMouseDownListener(mouseMoveListener)
 
+        Mouse.setMode(MouseMode.SCREEN_POINTING)
+
         FreeCam.enable()
 
         Chat.deinitialize()
@@ -75,6 +78,8 @@ export default class MapEditor {
 
             Mouse.removeMouseDownListener(mouseMoveListener)
 
+            Mouse.setMode(MouseMode.CAMERA_CONTROL)
+
             FreeCam.disable()
 
             Chat.initialize()
@@ -84,6 +89,16 @@ export default class MapEditor {
     static deinitialize() {}
 
     static update() {
+        const cam = FreeCam.getCurrentCam()
+
+        if (cam === null) return
+
+        const cursorPos = alt.getCursorPos()
+
+        const pos = ClientUtils.screenToWorld(cam, cursorPos.x, cursorPos.y)
+
+        // console.log(natives.getGroundZFor3dCoord(pos.x, pos.y, 9999, 9999, false, false))
+        // console.log(pos)
         for (let i = 0; i < MapEditor.selectedObjects.length; ++i) {
             // TODO: Render gizmo
         }

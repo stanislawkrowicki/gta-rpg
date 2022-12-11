@@ -124,4 +124,8 @@ export default class FreeCam {
         natives.setCamCoord(FreeCam._cam, newPos.x, newPos.y, newPos.z)
         natives.setCamRot(FreeCam._cam, rot.x, rot.y, rot.z, 2)
     }
+
+    static getCurrentCam() {
+        return FreeCam._cam
+    }
 }
