@@ -56,7 +56,7 @@
         "cli-spinners": "^2.7.0",
         "crypto": "^1.0.1",
         "dotenv": "^16.0.3",
-        "esbuild": "^0.15.13",
+        "esbuild": "^0.16.5",
         "esbuild-ifdef": "^0.1.8",
         "esbuild-plugin-tsc": "^0.3.1",
         "fancy-log": "^2.0.0",
