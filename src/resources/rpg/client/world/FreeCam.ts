@@ -25,6 +25,7 @@ export default class FreeCam {
         Input.VEH_MOVE_UD,
         Input.SNIPER_ZOOM_IN_SECONDARY,
         Input.SNIPER_ZOOM_OUT_SECONDARY,
+        Input.MELEE_ATTACK_ALTERNATE,
     ]
 
     static speed = 1

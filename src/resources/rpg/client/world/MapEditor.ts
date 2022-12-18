@@ -123,7 +123,6 @@ export default class MapEditor {
     static deinitialize() {}
 
     static update() {
-        natives.disableControlAction(0, 142, true)
         natives.displayRadar(false)
         // console.log(natives.getGroundZFor3dCoord(pos.x, pos.y, 9999, 9999, false, false))
         // console.log(pos)
