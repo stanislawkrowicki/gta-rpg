@@ -4,6 +4,7 @@ import Mouse, { MouseMode } from '../input/Mouse'
 import Chat from '../chat/Chat'
 import FreeCam from './FreeCam'
 import Vector2 from '../../shared/utils/Vector2'
+
 export interface IEditorObject {
     id: string
     key: string
@@ -52,38 +53,43 @@ export default class MapEditor {
         }
 
         const mouseDownListener = (x: number, y: number, button: number) => {
-            switch (button) {
-                case 0: {
-                    const cam = FreeCam.getCurrentCam()
+            if (Mouse.mode === MouseMode.SCREEN_POINTING) {
+                switch (button) {
+                    case 0: {
+                        const cam = FreeCam.getCurrentCam()
 
-                    if (cam === null) return
+                        if (cam === null) return
 
-                    const cursorPos = alt.getCursorPos()
+                        const cursorPos = alt.getCursorPos()
 
-                    // const pos = ClientUtils.screenToWorld(cam, cursorPos.x, cursorPos.y)
-                    const pos = alt.screenToWorld(cursorPos.x, cursorPos.y)
-                    console.log(pos.x, pos.y, pos.z)
+                        // const pos = ClientUtils.screenToWorld(cam, cursorPos.x, cursorPos.y)
+                        const pos = alt.screenToWorld(cursorPos.x, cursorPos.y)
+                        console.log(pos.x, pos.y, pos.z)
 
-                    break
-                }
-                case 2: {
-                    const cursorPos = alt.getCursorPos()
+                        break
+                    }
+                    case 2: {
+                        const cursorPos = alt.getCursorPos()
 
-                    MapEditor.lastKnownPointingPosition.setXY(cursorPos.x, cursorPos.y)
-                    Mouse.setMode(MouseMode.CAMERA_CONTROL)
+                        MapEditor.lastKnownPointingPosition.setXY(cursorPos.x, cursorPos.y)
+                        Mouse.setMode(MouseMode.CAMERA_CONTROL)
 
-                    break
+                        break
+                    }
                 }
             }
         }
 
         const mouseUpListener = (x: number, y: number, button: number) => {
-            switch (button) {
-                case 2:
-                    Mouse.setMode(MouseMode.SCREEN_POINTING)
-                    alt.setCursorPos(MapEditor.lastKnownPointingPosition)
+            if (Mouse.mode === MouseMode.CAMERA_CONTROL) {
+                switch (button) {
+                    case 2: {
+                        Mouse.setMode(MouseMode.SCREEN_POINTING)
+                        alt.setCursorPos(MapEditor.lastKnownPointingPosition)
 
-                    break
+                        break
+                    }
+                }
             }
         }
 
