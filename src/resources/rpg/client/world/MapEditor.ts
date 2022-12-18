@@ -40,7 +40,7 @@ export default class MapEditor {
 
     static compoundGizmo = true
 
-    static lastKnownPointingPositon = new Vector2()
+    static lastKnownPointingPosition = new Vector2()
 
     static initialize() {
         const updateInterval = alt.setInterval(MapEditor.update, 15)
@@ -69,7 +69,7 @@ export default class MapEditor {
                 case 2: {
                     const cursorPos = alt.getCursorPos()
 
-                    MapEditor.lastKnownPointingPositon.setXY(cursorPos.x, cursorPos.y)
+                    MapEditor.lastKnownPointingPosition.setXY(cursorPos.x, cursorPos.y)
                     Mouse.setMode(MouseMode.CAMERA_CONTROL)
 
                     break
@@ -81,7 +81,7 @@ export default class MapEditor {
             switch (button) {
                 case 2:
                     Mouse.setMode(MouseMode.SCREEN_POINTING)
-                    alt.setCursorPos(MapEditor.lastKnownPointingPositon)
+                    alt.setCursorPos(MapEditor.lastKnownPointingPosition)
 
                     break
             }

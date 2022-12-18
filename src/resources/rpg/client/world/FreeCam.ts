@@ -3,13 +3,29 @@ import natives from 'natives'
 import Utils from 'rpg/shared/utils/Utils'
 import Camera from '../Camera'
 import View from '../View'
+import InputGroup from '../../shared/input/InputGroup'
+import Input from '../../shared/input/Input'
 
 export default class FreeCam {
     static isEnabled = false
     static everyTick?: number = undefined
     static cam?: Camera
 
-    static readonly blockedKeys = [30, 31, 21, 36, 22, 44, 38, 71, 72, 59, 60, 42, 43]
+    static readonly blockedInputs = [
+        Input.MOVE_LR,
+        Input.MOVE_UD,
+        Input.SPRINT,
+        Input.DUCK,
+        Input.MULTIPLAYER_INFO,
+        Input.COVER,
+        Input.PICKUP,
+        Input.VEH_ACCELERATE,
+        Input.VEH_BRAKE,
+        Input.VEH_MOVE_LR,
+        Input.VEH_MOVE_UD,
+        Input.SNIPER_ZOOM_IN_SECONDARY,
+        Input.SNIPER_ZOOM_OUT_SECONDARY,
+    ]
 
     static speed = 1
 
@@ -53,8 +69,8 @@ export default class FreeCam {
     }
 
     static calculateNewPosition(pos: alt.IVector3) {
-        for (const blockedKey of FreeCam.blockedKeys) {
-            natives.disableControlAction(0, blockedKey, true)
+        for (const input of FreeCam.blockedInputs) {
+            natives.disableControlAction(InputGroup.MOVE, input, true)
         }
 
         let verticalSpeed = 0
@@ -62,17 +78,23 @@ export default class FreeCam {
 
         // Those are normals that are bound to left stick on a controller
         // 218 for left-right, 219 for up-down
-        const posMovementX = natives.getDisabledControlNormal(0, 218)
-        const posMovementY = natives.getDisabledControlNormal(0, 219)
+        const posMovementX = natives.getDisabledControlNormal(
+            InputGroup.MOVE,
+            Input.SCRIPT_LEFT_AXIS_X
+        )
+        const posMovementY = natives.getDisabledControlNormal(
+            InputGroup.MOVE,
+            Input.SCRIPT_LEFT_AXIS_Y
+        )
 
         // TODO: add isPressed to KeyBinds
         // 38 - E
-        if (natives.isDisabledControlPressed(0, 38)) {
+        if (natives.isDisabledControlPressed(InputGroup.MOVE, 38)) {
             verticalSpeed = FreeCam.speed
         }
 
         // 44 - Q
-        if (natives.isDisabledControlPressed(0, 44)) {
+        if (natives.isDisabledControlPressed(InputGroup.MOVE, 44)) {
             verticalSpeed = -FreeCam.speed
         }
 
