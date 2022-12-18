@@ -1,57 +1,55 @@
 import alt from 'alt-client'
 import natives from 'natives'
 import Utils from 'rpg/shared/utils/Utils'
+import Camera from '../Camera'
+import View from '../View'
 
 export default class FreeCam {
-    private static _isEnabled = false
-    private static _everyTick?: number = undefined
-    private static _cam?: number = null
+    static isEnabled = false
+    static everyTick?: number = undefined
+    static cam?: Camera
 
-    private static readonly blockedKeys = [30, 31, 21, 36, 22, 44, 38, 71, 72, 59, 60, 42, 43]
+    static readonly blockedKeys = [30, 31, 21, 36, 22, 44, 38, 71, 72, 59, 60, 42, 43]
 
     static speed = 1
 
     static enable() {
-        if (FreeCam._isEnabled) return
+        if (FreeCam.isEnabled) return
 
         const player = alt.Player.local
 
-        FreeCam._cam = natives.createCamWithParams(
-            'DEFAULT_SCRIPTED_CAMERA',
-            player.pos.x,
-            player.pos.y,
-            player.pos.z + 1,
+        FreeCam.cam = new Camera()
+
+        FreeCam.cam.setFov(50)
+        FreeCam.cam.setPosition(player.pos.x, player.pos.y, player.pos.z + 1)
+        FreeCam.cam.setRotation(
             (player.rot.x * 180) / Math.PI,
             (player.rot.y * 180) / Math.PI,
-            (player.rot.z * 180) / Math.PI,
-            50,
-            false,
-            2
+            (player.rot.y * 180) / Math.PI
         )
 
-        natives.setCamActive(FreeCam._cam, true)
-        natives.renderScriptCams(true, false, 0, true, false, 0)
+        View.setCamera(FreeCam.cam)
 
-        FreeCam._everyTick = alt.everyTick(FreeCam.handleFreeCam)
-        FreeCam._isEnabled = true
+        FreeCam.everyTick = alt.everyTick(FreeCam.handleFreeCam)
+        FreeCam.isEnabled = true
     }
 
     static disable() {
-        if (!FreeCam._isEnabled) return
+        if (!FreeCam.isEnabled) return
 
-        if (FreeCam._everyTick) {
-            alt.clearEveryTick(FreeCam._everyTick)
-            FreeCam._everyTick = undefined
+        if (FreeCam.everyTick) {
+            alt.clearEveryTick(FreeCam.everyTick)
+            FreeCam.everyTick = undefined
         }
 
-        if (FreeCam._cam) {
+        if (FreeCam.cam) {
             natives.renderScriptCams(false, false, 0, true, false, 0)
-            natives.setCamActive(FreeCam._cam, false)
-            natives.destroyCam(FreeCam._cam, false)
-            FreeCam._cam = null
+            natives.setCamActive(FreeCam.cam.wrapped, false)
+            natives.destroyCam(FreeCam.cam.wrapped, false)
+            FreeCam.cam = null
         }
 
-        FreeCam._isEnabled = false
+        FreeCam.isEnabled = false
     }
 
     static calculateNewPosition(pos: alt.IVector3) {
@@ -118,14 +116,15 @@ export default class FreeCam {
     }
 
     static handleFreeCam() {
-        if (!FreeCam._isEnabled || !FreeCam._cam) return
+        if (!FreeCam.isEnabled || !FreeCam.cam) return
 
-        const [rot, newPos] = FreeCam.calculateNewPosition(natives.getCamCoord(FreeCam._cam))
-        natives.setCamCoord(FreeCam._cam, newPos.x, newPos.y, newPos.z)
-        natives.setCamRot(FreeCam._cam, rot.x, rot.y, rot.z, 2)
+        const [rot, newPos] = FreeCam.calculateNewPosition(FreeCam.cam.getPosition())
+
+        FreeCam.cam.setRotation(rot.x, rot.y, rot.z)
+        FreeCam.cam.setPosition(newPos.x, newPos.y, newPos.z)
     }
 
     static getCurrentCam() {
-        return FreeCam._cam
+        return FreeCam.cam
     }
 }

@@ -86,7 +86,7 @@ export default class {
         return rad * (180 / Math.PI)
     }
 
-    static rotationToForward(rot: altShared.Vector3): altShared.Vector3 {
+    static rotateVecToForward(rot: altShared.Vector3): altShared.Vector3 {
         const rotInDegrees = rot.mul(Math.PI / 180)
         return new altShared.Vector3(
             -Math.sin(rotInDegrees.z) * Math.abs(Math.cos(rotInDegrees.x)),

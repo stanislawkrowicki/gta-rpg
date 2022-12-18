@@ -1,7 +1,9 @@
 import game from 'natives'
 
+type CameraId = number
+
 export default class Camera {
-    wrapped
+    wrapped: CameraId
     constructor(type = 'DEFAULT_SCRIPTED_CAMERA') {
         this.wrapped = game.createCam(type, false)
     }
@@ -16,5 +18,8 @@ export default class Camera {
     }
     setRotation(x: number, y: number, z: number) {
         game.setCamRot(this.wrapped, x, y, z, 2)
+    }
+    setFov(fieldOfView: number) {
+        game.setCamFov(this.wrapped, fieldOfView)
     }
 }

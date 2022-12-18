@@ -3,6 +3,7 @@ import Logger from '../logger/Logger'
 import type { ICommandDefinition, ICommand } from 'rpg/shared/commands/Commands'
 import Permissions, { RequiredPermission } from '../permissions/Permissions'
 import type GroupMap from '../permissions/groups/GroupMap'
+import alt from 'alt-server'
 
 export default class CommandManager {
     static commandsMap: Record<string, ICommand> = {}
@@ -49,4 +50,33 @@ CommandManager.registerCommand({
         'player',
         Permissions.queryCheck<typeof GroupMap.player.permissionsTree>(['chat', 'message'])
     ),
+})
+
+CommandManager.registerCommand({
+    name: 'spawnveh',
+    isUsableFromChat: true,
+    isUsableFromConsole: true,
+    callback: (client: Client, ...args: string[]) => {
+        if (args.length === 1) {
+            const model = args[0]
+
+            try {
+                new alt.Vehicle(
+                    model,
+                    client.wrapped.pos.x,
+                    client.wrapped.pos.y + 10,
+                    client.wrapped.pos.z,
+                    0,
+                    0,
+                    0
+                )
+            } catch (e) {
+                throw new Error()
+            }
+        }
+    },
+    requiredPermission: {
+        group: 'dev',
+        query: Permissions.queryCheck<typeof GroupMap.dev.permissionsTree>(['mapEditor']),
+    },
 })

@@ -3,7 +3,7 @@ import natives from 'natives'
 import Mouse, { MouseMode } from '../input/Mouse'
 import Chat from '../chat/Chat'
 import FreeCam from './FreeCam'
-import ClientUtils from 'rpg/client/utils/Utils'
+import Vector2 from '../../shared/utils/Vector2'
 export interface IEditorObject {
     id: string
     key: string
@@ -40,6 +40,8 @@ export default class MapEditor {
 
     static compoundGizmo = true
 
+    static lastKnownPointingPositon = new Vector2()
+
     static initialize() {
         const updateInterval = alt.setInterval(MapEditor.update, 15)
 
@@ -49,18 +51,50 @@ export default class MapEditor {
             }
         }
 
-        const mouseDownListener = (x: number, y: number, button: number) => {}
+        const mouseDownListener = (x: number, y: number, button: number) => {
+            switch (button) {
+                case 0: {
+                    const cam = FreeCam.getCurrentCam()
 
-        const mouseUpListener = (x: number, y: number, button: number) => {}
+                    if (cam === null) return
+
+                    const cursorPos = alt.getCursorPos()
+
+                    // const pos = ClientUtils.screenToWorld(cam, cursorPos.x, cursorPos.y)
+                    const pos = alt.screenToWorld(cursorPos.x, cursorPos.y)
+                    console.log(pos.x, pos.y, pos.z)
+
+                    break
+                }
+                case 2: {
+                    const cursorPos = alt.getCursorPos()
+
+                    MapEditor.lastKnownPointingPositon.setXY(cursorPos.x, cursorPos.y)
+                    Mouse.setMode(MouseMode.CAMERA_CONTROL)
+
+                    break
+                }
+            }
+        }
+
+        const mouseUpListener = (x: number, y: number, button: number) => {
+            switch (button) {
+                case 2:
+                    Mouse.setMode(MouseMode.SCREEN_POINTING)
+                    alt.setCursorPos(MapEditor.lastKnownPointingPositon)
+
+                    break
+            }
+        }
 
         const mouseMoveListener = (x: number, y: number) => {}
 
         alt.on('keydown', keyDownListener)
 
         Mouse.addMouseDownListener(mouseDownListener)
-        Mouse.addMouseDownListener(mouseUpListener)
+        Mouse.addMouseUpListener(mouseUpListener)
 
-        Mouse.addMouseDownListener(mouseMoveListener)
+        Mouse.addMouseMoveListener(mouseMoveListener)
 
         Mouse.setMode(MouseMode.SCREEN_POINTING)
 
@@ -89,14 +123,8 @@ export default class MapEditor {
     static deinitialize() {}
 
     static update() {
-        const cam = FreeCam.getCurrentCam()
-
-        if (cam === null) return
-
-        const cursorPos = alt.getCursorPos()
-
-        const pos = ClientUtils.screenToWorld(cam, cursorPos.x, cursorPos.y)
-
+        natives.disableControlAction(0, 142, true)
+        natives.displayRadar(false)
         // console.log(natives.getGroundZFor3dCoord(pos.x, pos.y, 9999, 9999, false, false))
         // console.log(pos)
         for (let i = 0; i < MapEditor.selectedObjects.length; ++i) {

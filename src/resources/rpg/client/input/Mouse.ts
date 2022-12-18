@@ -69,11 +69,11 @@ export default class Mouse {
             })
         }
 
-        const resolution = alt.getScreenResolution()
-        alt.setCursorPos({
-            x: resolution.x / 2,
-            y: resolution.y / 2,
-        })
+        // const resolution = alt.getScreenResolution()
+        // alt.setCursorPos({
+        //     x: resolution.x / 2
+        //     y: resolution.y / 2,
+        // })
 
         Mouse.mode = mode
     }

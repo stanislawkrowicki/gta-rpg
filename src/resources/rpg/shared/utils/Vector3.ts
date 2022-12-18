@@ -1,6 +1,107 @@
 import type altShared from 'alt-shared'
 
 export default class Vector3 {
+    x: number
+    y: number
+    z: number
+    constructor(x = 0, y = 0, z = 0) {
+        this.x = x
+        this.y = y
+        this.z = z
+    }
+
+    setXYZ(x: number, y: number, z: number) {
+        this.x = x
+        this.y = y
+        this.z = z
+    }
+
+    addXYZ(x: number, y: number, z: number) {
+        this.x += x
+        this.y += y
+        this.z += z
+    }
+    subXYZ(x: number, y: number, z: number) {
+        this.x -= x
+        this.y -= y
+        this.z -= z
+    }
+    divXYZ(x: number, y: number, z: number) {
+        this.x /= x
+        this.y /= y
+        this.z /= z
+    }
+    mulXYZ(x: number, y: number, z: number) {
+        this.x *= x
+        this.y *= y
+        this.z *= z
+    }
+
+    dotXYZ(x: number, y: number, z: number) {
+        let product = 0
+
+        product += this.x * x
+        product += this.y * y
+        product += this.z * z
+
+        return product
+    }
+    crossXYZ(x: number, y: number, z: number) {
+        const product = new Vector3()
+
+        product.x = this.y * z - this.z * y
+        product.y = this.z * x - this.x * z
+        product.z = this.x * y - this.y * x
+
+        return product
+    }
+
+    set(vec: Vector3) {
+        this.x = vec.x
+        this.y = vec.y
+        this.z = vec.z
+    }
+
+    add(vec: Vector3) {
+        this.x += vec.x
+        this.y += vec.y
+        this.z += vec.z
+    }
+    sub(vec: Vector3) {
+        this.x -= vec.x
+        this.y -= vec.y
+        this.z -= vec.z
+    }
+    div(vec: Vector3) {
+        this.x /= vec.x
+        this.y /= vec.y
+        this.z /= vec.z
+    }
+    mul(vec: Vector3) {
+        this.x *= vec.x
+        this.y *= vec.y
+        this.z *= vec.z
+    }
+
+    dot(vec: Vector3) {
+        let product = 0
+
+        product += this.x * vec.x
+        product += this.y * vec.y
+        product += this.z * vec.z
+
+        return product
+    }
+    cross(vec: Vector3) {
+        const product = new Vector3()
+
+        product.x = this.y * vec.z - this.z * vec.y
+        product.y = this.z * vec.x - this.x * vec.z
+        product.z = this.x * vec.y - this.y * vec.x
+
+        return product
+    }
+
     static getDistanceBetweenTwoXYZPoints(
         x1: number,
         y1: number,
