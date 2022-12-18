@@ -4,6 +4,7 @@ import Mouse, { MouseMode } from '../input/Mouse'
 import Chat from '../chat/Chat'
 import FreeCam from './FreeCam'
 import Vector2 from '../../shared/utils/Vector2'
+import ClientUtils from 'rpg/client/utils/Utils'
 
 export interface IEditorObject {
     id: string
@@ -62,9 +63,9 @@ export default class MapEditor {
 
                         const cursorPos = alt.getCursorPos()
 
-                        // const pos = ClientUtils.screenToWorld(cam, cursorPos.x, cursorPos.y)
-                        const pos = alt.screenToWorld(cursorPos.x, cursorPos.y)
-                        console.log(pos.x, pos.y, pos.z)
+                        const pos = ClientUtils.screenToWorld(cam.wrapped, cursorPos.x, cursorPos.y)
+                        // const pos = alt.screenToWorld(cursorPos.x, cursorPos.y)
+                        console.log(pos)
 
                         break
                     }
