@@ -2,6 +2,10 @@ import alt from 'alt-client'
 import natives from 'natives'
 
 import SharedUtils from 'rpg/shared/utils/Utils'
+import type Vector3 from '../../shared/utils/Vector3'
+import Vector2 from '../../shared/utils/Vector2'
+import * as v8 from 'v8'
+import type RGBA from '../../shared/utils/RGBA'
 
 export default class ClientUtils {
     static getScreenPosFromNormal(x: number, y: number): [number, number] {
@@ -66,5 +70,90 @@ export default class ClientUtils {
         const result = natives.getShapeTestResult(ray, undefined, undefined, undefined, undefined)
 
         return result
+    }
+    static drawPoly(a: Vector3, b: Vector3, c: Vector3, color: RGBA) {
+        natives.drawPoly(
+            a.x,
+            a.y,
+            a.z,
+            b.x,
+            b.y,
+            b.z,
+            c.x,
+            c.y,
+            c.z,
+            color.r,
+            color.g,
+            color.b,
+            color.a
+        )
+    }
+    static drawPlane(a: Vector3, b: Vector3, c: Vector3, d: Vector3, color: RGBA) {
+        ClientUtils.drawPoly(a, b, c, color)
+        ClientUtils.drawPoly(c, d, a, color)
+    }
+    static drawSphereMarker(position: Vector3, radius: number, color: RGBA) {
+        natives.drawMarkerSphere(
+            position.x,
+            position.y,
+            position.z,
+            radius,
+            color.r,
+            color.g,
+            color.b,
+            color.a
+        )
+    }
+    static drawBox(position: Vector3, rotation: Vector3, size: Vector3, color: RGBA) {
+        ClientUtils.drawPlane(
+            position.copy().addXYZ(0, size.y, 0),
+            position.copy().addXYZ(size.x, size.y, 0),
+            position.copy().addXYZ(size.x, 0, 0),
+            position,
+            color
+        )
+
+        ClientUtils.drawPlane(
+            position,
+            position.copy().addXYZ(size.x, 0, 0),
+            position.copy().addXYZ(size.x, 0, size.z),
+            position.copy().addXYZ(0, 0, size.z),
+            color
+        )
+
+        ClientUtils.drawPlane(
+            position.copy().addXYZ(0, 0, size.z),
+            position.copy().addXYZ(0, size.y, size.z),
+            position.copy().addXYZ(0, size.y, 0),
+            position,
+            color
+        )
+
+        ClientUtils.drawPlane(
+            position.copy().addXYZ(0, 0, size.z),
+            position.copy().addXYZ(size.x, 0, size.z),
+            position.copy().addXYZ(size.x, size.y, size.z),
+            position.copy().addXYZ(0, size.y, size.z),
+            color
+        )
+
+        ClientUtils.drawPlane(
+            position.copy().addXYZ(size.x, 0, 0),
+            position.copy().addXYZ(size.x, size.y, 0),
+            position.copy().addXYZ(size.x, size.y, size.z),
+            position.copy().addXYZ(size.x, 0, size.z),
+            color
+        )
+
+        ClientUtils.drawPlane(
+            position.copy().addXYZ(0, size.y, size.z),
+            position.copy().addXYZ(size.x, size.y, size.z),
+            position.copy().addXYZ(size.x, size.y, 0),
+            position.copy().addXYZ(0, size.y, 0),
+            color
+        )
+    }
+    static drawLine(a: Vector3, b: Vector3, thickness: number, color: RGBA) {
+        natives.drawLine(a.x, a.y, a.z, b.x, b.y, b.z, color.r, color.g, color.b, color.a)
     }
 }

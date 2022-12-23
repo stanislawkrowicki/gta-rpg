@@ -10,6 +10,10 @@ export default class Vector3 {
         this.z = z
     }
 
+    copy() {
+        return new Vector3(this.x, this.y, this.z)
+    }
+
     setXYZ(x: number, y: number, z: number) {
         this.x = x
         this.y = y
@@ -20,21 +24,29 @@ export default class Vector3 {
         this.x += x
         this.y += y
         this.z += z
+
+        return this
     }
     subXYZ(x: number, y: number, z: number) {
         this.x -= x
         this.y -= y
         this.z -= z
+
+        return this
     }
     divXYZ(x: number, y: number, z: number) {
         this.x /= x
         this.y /= y
         this.z /= z
+
+        return this
     }
     mulXYZ(x: number, y: number, z: number) {
         this.x *= x
         this.y *= y
         this.z *= z
+
+        return this
     }
 
     dotXYZ(x: number, y: number, z: number) {
@@ -66,21 +78,29 @@ export default class Vector3 {
         this.x += vec.x
         this.y += vec.y
         this.z += vec.z
+
+        return this
     }
     sub(vec: Vector3) {
         this.x -= vec.x
         this.y -= vec.y
         this.z -= vec.z
+
+        return this
     }
     div(vec: Vector3) {
         this.x /= vec.x
         this.y /= vec.y
         this.z /= vec.z
+
+        return this
     }
     mul(vec: Vector3) {
         this.x *= vec.x
         this.y *= vec.y
         this.z *= vec.z
+
+        return this
     }
 
     dot(vec: Vector3) {
