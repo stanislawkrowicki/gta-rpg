@@ -7,9 +7,20 @@ import VehicleSchema from '../../../../../db/MainDB/schemas/vehicles/Vehicle.sch
 import VehicleEquipmentSchema from '../../../../../db/MainDB/schemas/equipments/VehicleEquipment.schema'
 import NPCSchema from '../../../../../db/MainDB/schemas/npcs/NPC.schema'
 import GameDeviceSchema from '../../../../../db/MainDB/schemas/gameDevices/GameDevice.schema'
-import { getModelForClass } from '@typegoose/typegoose'
+import { getDiscriminatorModelForClass, getModelForClass } from '@typegoose/typegoose'
 import SuspiciousEventSchema from '../../../../../db/MainDB/schemas/suspiciousEvents/SuspiciousEvent.schema'
 import TemporaryPermissionSchema from '../../../../../db/MainDB/schemas/temporaryPermissions/TemporaryPermission.schema'
+import WorldEntitySchema from '../../../../../db/MainDB/schemas/world/WorldEntity.schema'
+import WorldObjectSchema from '../../../../../db/MainDB/schemas/world/WorldObject.schema'
+import WorldVehicleSchema from '../../../../../db/MainDB/schemas/world/WorldVehicle.schema'
+import WorldMarkerSchema from '../../../../../db/MainDB/schemas/world/WorldMarker.schema'
+
+interface IWorldEntityModels {
+    objects: mongoose.Model<WorldObjectSchema>
+    markers: mongoose.Model<WorldMarkerSchema>
+    vehicles: mongoose.Model<WorldVehicleSchema>
+}
+
 export default class MainDB {
     static NAME = 'rpg'
 
@@ -32,6 +43,8 @@ export default class MainDB {
         //
         // vehicleEquipments?: mongoose.Model<any>
         temporaryPermissions?: mongoose.Model<TemporaryPermissionSchema>
+
+        worldEntities?: IWorldEntityModels
     } = {}
 
     static connect() {
@@ -102,5 +115,19 @@ export default class MainDB {
                 customName: 'temporaryPermissions',
             },
         })
+
+        const worldEntityModel = getModelForClass(WorldEntitySchema)
+
+        MainDB.collections['worldEntities'] = {
+            objects: getDiscriminatorModelForClass(worldEntityModel, WorldObjectSchema, {
+                existingConnection: MainDB.connection,
+            }),
+            markers: getDiscriminatorModelForClass(worldEntityModel, WorldMarkerSchema, {
+                existingConnection: MainDB.connection,
+            }),
+            vehicles: getDiscriminatorModelForClass(worldEntityModel, WorldVehicleSchema, {
+                existingConnection: MainDB.connection,
+            }),
+        }
     }
 }
