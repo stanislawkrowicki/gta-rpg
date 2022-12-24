@@ -2,7 +2,7 @@ import alt from 'alt-client'
 import natives from 'natives'
 
 import SharedUtils from 'rpg/shared/utils/Utils'
-import type Vector3 from '../../shared/utils/Vector3'
+import Vector3 from '../../shared/utils/Vector3'
 import Vector2 from '../../shared/utils/Vector2'
 import * as v8 from 'v8'
 import type RGBA from '../../shared/utils/RGBA'
@@ -104,7 +104,26 @@ export default class ClientUtils {
             color.a
         )
     }
-    static drawBox(position: Vector3, rotation: Vector3, size: Vector3, color: RGBA) {
+    static rotateVector3AroundOrigin(vector: Vector3, origin: Vector3, toRotate: Vector3) {
+        return new Vector3()
+    }
+    static drawPath(path: Vector3[], color: RGBA) {
+        for (let i = 0; i < path.length; i++) {
+            const entry = path[i]
+
+            natives.drawMarkerSphere(
+                entry.x,
+                entry.y,
+                entry.z,
+                3,
+                color.r,
+                color.g,
+                color.b,
+                color.a
+            )
+        }
+    }
+    static drawBox(position: Vector3, size: Vector3, color: RGBA) {
         ClientUtils.drawPlane(
             position.copy().addXYZ(0, size.y, 0),
             position.copy().addXYZ(size.x, size.y, 0),
@@ -150,6 +169,145 @@ export default class ClientUtils {
             position.copy().addXYZ(size.x, size.y, size.z),
             position.copy().addXYZ(size.x, size.y, 0),
             position.copy().addXYZ(0, size.y, 0),
+            color
+        )
+    }
+    static drawBoxWithRotation(position: Vector3, rotation: Vector3, size: Vector3, color: RGBA) {
+        const boxCenter = new Vector3(
+            position.x + size.x / 2,
+            position.y + size.y / 2,
+            position.z + size.z / 2
+        )
+
+        ClientUtils.drawPlane(
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(0, size.y, 0),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, size.y, 0),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, 0, 0),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(position.copy(), boxCenter, rotation),
+            color
+        )
+
+        ClientUtils.drawPlane(
+            ClientUtils.rotateVector3AroundOrigin(position.copy(), boxCenter, rotation),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, 0, 0),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, 0, size.z),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(0, 0, size.z),
+                boxCenter,
+                rotation
+            ),
+            color
+        )
+
+        ClientUtils.drawPlane(
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(0, 0, size.z),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(0, size.y, size.z),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(0, size.y, 0),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(position.copy(), boxCenter, rotation),
+            color
+        )
+
+        ClientUtils.drawPlane(
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(0, 0, size.z),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, 0, size.z),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, size.y, size.z),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(0, size.y, size.z),
+                boxCenter,
+                rotation
+            ),
+            color
+        )
+
+        ClientUtils.drawPlane(
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, 0, 0),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, size.y, 0),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, size.y, size.z),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, 0, size.z),
+                boxCenter,
+                rotation
+            ),
+            color
+        )
+
+        ClientUtils.drawPlane(
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(0, size.y, size.z),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, size.y, size.z),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(size.x, size.y, 0),
+                boxCenter,
+                rotation
+            ),
+            ClientUtils.rotateVector3AroundOrigin(
+                position.copy().addXYZ(0, size.y, 0),
+                boxCenter,
+                rotation
+            ),
             color
         )
     }

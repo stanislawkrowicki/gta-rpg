@@ -81,10 +81,7 @@ export default class MapEditor {
 
                         const pos = result[2]
 
-                        MapEditor.debugPosition.setXYZ(pos.x, pos.y, pos.z + 10)
-
-                        // const pos = alt.screenToWorld(cursorPos.x, cursorPos.y)
-                        // console.log(pos)
+                        MapEditor.debugPosition.setXYZ(pos.x, pos.y, pos.z)
 
                         break
                     }
@@ -151,67 +148,67 @@ export default class MapEditor {
     static update() {
         natives.displayRadar(false)
 
-        function drawMovementGizmo(
-            position: Vector3,
-            rotation: Vector3,
-            scale: Vector3,
-            activeAxis: Axis3D
-        ) {
-            natives.setDepthwriting(true)
-
-            ClientUtils.drawBox(
-                position.copy().addXYZ(0.5, 0.5, 0.5),
-                rotation,
-                new Vector3(4.5, 0.1, 0.1).mul(scale),
-                new RGBA(0, 0, 0, 255)
-            )
-
-            ClientUtils.drawBox(
-                position.copy().addXYZ(0.5, 0.5, 0.5),
-                rotation,
-                new Vector3(0.1, 4.5, 0.1).mul(scale),
-                new RGBA(0, 0, 0, 255)
-            )
-
-            ClientUtils.drawBox(
-                position.copy().addXYZ(0.5, 0.5, 0.5),
-                rotation,
-                new Vector3(0.1, 0.1, 4.5).mul(scale),
-                new RGBA(0, 0, 0, 255)
-            )
-
-            ClientUtils.drawBox(
-                position.copy().addXYZ(0.35, 0.35, 0.35),
-                rotation,
-                new Vector3(0.4, 0.4, 0.4).mul(scale),
-                new RGBA(210, 210, 210, 255)
-            )
-
-            ClientUtils.drawBox(
-                position.copy().addXYZ(5, 0, 0),
-                rotation,
-                new Vector3(1, 1, 1).mul(scale),
-                new RGBA(255, 0, 0, 255)
-            )
-
-            ClientUtils.drawBox(
-                position.copy().addXYZ(0, 5, 0),
-                rotation,
-                new Vector3(1, 1, 1),
-                new RGBA(0, 255, 0, 255)
-            )
-
-            ClientUtils.drawBox(
-                position.copy().addXYZ(0, 0, 5),
-                rotation,
-                new Vector3(1, 1, 1).mul(scale),
-                new RGBA(0, 0, 255, 255)
-            )
-
-            natives.setDepthwriting(false)
-        }
-
-        drawMovementGizmo(MapEditor.debugPosition, new Vector3(), new Vector3(1, 1, 1), Axis3D.X)
+        // function drawMovementGizmo(
+        //     position: Vector3,
+        //     rotation: Vector3,
+        //     scale: Vector3,
+        //     activeAxis: Axis3D
+        // ) {
+        //     natives.setDepthwriting(true)
+        //
+        //     ClientUtils.drawBox(
+        //         position.copy().addXYZ(0.5, 0.5, 0.5),
+        //         rotation,
+        //         new Vector3(4.5, 0.1, 0.1).mul(scale),
+        //         new RGBA(0, 0, 0, 255)
+        //     )
+        //
+        //     ClientUtils.drawBox(
+        //         position.copy().addXYZ(0.5, 0.5, 0.5),
+        //         rotation,
+        //         new Vector3(0.1, 4.5, 0.1).mul(scale),
+        //         new RGBA(0, 0, 0, 255)
+        //     )
+        //
+        //     ClientUtils.drawBox(
+        //         position.copy().addXYZ(0.5, 0.5, 0.5),
+        //         rotation,
+        //         new Vector3(0.1, 0.1, 4.5).mul(scale),
+        //         new RGBA(0, 0, 0, 255)
+        //     )
+        //
+        //     ClientUtils.drawBox(
+        //         position.copy().addXYZ(0.35, 0.35, 0.35),
+        //         rotation,
+        //         new Vector3(0.4, 0.4, 0.4).mul(scale),
+        //         new RGBA(210, 210, 210, 255)
+        //     )
+        //
+        //     ClientUtils.drawBox(
+        //         position.copy().addXYZ(5, 0, 0),
+        //         rotation,
+        //         new Vector3(1, 1, 1).mul(scale),
+        //         new RGBA(255, 0, 0, 255)
+        //     )
+        //
+        //     ClientUtils.drawBox(
+        //         position.copy().addXYZ(0, 5, 0),
+        //         rotation,
+        //         new Vector3(1, 1, 1),
+        //         new RGBA(0, 255, 0, 255)
+        //     )
+        //
+        //     ClientUtils.drawBox(
+        //         position.copy().addXYZ(0, 0, 5),
+        //         rotation,
+        //         new Vector3(1, 1, 1).mul(scale),
+        //         new RGBA(0, 0, 255, 255)
+        //     )
+        //
+        //     natives.setDepthwriting(false)
+        // }
+        //
+        // drawMovementGizmo(MapEditor.debugPosition, new Vector3(), new Vector3(1, 1, 1), Axis3D.X)
         // console.log(natives.getGroundZFor3dCoord(pos.x, pos.y, 9999, 9999, false, false))
         // console.log(pos)
         for (let i = 0; i < MapEditor.selectedObjects.length; ++i) {

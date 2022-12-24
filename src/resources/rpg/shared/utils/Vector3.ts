@@ -1,4 +1,5 @@
 import type altShared from 'alt-shared'
+import type Matrix3 from './Matrix3'
 
 export default class Vector3 {
     x: number
@@ -112,6 +113,17 @@ export default class Vector3 {
 
         return product
     }
+
+    dotFromMatrix3(matrix: Matrix3) {
+        const product = new Vector3(
+            matrix.a1 * this.x + matrix.a2 * this.y + matrix.a3 * this.z,
+            matrix.b1 * this.x + matrix.b2 * this.y + matrix.b3 * this.z,
+            matrix.c1 * this.x + matrix.c2 * this.y + matrix.c3 * this.z
+        )
+
+        return product
+    }
+
     cross(vec: Vector3) {
         const product = new Vector3()
 
@@ -138,7 +150,10 @@ export default class Vector3 {
         return Math.sqrt(dx * dx + dy * dy + dz * dz)
     }
 
-    static getDistanceBetweenTwoVectors(a: altShared.Vector3, b: altShared.Vector3): number {
+    static getDistanceBetweenTwoVectors(
+        a: altShared.Vector3 | Vector3,
+        b: altShared.Vector3 | Vector3
+    ): number {
         const dx = b.x - a.x
         const dy = b.y - a.y
         const dz = b.z - a.z
