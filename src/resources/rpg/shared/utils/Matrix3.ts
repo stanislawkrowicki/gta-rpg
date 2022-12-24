@@ -22,19 +22,19 @@ export default class Matrix3 {
         this.c3 = c3
     }
 
-    dot(a: Matrix3, b: Matrix3) {
+    dot(matrix: Matrix3) {
         const product = new Matrix3(
-            a.a1 * b.a1 + a.b1 * b.a2 + a.c1 * b.a3,
-            a.a1 * b.b1 + a.b1 * b.b2 + a.c1 * b.b3,
-            a.a1 * b.c1 + a.b1 * b.c2 + a.c1 * b.c3,
+            this.a1 * matrix.a1 + this.b1 * matrix.a2 + this.c1 * matrix.a3,
+            this.a1 * matrix.b1 + this.b1 * matrix.b2 + this.c1 * matrix.b3,
+            this.a1 * matrix.c1 + this.b1 * matrix.c2 + this.c1 * matrix.c3,
 
-            a.a2 * b.a1 + a.b2 * b.a2 + a.c2 * b.a3,
-            a.a2 * b.b1 + a.b2 * b.b2 + a.c2 * b.b3,
-            a.a2 * b.c1 + a.b2 * b.c2 + a.c2 * b.c3,
+            this.a2 * matrix.a1 + this.b2 * matrix.a2 + this.c2 * matrix.a3,
+            this.a2 * matrix.b1 + this.b2 * matrix.b2 + this.c2 * matrix.b3,
+            this.a2 * matrix.c1 + this.b2 * matrix.c2 + this.c2 * matrix.c3,
 
-            a.a3 * b.a1 + a.b3 * b.a2 + a.c3 * b.a3,
-            a.a3 * b.b1 + a.b3 * b.b2 + a.c3 * b.b3,
-            a.a3 * b.c1 + a.b3 * b.c2 + a.c3 * b.c3
+            this.a3 * matrix.a1 + this.b3 * matrix.a2 + this.c3 * matrix.a3,
+            this.a3 * matrix.b1 + this.b3 * matrix.b2 + this.c3 * matrix.b3,
+            this.a3 * matrix.c1 + this.b3 * matrix.c2 + this.c3 * matrix.c3
         )
 
         return product

@@ -92,17 +92,25 @@ export default class Matrix4 {
 
     dot(matrix: Matrix4) {
         const product = new Matrix4(
-            this.a1 * matrix.a1 + this.b1 * matrix.a2 + this.c1 * matrix.a3,
-            this.a1 * matrix.b1 + this.b1 * matrix.b2 + this.c1 * matrix.b3,
-            this.a1 * matrix.c1 + this.b1 * matrix.c2 + this.c1 * matrix.c3,
+            this.a1 * matrix.a1 + this.b1 * matrix.a2 + this.c1 * matrix.a3 + this.d1 * matrix.a4,
+            this.a1 * matrix.b1 + this.b1 * matrix.b2 + this.c1 * matrix.b3 + this.d1 * matrix.b4,
+            this.a1 * matrix.c1 + this.b1 * matrix.c2 + this.c1 * matrix.c3 + this.d1 * matrix.c4,
+            this.a1 * matrix.d1 + this.b1 * matrix.d2 + this.c1 * matrix.d3 + this.d1 * matrix.d4,
 
-            this.a2 * matrix.a1 + this.b2 * matrix.a2 + this.c2 * matrix.a3,
-            this.a2 * matrix.b1 + this.b2 * matrix.b2 + this.c2 * matrix.b3,
-            this.a2 * matrix.c1 + this.b2 * matrix.c2 + this.c2 * matrix.c3,
+            this.a2 * matrix.a1 + this.b2 * matrix.a2 + this.c2 * matrix.a3 + this.d2 * matrix.a4,
+            this.a2 * matrix.b1 + this.b2 * matrix.b2 + this.c2 * matrix.b3 + this.d2 * matrix.b4,
+            this.a2 * matrix.c1 + this.b2 * matrix.c2 + this.c2 * matrix.c3 + this.d2 * matrix.c4,
+            this.a2 * matrix.d1 + this.b2 * matrix.d2 + this.c2 * matrix.d3 + this.d2 * matrix.d4,
 
-            this.a3 * matrix.a1 + this.b3 * matrix.a2 + this.c3 * matrix.a3,
-            this.a3 * matrix.b1 + this.b3 * matrix.b2 + this.c3 * matrix.b3,
-            this.a3 * matrix.c1 + this.b3 * matrix.c2 + this.c3 * matrix.c3
+            this.a3 * matrix.a1 + this.b3 * matrix.a2 + this.c3 * matrix.a3 + this.d3 * matrix.a4,
+            this.a3 * matrix.b1 + this.b3 * matrix.b2 + this.c3 * matrix.b3 + this.d3 * matrix.b4,
+            this.a3 * matrix.c1 + this.b3 * matrix.c2 + this.c3 * matrix.c3 + this.d3 * matrix.c4,
+            this.a3 * matrix.d1 + this.b3 * matrix.d2 + this.c3 * matrix.d3 + this.d3 * matrix.d4,
+
+            this.a4 * matrix.a1 + this.b4 * matrix.a2 + this.c4 * matrix.a3 + this.d4 * matrix.a4,
+            this.a4 * matrix.b1 + this.b4 * matrix.b2 + this.c4 * matrix.b3 + this.d4 * matrix.b4,
+            this.a4 * matrix.c1 + this.b4 * matrix.c2 + this.c4 * matrix.c3 + this.d4 * matrix.c4,
+            this.a4 * matrix.d1 + this.b4 * matrix.d2 + this.c4 * matrix.d3 + this.d4 * matrix.d4,
         )
 
         return product
