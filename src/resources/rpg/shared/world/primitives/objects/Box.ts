@@ -1,5 +1,5 @@
-import type Vector3 from './Vector3'
-import PrimitiveObject from './PrimitiveObject'
+import type Vector3 from '../../../utils/Vector3'
+import PrimitiveObject from '../PrimitiveObject'
 
 export default class Box extends PrimitiveObject {
     size: Vector3

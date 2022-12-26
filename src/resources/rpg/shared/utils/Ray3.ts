@@ -1,5 +1,4 @@
 import type Vector3 from './Vector3'
-import type Box from './Box'
 
 export default class Ray3 {
     startPoint: Vector3

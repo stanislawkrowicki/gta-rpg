@@ -1,4 +1,4 @@
-import type Vector3 from './Vector3'
+import type Vector3 from '../../utils/Vector3'
 
 export default abstract class PrimitiveObject {
     position: Vector3

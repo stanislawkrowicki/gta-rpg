@@ -1,7 +1,7 @@
 import Ray3 from './Ray3'
 import type Vector3 from './Vector3'
-import type PrimitiveObject from './PrimitiveObject'
-import Box from './Box'
+import type PrimitiveObject from '../world/primitives/PrimitiveObject'
+import Box from '../world/primitives/objects/Box'
 
 export default class PrimitiveRay3 extends Ray3 {
     constructor(startPoint: Vector3, directionPoint: Vector3) {
