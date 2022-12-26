@@ -21,6 +21,14 @@ export default abstract class ServerEvent extends Event {
         )
     }
 
+    static emitToUnwrappedClient(player: altServer.Player, event: ServerEvent) {
+        altServer.emitClientRaw(
+            player,
+            (event.constructor as typeof Event).ID as unknown as string,
+            event
+        )
+    }
+
     static emitToAll(event: ServerEvent) {
         altServer.emitAllClientsRaw(
             (event.constructor as typeof Event).ID as unknown as string,
