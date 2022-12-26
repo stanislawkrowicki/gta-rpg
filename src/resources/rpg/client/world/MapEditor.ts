@@ -5,12 +5,43 @@ import Chat from '../chat/Chat'
 import FreeCam from './FreeCam'
 import Vector2 from '../../shared/utils/Vector2'
 import ClientUtils from 'rpg/client/utils/Utils'
+import type WorldEntityType from 'rpg/shared/world/WorldEntityType'
+import type { MarkerType } from 'rpg/shared/world/markers/Markers'
+import type Vector3 from 'rpg/shared/utils/Vector3'
+import type WorldEntityGroupSchema from '../../../../db/MainDB/schemas/world/WorldEntityGroup.schema'
 
-export interface IEditorObject {
-    id: string
-    key: string
-    description: string
-    object: alt.Object
+export interface IMarkerEntity {
+    markerType: MarkerType
+    position: Vector3
+    scale: number
+    vertices?: any
+}
+
+export interface IObjectEntity {
+    hash: string | number
+    position: Vector3
+    rotation: Vector3
+}
+
+// export interface IVehicleEntity {}
+// export interface INPCEntity {}
+
+export interface IEntity {
+    _id: string
+
+    type: WorldEntityType
+    name: string
+    description?: string
+
+    wrapped: IMarkerEntity | IObjectEntity
+}
+
+export interface IEntityGroup {
+    _id: string
+    name: string
+    description?: string
+    children?: IEntityGroup[]
+    entities?: IEntity[]
 }
 
 enum EditableObject {
@@ -37,8 +68,7 @@ const CurrentlyPressedKeys = []
  *
  */
 export default class MapEditor {
-    static editableObjects: IEditorObject[] = []
-    static selectedObjects: IEditorObject[] = []
+    static groupedEntities: string[] = []
 
     static compoundGizmo = true
 
@@ -129,12 +159,52 @@ export default class MapEditor {
 
     static deinitialize() {}
 
+    private static convertGroupFromDB(dbGroup: WorldEntityGroupSchema): IEntityGroup {
+        return {
+            _id: dbGroup._id.toString(),
+            name: dbGroup.name,
+            description: dbGroup.description,
+            children: [],
+            entities: [],
+        }
+    }
+
+    // static async loadEntities() {
+    //     const groupsFromDB = await MainDB.collections.worldEntityGroups.find()
+
+    //     if (groupsFromDB.length === 0) return
+
+    //     const rootGroupsFromDB = groupsFromDB.filter((group) => typeof group.parent === 'undefined')
+
+    //     const groups: IEntityGroup[] = []
+
+    //     rootGroupsFromDB.forEach((dbGroup) => {
+    //         groups.push(MapEditor.convertGroupFromDB(dbGroup))
+    //     })
+
+    //     for (const rootGroup of groups) {
+    //         const currentParentGroup = rootGroup
+
+    //         let hasAnyChild = false
+
+    //         do {
+    //             hasAnyChild = false
+
+    //             for (const groupFromDB of groupsFromDB) {
+    //                 if (typeof groupFromDB.parent !== 'undefined') hasAnyChild = true
+    //                 if (groupFromDB.parent._id.toString() === currentParentGroup._id)
+    //                     currentParentGroup.children.push(MapEditor.convertGroupFromDB(groupFromDB))
+    //             }
+    //         } while (hasAnyChild)
+    //     }
+    // }
+
     static update() {
         natives.displayRadar(false)
         // console.log(natives.getGroundZFor3dCoord(pos.x, pos.y, 9999, 9999, false, false))
         // console.log(pos)
-        for (let i = 0; i < MapEditor.selectedObjects.length; ++i) {
-            // TODO: Render gizmo
-        }
+        // for (let i = 0; i < MapEditor.selectedObjects.length; ++i) {
+        //     // TODO: Render gizmo
+        // }
     }
 }

@@ -14,6 +14,7 @@ import WorldEntitySchema from '../../../../../db/MainDB/schemas/world/WorldEntit
 import WorldObjectSchema from '../../../../../db/MainDB/schemas/world/WorldObject.schema'
 import WorldVehicleSchema from '../../../../../db/MainDB/schemas/world/WorldVehicle.schema'
 import WorldMarkerSchema from '../../../../../db/MainDB/schemas/world/WorldMarker.schema'
+import WorldEntityGroupSchema from '../../../../../db/MainDB/schemas/world/WorldEntityGroup.schema'
 
 interface IWorldEntityModels {
     objects: mongoose.Model<WorldObjectSchema>
@@ -44,6 +45,7 @@ export default class MainDB {
         // vehicleEquipments?: mongoose.Model<any>
         temporaryPermissions?: mongoose.Model<TemporaryPermissionSchema>
 
+        worldEntityGroups?: mongoose.Model<WorldEntityGroupSchema>
         worldEntities?: IWorldEntityModels
     } = {}
 
@@ -115,6 +117,8 @@ export default class MainDB {
                 customName: 'temporaryPermissions',
             },
         })
+
+        MainDB.addCollection(WorldEntityGroupSchema, 'worldEntityGroups')
 
         const worldEntityModel = getModelForClass(WorldEntitySchema)
 

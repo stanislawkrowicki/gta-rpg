@@ -1,7 +1,7 @@
 enum WorldEntityType {
-    Object = 'object',
-    Marker = 'marker',
-    Vehicle = 'vehicle',
+    OBJECT = 'object',
+    MARKER = 'marker',
+    VEHICLE = 'vehicle',
     NPC = 'npc',
 }
 
