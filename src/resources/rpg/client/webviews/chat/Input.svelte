@@ -58,4 +58,20 @@
 <input bind:value={message} bind:this={inputField} on:keydown={onKeyPress} />
 
 <style>
+    input {
+        width: -webkit-fill-available;
+        padding: 4px;
+
+        outline: none;
+        background: transparent;
+        border: none;
+
+        transition: background 0.15s;
+
+        border-radius: 4px;
+    }
+
+    input:focus {
+        background: #ffffffbb;
+    }
 </style>

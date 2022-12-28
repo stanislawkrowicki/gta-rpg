@@ -156,6 +156,40 @@ export default class Vector3 {
         return output
     }
 
+    mulByScalar(scalar: number) {
+        this.mulByScalarTo(scalar, this)
+
+        return this
+    }
+
+    mulByScalarTo(scalar: number, output: Vector3) {
+        Vector3.mulByScalarTo(this, scalar, output)
+    }
+
+    static mulByScalarTo(vector: Vector3 | altShared.Vector3, scalar: number, output: Vector3) {
+        output.x = vector.x * scalar
+        output.y = vector.y * scalar
+        output.z = vector.z * scalar
+    }
+
+    normalize() {
+        this.normalizeTo(this)
+
+        return this
+    }
+
+    normalizeTo(output: Vector3) {
+        Vector3.normalizeTo(this, output)
+    }
+
+    static normalizeTo(vector: Vector3 | altShared.Vector3, output: Vector3) {
+        const length = Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z)
+
+        output.x = vector.x / length
+        output.y = vector.y / length
+        output.z = vector.z / length
+    }
+
     dot(vector: Vector3 | altShared.Vector3) {
         return Vector3.dot(this, vector)
     }
@@ -236,6 +270,16 @@ export default class Vector3 {
         outputVector.x = matrix.a1 * this.x + matrix.b1 * this.y + matrix.c1 * this.z + matrix.d1
         outputVector.y = matrix.a2 * this.x + matrix.b2 * this.y + matrix.c2 * this.z + matrix.d2
         outputVector.z = matrix.a3 * this.x + matrix.b3 * this.y + matrix.c3 * this.z + matrix.d3
+    }
+
+    distanceToVector(vector: Vector3) {
+        return Vector3.getDistanceBetweenTwoVectors(this, vector)
+    }
+
+    length(vector: Vector3) {
+        const squareLength = vector.x * vector.x + vector.y * vector.y + vector.z * vector.z
+
+        return Math.sqrt(squareLength)
     }
 
     static getDistanceBetweenTwoXYZPoints(

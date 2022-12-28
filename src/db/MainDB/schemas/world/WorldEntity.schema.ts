@@ -1,6 +1,6 @@
 import typegoose, { Ref } from '@typegoose/typegoose'
 import { modelOptions, Severity } from '@typegoose/typegoose'
-import mongoose from 'mongoose'
+import type mongoose from 'mongoose'
 import WorldEntityType from '../../../../resources/rpg/shared/world/WorldEntityType'
 import WorldEntityGroupSchema from './WorldEntityGroup.schema'
 
