@@ -5,9 +5,19 @@
     import CarOutline from 'svelte-material-icons/CarOutline.svelte'
     import AccountOutline from 'svelte-material-icons/AccountOutline.svelte'
     import CubeOutline from 'svelte-material-icons/CubeOutline.svelte'
+    import PencilOutline from 'svelte-material-icons/PencilOutline.svelte'
+
     import type { IEntity } from 'rpg/client/world/MapEditor'
 
+    import { createEventDispatcher } from 'svelte'
+
+    const dispatch = createEventDispatcher()
+
     export let data: IEntity
+
+    const emitEditEntity = () => {
+        dispatch('editEntity', data._id)
+    }
 </script>
 
 <main>
@@ -21,6 +31,7 @@
         <AccountOutline />
     {/if}
     <span>{data.name}</span>
+    <button on:click={emitEditEntity}><PencilOutline /></button>
 </main>
 
 <style lang="scss">
@@ -35,6 +46,14 @@
             background: 0 0.1em no-repeat;
             background-size: 1em 1em;
             font-family: Roboto, sans-serif;
+        }
+
+        button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-left: 0.2rem;
         }
     }
 </style>

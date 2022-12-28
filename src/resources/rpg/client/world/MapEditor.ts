@@ -8,7 +8,6 @@ import ClientUtils from 'rpg/client/utils/Utils'
 import type WorldEntityType from 'rpg/shared/world/WorldEntityType'
 import type { MarkerType } from 'rpg/shared/world/markers/Markers'
 import Vector3 from 'rpg/shared/utils/Vector3'
-import type WorldEntityGroupSchema from '../../../../db/MainDB/schemas/world/WorldEntityGroup.schema'
 import RGBA from '../../shared/utils/RGBA'
 
 export interface IMarkerEntity {
@@ -29,6 +28,7 @@ export interface IObjectEntity {
 
 export interface IEntity {
     _id: string
+    groupId: string
 
     type: WorldEntityType
     name: string
@@ -41,8 +41,7 @@ export interface IEntityGroup {
     _id: string
     name: string
     description?: string
-    children?: IEntityGroup[]
-    entities?: IEntity[]
+    parent?: IEntityGroup
 }
 
 enum EditableObject {
@@ -173,46 +172,6 @@ export default class MapEditor {
     }
 
     static deinitialize() {}
-
-    private static convertGroupFromDB(dbGroup: WorldEntityGroupSchema): IEntityGroup {
-        return {
-            _id: dbGroup._id.toString(),
-            name: dbGroup.name,
-            description: dbGroup.description,
-            children: [],
-            entities: [],
-        }
-    }
-
-    // static async loadEntities() {
-    //     const groupsFromDB = await MainDB.collections.worldEntityGroups.find()
-
-    //     if (groupsFromDB.length === 0) return
-
-    //     const rootGroupsFromDB = groupsFromDB.filter((group) => typeof group.parent === 'undefined')
-
-    //     const groups: IEntityGroup[] = []
-
-    //     rootGroupsFromDB.forEach((dbGroup) => {
-    //         groups.push(MapEditor.convertGroupFromDB(dbGroup))
-    //     })
-
-    //     for (const rootGroup of groups) {
-    //         const currentParentGroup = rootGroup
-
-    //         let hasAnyChild = false
-
-    //         do {
-    //             hasAnyChild = false
-
-    //             for (const groupFromDB of groupsFromDB) {
-    //                 if (typeof groupFromDB.parent !== 'undefined') hasAnyChild = true
-    //                 if (groupFromDB.parent._id.toString() === currentParentGroup._id)
-    //                     currentParentGroup.children.push(MapEditor.convertGroupFromDB(groupFromDB))
-    //             }
-    //         } while (hasAnyChild)
-    //     }
-    // }
 
     static update() {
         natives.displayRadar(false)

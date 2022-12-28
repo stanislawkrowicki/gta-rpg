@@ -3,34 +3,44 @@
     import FolderOpenOutline from 'svelte-material-icons/FolderOpenOutline.svelte'
 
     import Entity from './Entity.svelte'
-    import type { IEntityGroup } from 'rpg/client/world/MapEditor'
+    import type { IEntityGroupTree } from './App.svelte'
 
-    export let data: IEntityGroup
+    import { createEventDispatcher } from 'svelte'
+
+    const dispatch = createEventDispatcher()
+
+    export let data: IEntityGroupTree
 
     let expanded = false
 
     const toggle = () => {
         expanded = !expanded
+
+        dispatch('groupInteraction', data._id)
     }
 </script>
 
 {#if expanded}
     <div class="current-group">
         <FolderOpenOutline color="white" />
-        <button on:click={toggle}>{data.name}</button>
+        <button on:click|stopPropagation={toggle}>{data.name}</button>
     </div>
     <ul>
-        {#each data.children as child}
-            <li><svelte:self data={child} /></li>
-        {/each}
-        {#each data.entities as entity}
-            <li><Entity data={entity} /></li>
-        {/each}
+        {#if data.children}
+            {#each data.children as child}
+                <li><svelte:self data={child} on:groupInteraction on:editEntity /></li>
+            {/each}
+        {/if}
+        {#if data.entities}
+            {#each data.entities as entity}
+                <li><Entity data={entity} on:editEntity /></li>
+            {/each}
+        {/if}
     </ul>
 {:else}
     <div class="current-group">
         <FolderOutline color="white" />
-        <button on:click={toggle}>{data.name}</button>
+        <button on:click|stopPropagation={toggle}>{data.name}</button>
     </div>
 {/if}
 
@@ -49,6 +59,8 @@
         cursor: pointer;
         border: none;
         margin: 0;
+        background: none;
+        color: white;
     }
 
     ul {
