@@ -276,6 +276,12 @@ export default class Vector3 {
         return Vector3.getDistanceBetweenTwoVectors(this, vector)
     }
 
+    length(vector: Vector3) {
+        const squareLength = vector.x * vector.x + vector.y * vector.y + vector.z * vector.z
+
+        return Math.sqrt(squareLength)
+    }
+
     static getDistanceBetweenTwoXYZPoints(
         x1: number,
         y1: number,

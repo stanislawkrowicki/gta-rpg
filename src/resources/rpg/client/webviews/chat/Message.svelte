@@ -11,6 +11,7 @@
 <style>
     .message {
         color: white;
+        padding: 2px;
     }
     .author {
         display: inline-block;

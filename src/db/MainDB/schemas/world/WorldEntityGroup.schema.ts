@@ -1,4 +1,4 @@
-import { prop } from '@typegoose/typegoose'
+import { prop, Ref } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
 
 export default class WorldEntityGroupSchema {
@@ -6,5 +6,5 @@ export default class WorldEntityGroupSchema {
 
     @prop() name: string
     @prop() description?: string
-    @prop() parent?: WorldEntityGroupSchema
+    @prop({ ref: () => WorldEntityGroupSchema }) parent?: Ref<WorldEntityGroupSchema>
 }

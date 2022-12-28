@@ -32,8 +32,6 @@ class GameDefaultsInitiator {
 
         game.triggerScreenblurFadeOut(0)
 
-        game.displayRadar(false)
-
         // game.restartFrontendMenu(alt.hash('FE_MENU_VERSION_MP_PAUSE'), -1)
         View.restoreDefault()
     }

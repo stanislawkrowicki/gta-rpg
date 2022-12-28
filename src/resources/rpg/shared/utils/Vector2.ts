@@ -45,18 +45,26 @@ export default class Vector2 {
     add(vec: Vector2) {
         this.x += vec.x
         this.y += vec.y
+
+        return this
     }
     sub(vec: Vector2) {
         this.x -= vec.x
         this.y -= vec.y
+
+        return this
     }
     div(vec: Vector2) {
         this.x /= vec.x
         this.y /= vec.y
+
+        return this
     }
     mul(vec: Vector2) {
         this.x *= vec.x
         this.y *= vec.y
+
+        return this
     }
 
     dot(vec: Vector2) {

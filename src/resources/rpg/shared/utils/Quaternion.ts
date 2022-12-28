@@ -46,6 +46,43 @@ export default class Quaternion extends Vector4 {
         return vector
     }
 
+    inverse() {
+        const squareLength = this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w
+
+        return new Quaternion(
+            -this.x / squareLength,
+            -this.y / squareLength,
+            -this.z / squareLength,
+            this.w / squareLength
+        )
+    }
+
+    getRotationX() {
+        return (
+            (Math.atan2(
+                2 * (this.w * this.x + this.y * this.z),
+                1 - 2 * (this.x * this.x + this.y * this.y)
+            ) *
+                180) /
+            Math.PI
+        )
+    }
+
+    getRotationY() {
+        return (Math.asin(2 * (this.w * this.y - this.z * this.x)) * 180) / Math.PI
+    }
+
+    getRotationZ() {
+        return (
+            (Math.atan2(
+                2 * (this.w * this.z + this.x * this.y),
+                1 - 2 * (this.y * this.y + this.z * this.z)
+            ) *
+                180) /
+            Math.PI
+        )
+    }
+
     toVec3RotationTo(outputVector: Vector3) {
         Quaternion.rotationQuaternionToVec3To(this, outputVector)
     }
@@ -53,7 +90,7 @@ export default class Quaternion extends Vector4 {
     static rotationQuaternionToVec3(rotation: Vector4) {
         const vector = new Vector3()
 
-        Quaternion.rotationQuaternionToVec3(rotation)
+        Quaternion.rotationQuaternionToVec3To(rotation, vector)
 
         return vector
     }

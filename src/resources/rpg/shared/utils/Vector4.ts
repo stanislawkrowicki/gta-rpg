@@ -10,14 +10,14 @@ export default class Vector4 {
         this.w = w
     }
 
-    setXYZ(x: number, y: number, z: number, w: number) {
+    setXYZW(x: number, y: number, z: number, w: number) {
         this.x = x
         this.y = y
         this.z = z
         this.w = w
     }
 
-    addXYZ(x: number, y: number, z: number, w: number) {
+    addXYZW(x: number, y: number, z: number, w: number) {
         this.x += x
         this.y += y
         this.z += z
@@ -25,7 +25,7 @@ export default class Vector4 {
 
         return this
     }
-    subXYZ(x: number, y: number, z: number, w: number) {
+    subXYZW(x: number, y: number, z: number, w: number) {
         this.x -= x
         this.y -= y
         this.z -= z
@@ -33,7 +33,7 @@ export default class Vector4 {
 
         return this
     }
-    divXYZ(x: number, y: number, z: number, w: number) {
+    divXYZW(x: number, y: number, z: number, w: number) {
         this.x /= x
         this.y /= y
         this.z /= z
@@ -41,7 +41,7 @@ export default class Vector4 {
 
         return this
     }
-    mulXYZ(x: number, y: number, z: number, w: number) {
+    mulXYZW(x: number, y: number, z: number, w: number) {
         this.x *= x
         this.y *= y
         this.z *= z
@@ -50,7 +50,7 @@ export default class Vector4 {
         return this
     }
 
-    dotXYZ(x: number, y: number, z: number, w: number) {
+    dotXYZW(x: number, y: number, z: number, w: number) {
         let product = 0
 
         product += this.x * x
@@ -111,8 +111,9 @@ export default class Vector4 {
     }
 
     inverseTo(vector: Vector4) {
-        vector.x = -this.x
-        vector.y = -this.y
-        vector.z = -this.z
+        vector.x = 1 / this.x
+        vector.y = 1 / this.y
+        vector.z = 1 / this.z
+        vector.w = 1 / this.w
     }
 }

@@ -17,6 +17,8 @@
     let filteredCommands: ICommandDefinition[] = []
     let inputComponent: Input
 
+    let container
+
     let isInCommandMode = false
 
     const handleMessage = (messageEvent: { detail: string }) => {
@@ -68,8 +70,12 @@
         inputComponent.setMessage('/' + filteredCommands[commandEvent.detail].name)
     }
 
+    let isFocused = false
+
     const focus = () => {
         inputComponent.focus()
+
+        isFocused = true
     }
 
     const unfocus = () => {
@@ -77,6 +83,8 @@
         alt.emit('UNFOCUS')
         commands = []
         isInCommandMode = false
+
+        isFocused = false
     }
 
     alt.on('FOCUS', () => {
@@ -93,13 +101,9 @@
     })
 </script>
 
-<svelte:window
-    on:mousedown={(e) => {
-        e.preventDefault()
-    }}
-/>
+<svelte:window on:mousedown={(e) => {}} />
 
-<div id="container">
+<div bind:this={container} class="container {isFocused ? 'active' : ''}">
     <div class="messages">
         {#each messages as message}
             <Message author={message.author} message={message.message} />
@@ -122,3 +126,44 @@
         </div>
     {/if}
 </div>
+
+<style>
+    :global(body) {
+        font-family: 'Amiable Forsythia Free', sans-serif;
+    }
+    .container {
+        height: 150px;
+        width: 350px;
+
+        background: #00000000;
+
+        transform-origin: 0 0;
+
+        /*--scale: calc();*/
+        /*transform: scale(var(--scale));*/
+
+        transition: background 0.25s;
+
+        border-radius: 5px;
+    }
+    .container.active {
+        background: #00000077;
+    }
+    .messages {
+        height: inherit;
+        overflow-y: scroll;
+
+        padding: 4px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 4px;
+    }
+    .messages::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+    .messages::-webkit-scrollbar-thumb {
+        background-color: #d6dee1;
+        border-radius: 5px;
+    }
+</style>

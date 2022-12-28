@@ -120,17 +120,43 @@ export default class MainDB {
 
         MainDB.addCollection(WorldEntityGroupSchema, 'worldEntityGroups')
 
-        const worldEntityModel = getModelForClass(WorldEntitySchema)
+        const worldEntityModel = getModelForClass(WorldEntitySchema, {
+            existingConnection: MainDB.connection,
+            schemaOptions: {
+                versionKey: false,
+            },
+            options: {
+                customName: 'worldEntities',
+            },
+        })
 
         MainDB.collections['worldEntities'] = {
             objects: getDiscriminatorModelForClass(worldEntityModel, WorldObjectSchema, {
                 existingConnection: MainDB.connection,
+                schemaOptions: {
+                    versionKey: false,
+                },
+                options: {
+                    customName: 'worldEntities',
+                },
             }),
             markers: getDiscriminatorModelForClass(worldEntityModel, WorldMarkerSchema, {
                 existingConnection: MainDB.connection,
+                schemaOptions: {
+                    versionKey: false,
+                },
+                options: {
+                    customName: 'worldEntities',
+                },
             }),
             vehicles: getDiscriminatorModelForClass(worldEntityModel, WorldVehicleSchema, {
                 existingConnection: MainDB.connection,
+                schemaOptions: {
+                    versionKey: false,
+                },
+                options: {
+                    customName: 'worldEntities',
+                },
             }),
         }
     }
