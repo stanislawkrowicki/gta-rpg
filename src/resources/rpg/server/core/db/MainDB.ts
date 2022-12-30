@@ -14,12 +14,14 @@ import WorldEntitySchema from '../../../../../db/MainDB/schemas/world/WorldEntit
 import WorldObjectSchema from '../../../../../db/MainDB/schemas/world/WorldObject.schema'
 import WorldVehicleSchema from '../../../../../db/MainDB/schemas/world/WorldVehicle.schema'
 import WorldMarkerSchema from '../../../../../db/MainDB/schemas/world/WorldMarker.schema'
+import WorldNPCSchema from '../../../../../db/MainDB/schemas/world/WorldNPCSchema'
 import WorldEntityGroupSchema from '../../../../../db/MainDB/schemas/world/WorldEntityGroup.schema'
 
 interface IWorldEntityModels {
     objects: mongoose.Model<WorldObjectSchema>
     markers: mongoose.Model<WorldMarkerSchema>
     vehicles: mongoose.Model<WorldVehicleSchema>
+    npcs: mongoose.Model<WorldNPCSchema>
 }
 
 export default class MainDB {
@@ -150,6 +152,15 @@ export default class MainDB {
                 },
             }),
             vehicles: getDiscriminatorModelForClass(worldEntityModel, WorldVehicleSchema, {
+                existingConnection: MainDB.connection,
+                schemaOptions: {
+                    versionKey: false,
+                },
+                options: {
+                    customName: 'worldEntities',
+                },
+            }),
+            npcs: getDiscriminatorModelForClass(worldEntityModel, WorldNPCSchema, {
                 existingConnection: MainDB.connection,
                 schemaOptions: {
                     versionKey: false,

@@ -23,8 +23,14 @@ export interface IObjectEntity {
     rotation: Vector3
 }
 
-// export interface IVehicleEntity {}
-// export interface INPCEntity {}
+export interface IVehicleEntity {
+    hash: string | number
+    position: Vector3
+}
+export interface INPCEntity {
+    model: string | number
+    position: Vector3
+}
 
 export interface IEntity {
     _id: string

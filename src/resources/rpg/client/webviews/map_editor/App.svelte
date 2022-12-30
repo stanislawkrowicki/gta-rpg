@@ -26,7 +26,7 @@
 
     let groupsTrees: IEntityGroupTree[] = []
 
-    $: groups, generateGroupTrees()
+    $: groups, generateGroupTrees() // TODO: need smarter way to update the tree
 
     const generateGroupTree = (group: IEntityGroup, slot: IEntityGroupTree[] = groupsTrees) => {
         const newSlotLen = slot.push({
