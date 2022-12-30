@@ -420,6 +420,12 @@ const buildWebView = (path, done) => {
                     esbuildSvelte({
                         preprocess: sveltePreprocess(),
                     }),
+                    ifdefPlugin.default({
+                        variables: {
+                            SERVER: false,
+                            CLIENT: false,
+                        },
+                    }),
                 ],
             })
         )
