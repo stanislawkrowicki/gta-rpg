@@ -1,0 +1,11 @@
+.property {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.5em 3em 0.5em 3em;
+
+    label {
+        color: white;
+        font-family: Roboto, sans-serif;
+    }
+}

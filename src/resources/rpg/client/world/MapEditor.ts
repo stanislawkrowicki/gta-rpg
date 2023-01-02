@@ -40,7 +40,7 @@ export interface IEntity {
     name: string
     description?: string
 
-    wrapped: IMarkerEntity | IObjectEntity
+    wrapped: IMarkerEntity | IObjectEntity | IVehicleEntity | INPCEntity
 }
 
 export interface IEntityGroup {

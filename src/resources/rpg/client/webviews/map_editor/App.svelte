@@ -14,19 +14,22 @@
     import DeleteOutline from 'svelte-material-icons/DeleteOutline.svelte'
     import Close from 'svelte-material-icons/Close.svelte'
 
-    import type { IEntityGroup } from 'rpg/client/world/MapEditor'
+    import type { IEntityGroup, IObjectEntity } from 'rpg/client/world/MapEditor'
     import type { IEntity } from 'rpg/client/world/MapEditor'
-    import Group from './Group.svelte'
-
-    import Vector3 from 'rpg/shared/utils/Vector3'
     import WorldEntityType from 'rpg/shared/world/WorldEntityType'
+
+    import Group from './Group.svelte'
+    import ObjectPropertyEditor from './ObjectPropertyEditor.svelte'
+    import MarkerPropertyEditor from './MarkerPropertyEditor.svelte'
+    import VehiclePropertyEditor from './VehiclePropertyEditor.svelte'
+    import NPCPropertyEditor from './NPCPropertyEditor.svelte'
 
     let entities: IEntity[] = []
     let groups: IEntityGroup[] = []
 
     let groupsTrees: IEntityGroupTree[] = []
 
-    $: groups, generateGroupTrees() // TODO: need smarter way to update the tree
+    $: groups, entities, generateGroupTrees() // TODO: need smarter way to update the tree
 
     const generateGroupTree = (group: IEntityGroup, slot: IEntityGroupTree[] = groupsTrees) => {
         const newSlotLen = slot.push({
@@ -91,6 +94,25 @@
         groups = groups
     }
 
+    const createNewEntity = () => {
+        currentlyEditedEntity = {
+            _id: Math.floor(Math.random() * 0xffffff).toString(),
+            groupId: lastClickedGroup._id,
+            type: WorldEntityType.OBJECT,
+            name: '',
+            wrapped: {} as IObjectEntity,
+        }
+    }
+
+    const onCreateNewEntity = () => {
+        if (!lastClickedGroup) {
+            alert('Wybierz grupę')
+            return
+        }
+
+        createNewEntity()
+    }
+
     const editEntity = (entityId: string) => {
         const selectedEntity = entities.find((entity) => entity._id === entityId)
         if (!selectedEntity) return
@@ -103,11 +125,32 @@
     const disableEntityEditor = () => {
         currentlyEditedEntity = null
     }
+
+    const submitEntity = () => {
+        // if (currentlyEditedEntity._id.length > 0) {
+        //     // an edit
+        //     const existingIndex = entities.findIndex((entity) => entity._id === currentlyEditedEntity._id)
+
+        //     if (existingIndex < 0) {
+        //         alert('Nie udało się edytować obiektu :/')
+        //         return
+        //     }
+
+        //     entities[existingIndex] = currentlyEditedEntity
+        // } else {
+        //     // a new one
+        //     entities.push(currentlyEditedEntity)
+        // }
+
+        entities.push(currentlyEditedEntity)
+        currentlyEditedEntity = null
+        entities = entities
+    }
 </script>
 
 <main>
     <div class="actions">
-        <button class="action" id="new-object">
+        <button class="action" id="new-object" on:click={onCreateNewEntity}>
             <FilePlusOutline color="white" size="1.5em" />
         </button>
         <button class="action" id="new-group" on:click={onCreateNewGroup}>
@@ -155,9 +198,45 @@
     {:else if currentlyEditedEntity}
         <div class="entity-editor">
             <button id="close-btn" on:click={disableEntityEditor}><Close size="1.5em" /></button>
-            <div class="properties">
-                <div class="property" />
-            </div>
+            <form class="properties">
+                <div class="property">
+                    <label for="name"><u>Nazwa:</u></label>
+                    <input type="text" id="name" bind:value={currentlyEditedEntity.name} />
+                </div>
+                <div class="property">
+                    <label for="description">Opis:</label>
+                    <input
+                        type="text"
+                        id="description"
+                        bind:value={currentlyEditedEntity.description}
+                    />
+                </div>
+                <div class="property">
+                    <label for="type">Typ:</label>
+                    <select name="type" id="type" bind:value={currentlyEditedEntity.type}>
+                        <option value={WorldEntityType.OBJECT}>Obiekt</option>
+                        <option value={WorldEntityType.MARKER}>Marker</option>
+                        <option value={WorldEntityType.VEHICLE}>Pojazd</option>
+                        <option value={WorldEntityType.NPC}>NPC</option>
+                    </select>
+                </div>
+                <div class="separator" />
+                {#if currentlyEditedEntity.type === WorldEntityType.OBJECT}
+                    <ObjectPropertyEditor data={currentlyEditedEntity} />
+                {:else if currentlyEditedEntity.type === WorldEntityType.MARKER}
+                    <MarkerPropertyEditor data={currentlyEditedEntity} />
+                {:else if currentlyEditedEntity.type === WorldEntityType.VEHICLE}
+                    <VehiclePropertyEditor data={currentlyEditedEntity} />
+                {:else if currentlyEditedEntity.type === WorldEntityType.NPC}
+                    <NPCPropertyEditor data={currentlyEditedEntity} />
+                {/if}
+                <input
+                    type="submit"
+                    value="Stwórz"
+                    id="submit"
+                    on:click|preventDefault={submitEntity}
+                />
+            </form>
         </div>
     {:else}
         <div class="tree" on:click={onBackgroundInteraction} on:keypress>
@@ -256,5 +335,12 @@
                 font-family: Roboto, sans-serif;
             }
         }
+    }
+
+    .separator {
+        margin: 1em 0 1em 0;
+        height: 2px;
+        width: 100%;
+        background-color: white;
     }
 </style>
