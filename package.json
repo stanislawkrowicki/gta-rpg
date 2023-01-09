@@ -51,7 +51,7 @@
     "dependencies": {
         "@elastic/elasticsearch": "^8.5.0",
         "@typegoose/typegoose": "^9.12.1",
-        "altv-esbuild": "^0.3.3",
+        "altv-esbuild": "^0.4.2",
         "amqplib": "^0.10.3",
         "cli-spinners": "^2.7.0",
         "crypto": "^1.0.1",
